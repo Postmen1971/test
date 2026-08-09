@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Galvanik Tools – Strom & Zeit</title>
+<style>
+  /* Allgemeine Anpassungen für bessere Darstellung auf kleinen Bildschirmen */
+  :root{--orange:#F58025;--darkblue:#002855;--lightgray:#f7f7f7}
+  body{
+    font-family:Arial,sans-serif;
+    background:linear-gradient(to bottom right,var(--lightgray),#ffffff);
+    margin:0;
+    /* Anpassung 2: Padding für Rand: Fixe 16px oben/unten und seitlich. */
+    padding: 16px;
+    display:flex;
+    justify-content:center;
+    flex-direction:column;
+    align-items:center;
+    /* Zusätzliches Padding für Topbar-Platzhalter */
+    padding-top: 70px; 
+  }
+
+  .topbar{
+    position:fixed; /* Auf fixed geändert, damit es oben bleibt */
+    top:0;
+    left:0;
+    right:0;
+    background:#ffffffcc;
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid #e5e7eb;
+    padding:10px 16px; /* Etwas mehr seitlicher Rand */
+    z-index:1000;
+    display:flex;
+    justify-content:center;
+    gap:8px;
+  }
+  
+  .tabbtn{border:2px solid #002855;color:#002855;background:#fff;padding:8px 12px; /* Etwas kleiner für iPhone 8 */
+          border-radius:999px;cursor:pointer;font-weight:bold;font-size:14px;}
+  .tabbtn.active{background:#F58025;color:#fff;border-color:#F58025}
+  section.tab-pane{display:none}section.tab-pane.active{display:block}
+
+  .container{
+    width:calc(100% - 32px); /* 100% minus seitliches Body-Padding */
+    max-width:500px;
+    background:#fff;
+    padding:20px; /* Innen-Padding leicht reduziert */
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+    position:relative;
+    margin-top:0; /* Kein zusätzlicher oberer Margin, da Body-Padding angepasst wurde */
+    margin-bottom: 16px; /* Rand unten */
+  }
+  
+  h2{text-align:center;color:var(--orange);margin-top:0}
+  label{display:block;margin-top:14px; /* Etwas weniger Abstand */
+        font-weight:bold;color:#002855;font-size:16px;}
+  input[type=number], select{
+    width:100%;
+    padding:8px; /* Etwas weniger Padding */
+    font-size:16px; /* Etwas kleiner für bessere Sichtbarkeit */
+    margin-top:4px;
+    border:1px solid #ccc;border-radius:6px;box-sizing:border-box
+  }
+  
+  .ergebnis{margin-top:20px;padding:12px;background:#f0f0f0;font-size:18px; /* Etwas kleiner */
+            text-align:center;border-radius:8px;color:#F58025;border:1px solid #ccc}
+  .haftungshinweis{letter-spacing:.2px;text-align:center;font-size:11px;margin-top:8px;color:#888}
+  #counter{position:fixed;bottom:4px;right:8px;font-size:10px;color:#ccc;font-family:monospace;opacity:.5;z-index:9999}
+
+  /* Zeitrechner spezifische Anpassungen */
+  .zeit-container .row{display:flex;gap:8px}
+  .zeit-container select, .zeit-container button{padding:10px;font-size:16px;}
+  .zeit-container button{background:#0066cc;color:#fff;border:none;font-weight:bold;cursor:pointer}
+  .zeit-container button:hover{background:#004d99}
+  .zeit-result{margin-top:16px;padding:12px;background:#e9f5e9;border-radius:6px;font-weight:bold;color:#0b4f0b;border:1px solid #bfe0bf}
+
+  .panel{margin-top:12px;padding:10px;border-radius:6px;border:1px solid #e5e7eb}
+  .tip-panel{background:#fff7ea;border-color:#f2c58a;color:#8a5400}
+  .quote-panel{background:#eef5ff;border-color:#cbdcff;color:#143a66;font-style:italic}
+  .panel h3{margin:0 0 6px 0;font-size:14px;color:#333;font-style:normal}
+  .small{font-size:12px;color:#666}
+
+  /* ===== Spulenrechner (1:1 aus AzeSpule.html übernommen, isoliert unter #tab-spule) ===== */
+  #tab-spule{font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+  #tab-spule .container{
+      background-color: white;
+      max-width: 480px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+      border: 1px solid #ddd;
+      padding:0;
+  }
+  #tab-spule .header {
+      background-color: #333;
+      color: white;
+      padding: 8px;
+      text-align: center;
+  }
+  #tab-spule .header h2 { margin: 0; font-size: 1rem; }
+
+  #tab-spule .section {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+  }
+  #tab-spule .section-title {
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 4px;
+      font-size: 0.68rem;
+  }
+
+  #tab-spule .bg-blue { background-color: #eef6ff; }
+  #tab-spule .bg-green { background-color: #ebf9eb; }
+  #tab-spule .bg-result { background-color: #2c3e50; }
+
+  #tab-spule label {
+      display: block;
+      margin-bottom: 2px;
+      margin-top:0;
+      font-weight: 600;
+      color: #333;
+      font-size: 0.74rem;
+  }
+
+  #tab-spule input[type="number"] {
+      width: 100%;
+      padding: 6px;
+      font-size: 13.5px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      margin-bottom: 4px;
+      margin-top:0;
+  }
+
+  #tab-spule button {
+      width: 100%;
+      padding: 9px;
+      background-color: #007bff;
+      color: white;
+      font-size: 14px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 6px;
+  }
+
+  #tab-spule .result-area {
+      text-align: center;
+      padding: 8px;
+      color: white;
+      display: none;
+  }
+  #tab-spule .result-group {
+      margin-bottom: 4px;
+  }
+  #tab-spule .result-number {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #4cd137;
+      line-height: 1.1;
+  }
+  #tab-spule .result-label {
+      font-size: 0.72rem;
+      color: #ccc;
+  }
+  #tab-spule .error-msg {
+      color: red;
+      text-align: center;
+      padding: 6px;
+      font-size: 0.78rem;
+      display: none;
+  }
+  #tab-spule .small-output {
+      color: #f7b731;
+      font-weight: bold;
+      font-size: 0.9rem;
+      margin-top: -2px;
+      margin-bottom: 6px;
+      display: block;
+  }
+
+  #tab-spule .switch-container {
+      display: flex;
+      justify-content: space-around;
+      padding: 5px 0;
+      background-color: #f0f0f0;
+  }
+  #tab-spule .switch-button {
+      padding: 6px 8px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.8rem;
+      transition: background-color 0.2s, color 0.2s;
+      flex-grow: 1;
+      text-align: center;
+      margin: 0 4px;
+  }
+  #tab-spule .switch-button.active {
+      background-color: #007bff;
+      color: white;
+      border-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <button id="tabBtnStrom" class="tabbtn">⚡ Stromrechner</button>
+  <button id="tabBtnZeit" class="tabbtn active">⏱️ Zeitrechner</button>
+  <button id="tabBtnSpule" class="tabbtn">🧵 Spulenrechner</button>
+</nav>
+
+<section id="tab-strom" class="tab-pane">
+  <div class="container">
+    <h2>Galvanik-Stromrechner</h2>
+
+    <label for="istStrom">Aktueller Strom (A):</label>
+    <input type="number" id="istStrom" placeholder="z. B. 4" value="4">
+
+    <label for="istSchicht">Aktuelle Schichtdicke (µm):</label>
+    <input type="number" id="istSchicht" placeholder="z. B. 1.0" value="1.0">
+
+    <label for="zielSchicht">Ziel-Schichtdicke (µm):</label>
+    <input type="number" id="zielSchicht" placeholder="z. B. 2.5" value="2.5">
+
+    <label for="istGeschw">Aktuelle Bandgeschwindigkeit (m/min):</label>
+    <input type="number" id="istGeschw" placeholder="z. B. 7" value="7">
+
+    <label for="neuGeschw">Neue Bandgeschwindigkeit (m/min):</label>
+    <input type="number" id="neuGeschw" placeholder="z. B. 7" value="7">
+
+    <div class="ergebnis" id="ergebnis">Ergebnis wird hier angezeigt</div>
+    <div class="haftungshinweis">Alle Angaben ohne Gewähr – es wird keine Haftung übernommen.</div>
+  </div>
+
+  <div id="counter"></div>
+
+  <script>
+    const STROM_KEY="galvanikStromLetzteWerte";
+    const stromFelder=["istStrom","istSchicht","zielSchicht","istGeschw","neuGeschw"];
+
+    function ladeLetzteStromWerte(){
+      try{
+        const gespeichert=JSON.parse(localStorage.getItem(STROM_KEY));
+        if(gespeichert){
+          stromFelder.forEach(id=>{
+            if(gespeichert[id]!==undefined && gespeichert[id]!=="") document.getElementById(id).value=gespeichert[id];
+          });
+        }
+      }catch(e){}
+    }
+
+    function speichereLetzteStromWerte(){
+      try{
+        const werte={};
+        stromFelder.forEach(id=>{ werte[id]=document.getElementById(id).value; });
+        localStorage.setItem(STROM_KEY, JSON.stringify(werte));
+      }catch(e){}
+    }
+
+    function berechne(){
+      const I_alt=parseFloat(document.getElementById("istStrom").value);
+      const S_alt=parseFloat(document.getElementById("istSchicht").value);
+      const S_neu=parseFloat(document.getElementById("zielSchicht").value);
+      const V_alt=parseFloat(document.getElementById("istGeschw").value);
+      const V_neu=parseFloat(document.getElementById("neuGeschw").value);
+
+      if(!I_alt||!S_alt||!S_neu||!V_alt||!V_neu){document.getElementById("ergebnis").innerText="Bitte alle Werte eingeben.";return;}
+      
+      const I_neu=I_alt*(S_neu/S_alt)*(V_neu/V_alt);
+      document.getElementById("ergebnis").innerText=`Benötigter Strom: ${I_neu.toFixed(2)} A`;
+      speichereLetzteStromWerte();
+    }
+    
+    ladeLetzteStromWerte();
+    document.querySelectorAll("#tab-strom input").forEach(i=>i.addEventListener("input",berechne));
+    
+    document.addEventListener("DOMContentLoaded", berechne);
+
+    const key="galvanikCounter"; let count=localStorage.getItem(key); count=count?parseInt(count)+1:1;
+    localStorage.setItem(key,count); document.getElementById("counter").innerText=`#${count}`;
+  </script>
+</section>
+
+<section id="tab-zeit" class="tab-pane active">
+  <div class="container zeit-container">
+    <h2>Galvanik-Zeitrechner</h2>
+
+    <div class="row">
+      <div style="flex:1">
+        <label for="speedInput">Geschwindigkeit (m/min)</label>
+        <input type="number" id="speedInput" placeholder="z. B. 7" value="7" min="1">
+      </div>
+    </div>
+    <div class="row">
+      <div style="flex:1">
+        <label for="startSel">Startpunkt</label>
+        <select id="startSel"></select>
+      </div>
+      <div style="flex:1">
+        <label for="endSel">Endpunkt</label>
+        <select id="endSel"></select>
+      </div>
+    </div>
+
+    <button id="calcBtn">Zeit berechnen</button>
+    <div class="zeit-result" id="zeitResult">Bitte wähle Start, Ende und Geschwindigkeit.</div>
+
+    <div class="panel tip-panel">
+      <h3>Tipp des Tages</h3>
+      <div id="tipOfDay">–</div>
+      <div class="small">Wechselt automatisch täglich.</div>
+    </div>
+
+    <div class="panel quote-panel">
+      <h3>Zitat des Tages (Allgemein)</h3>
+      <div id="quoteGeneral">–</div>
+    </div>
+  </div>
+
+  <script>
+    /* --- Zeitmarken (Basis: 7 m/min) --- */
+    const punkte=[
+      ["Start","0:00"],
+      ["Hot Wash","5:10"],
+      ["Nickel 1","6:32"],
+      ["Nickel 6","7:25"],
+      ["Nickel 12","8:27"],
+      ["Pd 1","9:10"],
+      ["Pd 3","9:40"],
+      ["Pd 5","10:12"],
+      ["Pd 7","10:40"],
+      ["U-Turn Mitte","11:47"],
+      ["Gold 1","14:52"],
+      ["Gold 3","15:22"],
+      ["Gold 5","15:40"],
+      ["Gold Stripper","16:11"],
+      ["Zinn 1","17:20"],
+      ["Zinn 3","17:41"],
+      ["Zinn 5","18:03"],
+      ["Zinn 7","18:25"],
+      ["Zinn 9","19:00"],
+      ["Zinn Stripper","19:25"],
+      ["Nach-Fön","20:31"],
+      ["Speicher","22:17"],
+      ["Getriebe vor Befettung","25:43"]
+    ];
+
+    /* --- Helfer --- */
+    function zeitInSekunden(t){const[m,s]=t.split(":").map(Number);return m*60+s;}
+    function dayOfYear(d=new Date()){
+      const start=new Date(d.getFullYear(),0,0);
+      const diff=d - start + ((start.getTimezoneOffset()-d.getTimezoneOffset())*60*1000);
+      return Math.floor(diff/(1000*60*60*24));
+    }
+    function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+    /* --- UI init --- */
+    const startSel=document.getElementById("startSel"),endSel=document.getElementById("endSel"),speedInput=document.getElementById("speedInput");
+    punkte.forEach(([n])=>{startSel.add(new Option(n,n));endSel.add(new Option(n,n));});
+
+    /* --- Letzte Suche wiederherstellen (localStorage) --- */
+    const ZEIT_KEY="galvanikZeitLetzteSuche";
+    function ladeLetzteSuche(){
+      try{
+        const gespeichert=JSON.parse(localStorage.getItem(ZEIT_KEY));
+        if(gespeichert){
+          if(gespeichert.speed) speedInput.value=gespeichert.speed;
+          if(gespeichert.start && punkte.some(p=>p[0]===gespeichert.start)) startSel.value=gespeichert.start;
+          if(gespeichert.end && punkte.some(p=>p[0]===gespeichert.end)) endSel.value=gespeichert.end;
+        }
+      }catch(e){}
+    }
+    ladeLetzteSuche();
+    if(!startSel.value) startSel.value="Start";
+    if(!endSel.value) endSel.value="Hot Wash";
+
+    function speichereLetzteSuche(){
+      try{
+        localStorage.setItem(ZEIT_KEY, JSON.stringify({speed:speedInput.value, start:startSel.value, end:endSel.value}));
+      }catch(e){}
+    }
+
+    /* --- Berechnung (Skalierung von 7 m/min auf v m/min) --- */
+    function berechnenZeit(){
+      const v=parseFloat(document.getElementById("speedInput").value);
+      const s=startSel.value, e=endSel.value, out=document.getElementById("zeitResult");
+      
+      if(!v||!s||!e){out.textContent="Bitte Start, Ende und Geschwindigkeit wählen/eingeben.";return;}
+      if(v <= 0){out.textContent="Die Geschwindigkeit muss größer als 0 sein.";return;}
+
+      const iS=punkte.findIndex(p=>p[0]===s), iE=punkte.findIndex(p=>p[0]===e);
+      if(iS>iE){out.textContent="Rückwärtslauf ist nicht erlaubt.";return;}
+
+      const tStart7=zeitInSekunden(punkte[iS][1]), tEnd7=zeitInSekunden(punkte[iE][1]);
+      const d7=tEnd7 - tStart7;
+      const total=Math.round(d7*(7/v));
+      const m=Math.floor(total/60), sec=total%60;
+      out.textContent=`Von "${s}" bis "${e}" dauert es bei ${v.toFixed(1)} m/min etwa ${m} Minuten und ${sec} Sekunden.`;
+      speichereLetzteSuche();
+      renderGeneral();
+    }
+    document.getElementById("calcBtn").addEventListener("click", berechnenZeit);
+
+    /* --- 365 feste Galvanik-Tipps (deterministisch aus Bausteinen) --- */
+    const tipBereich=["Nickel","Palladium","Gold","Zinn","Spülen","Vorbehandlung","Kontaktierung","Anoden","Kathoden","Stripper","U-Turn","Trocknung"];
+    const tipAktion=["Stromdichte prüfen","Temperaturfenster kontrollieren","pH stabil halten","Leitfähigkeit messen","Zugaben nach Analyse dosieren","Durchfluss erhöhen","Rühren optimieren","Filter prüfen oder wechseln","Anodenfilm inspizieren","Kontaktflächen reinigen","Bandführung justieren","Drag-Out minimieren","Oberflächenspannung senken","Proben dokumentieren","Stromrampe testen","Verweilzeit verifizieren","Luftblasen vermeiden","Spülkaskade überprüfen","Rückführung aktivieren","Dosiersperren prüfen","Anodenkörbe gleichmäßig verteilen","Ionenbelastung beobachten","Badoberfläche entspannen","Kathodenbewegung anpassen","Badansatz nach SOP prüfen"];
+    const tipBed=["bei höherer Bandgeschwindigkeit","bei niedrigen Temperaturen","nach Stillstand","bei Qualitätsabweichungen","vor Schichtwechsel","nach Filterwechsel","bei geänderter Stromstärke","bei hoher Teilelast","bei Kantenunterdeckung","bei Fleckenbildung","bei steigender Rauheit","bei Glanzverlust"];
+    const tipDetail=["Messwerte protokollieren","Soll/Ist vergleichen","Zeitstempel setzen","Kontaktfedern schonen","gleichmäßige Strömung sichern","Leitwert in der Spüle loggen","Badschaum entfernen","Rauheit dokumentieren","Fühler kalibrieren","Stromzuführung auf Erwärmung prüfen","Zugaben in kleinen Schritten vornehmen","Überläufe klar halten","Sicherheitskette testen"];
+    function buildTip(i){
+      const b=tipBereich[i%tipBereich.length];
+      const a=tipAktion[(i*3)%tipAktion.length];
+      const c=tipBed[(i*5+7)%tipBed.length];
+      const d=tipDetail[(i*11+3)%tipDetail.length];
+      switch(i%4){
+        case 0: return `${b}: ${a} ${c} – ${d}.`;
+        case 1: return `${b}: ${c}, daher ${a} (${d}).`;
+        case 2: return `${b}: Zur Stabilität ${a}; zusätzlich ${d}.`;
+        default: return `${b}: ${a}. Danach ${d}.`;
+      }
+    }
+    const TIPS365=[...Array(365)].map((_,i)=>buildTip(i));
+    document.getElementById('tipOfDay').textContent = TIPS365[(dayOfYear()-1)%365];
+
+    /* --- Zitat des Tages (Allgemein): Autor, wenn bekannt --- */
+    const KNOWN_QUOTES = [
+      {text:"Der Weg ist das Ziel.", author:"Konfuzius (zugeschrieben)"},
+      {text:"Alles fließt.", author:"Heraklit"},
+      {text:"Wer rastet, der rostet.", author:"Sprichwort"},
+      {text:"Auch aus Steinen, die einem in den Weg gelegt werden, kann man Schönes bauen.", author:"Goethe"},
+      {text:"In der Ruhe liegt die Kraft.", author:"Sprichwort"},
+      {text:"Wege entstehen dadurch, dass man sie geht.", author:"Franz Kafka"},
+      {text:"Wissen ist Macht.", author:"Francis Bacon"},
+      {text:"Man sieht nur mit dem Herzen gut.", author:"Antoine de Saint-Exupéry"},
+      {text:"Ohne Daten nur Meinung.", author:"W. Edwards Deming"},
+      {text:"Das Bessere ist der Feind des Guten.", author:"Voltaire"},
+      {text:"Handle nur nach der Maxime, die du zugleich wollen kannst als allgemeines Gesetz.", author:"Immanuel Kant"},
+      {text:"Nicht die Dinge beunruhigen uns, sondern die Meinungen über die Dinge.", author:"Epiktet"},
+      {text:"Der Anfang ist die Hälfte des Ganzen.", author:"Aristoteles"},
+      {text:"Per aspera ad astra.", author:"Lateinisches Motto"},
+      {text:"Humor ist der Regenschirm der Weisen.", author:"Erich Kästner"},
+      {text:"Der Mensch ist, was er täglich tut.", author:"Aristoteles"},
+      {text:"Wer immer tut, was er schon kann, bleibt, was er ist.", author:"Henry Ford"},
+      {text:"Die Einfachheit ist die höchste Stufe der Vollendung.", author:"Leonardo da Vinci"},
+      {text:"Glück bevorzugt den Vorbereiteten.", author:"Louis Pasteur"},
+      {text:"Erfahrung ist der Name, den jeder seinen Irrtümern gibt.", author:"Oscar Wilde"},
+      {text:"Ohne Fleiß kein Preis.", author:"Sprichwort"},
+      {text:"Kein Meister ist vom Himmel gefallen.", author:"Sprichwort"},
+      {text:"Steter Tropfen höhlt den Stein.", author:"Sprichwort"},
+      {text:"Ausdauer wird früher oder später belohnt.", author:"Sprichwort"},
+      {text:"Auch der längste Weg beginnt mit dem ersten Schritt.", author:"Laozi (zugeschrieben)"},
+      {text:"Der Zweck heiligt nicht die Mittel.", author:"Sprichwort"},
+      {text:"Gib jedem Tag die Chance, der schönste deines Lebens zu werden.", author:"Mark Twain (zugeschrieben)"},
+      {text:"Wer etwas will, findet Wege. Wer etwas nicht will, findet Gründe.", author:"Sprichwort"},
+      {text:"Mut steht am Anfang des Handelns, Glück am Ende.", author:"Demokrit"},
+      {text:"Die Grenzen meiner Sprache bedeuten die Grenzen meiner Welt.", author:"Ludwig Wittgenstein"},
+      {text:"Der Kopf ist rund, damit das Denken die Richtung wechseln kann.", author:"Francis Picabia"},
+      {text:"Probleme kann man niemals mit derselben Denkweise lösen, durch die sie entstanden sind.", author:"Albert Einstein (zugeschrieben)"}
+    ];
+    const qSub=["Mut","Geduld","Klarheit","Sorgfalt","Neugier","Fokus","Disziplin","Gelassenheit","Achtsamkeit","Verantwortung","Weitsicht","Bescheidenheit","Präzision","Qualität","Lernen","Übung","Ausdauer","Respekt","Teamgeist","Neuanfang","Ruhe","Tempo","Ordnung","Offenheit","Vertrauen","Humor","Logik","Intuition","Erfahrung","Neugierde"];
+    const qVerb=["ist","bleibt","wirkt","schafft","bringt","führt zu","fordert","ermöglicht","ordnet","schärft"];
+    const qPred=["leise — und stark","die Grundlage von Qualität","der beste Anfang","mehr als Tempo","Raum für Lösungen","Sicherheit im Prozess","Ruhe in der Entscheidung","Klarheit im Kopf","Reserven für schwere Tage","Wert statt Aufwand","den Unterschied","Zeit zum Nachdenken"];
+    const qTail=["— Spruch","— Sprichwort","— Weisheit","— Leitsatz","— Werkstattregel"];
+    function buildAph(i){return `${qSub[i%qSub.length]} ${qVerb[(i*7)%qVerb.length]} ${qPred[(i*13)%qPred.length]}. ${qTail[(i*17)%qTail.length]}`;}
+    const QUOTES1000=(()=>{const arr=[]; for(let i=0;i<1000;i++) arr.push(buildAph(i)); return arr;})();
+    const ALL_GENERAL_QUOTES=[...QUOTES1000, ...KNOWN_QUOTES];
+
+    function renderGeneral(){
+      const q=pick(ALL_GENERAL_QUOTES);
+      if(typeof q==="string"){ document.getElementById('quoteGeneral').textContent=q; }
+      else { document.getElementById('quoteGeneral').textContent=`${q.text} — ${q.author}`; }
+    }
+    renderGeneral();
+  </script>
+</section>
+
+<section id="tab-spule" class="tab-pane">
+<div class="container">
+    <div class="header">
+        <h2>Spulen-Bestandsrechner</h2>
+    </div>
+
+    <div class="switch-container">
+        <div class="switch-button" id="btn-98" onclick="setSpoolSize(98)">Spule 98 cm</div>
+        <div class="switch-button active" id="btn-76" onclick="setSpoolSize(76)">Spule 76 cm</div>
+    </div>
+
+    <div class="section" style="padding-top: 5px; padding-bottom: 5px;">
+        <div class="section-title" style="margin-bottom: 0;">
+            Kern-Durchmesser: **35 cm**. Max. Durchmesser: <span id="maxDDisplay">76 cm</span>.
+        </div>
+    </div>
+
+    <div class="section bg-blue">
+        <div class="section-title">1. Referenz (Kalibrierung)</div>
+        
+        <label>Gemessene Distanz **AUßEN nach KERN** (cm) - **REFERENZ**:</label>
+        <input type="number" id="refHalfD" placeholder="z.B. 31.5">
+        
+        <label>Stückzahl bei diesem Referenz-Zustand:</label>
+        <input type="number" id="refCount" placeholder="z.B. 200000">
+
+        <label>**Kontakte pro Meter (Dichte):**</label>
+        <input type="number" id="cpm" placeholder="z.B. 200">
+
+        <div style="display:none;">
+        <small style="color:#666; display:block; margin-top:-5px; margin-bottom:10px;">Dieser Wert kalibriert die Genauigkeit.</small>
+        
+        <label>Berechneter Referenz-Durchmesser $D_{\text{Ref}}$:</label>
+        <span id="outputRefD" class="small-output">-</span>
+        
+        <label>Kalibrierfaktor $F$ (Fläche pro Meter):</label>
+        <span id="outputFactorF" class="small-output">-</span>
+        </div>
+    </div>
+
+    <div class="section bg-green">
+        <div class="section-title">2. Aktuelle Messung</div>
+        
+        <label>Gemessene Distanz **AUßEN nach KERN** (cm) - **AKTUELL**:</label>
+        <input type="number" id="currHalfD" placeholder="z.B. 25.5">
+
+        <label>Berechneter Aktueller-Durchmesser $D_{\text{Aktuell}}$:</label>
+        <span id="outputCurrD" class="small-output">-</span>
+    </div>
+
+    <div id="errorBox" class="error-msg"></div>
+
+    <button onclick="calculate()">BESTAND BERECHNEN</button>
+
+    <div id="resultBox" class="result-area bg-result">
+        <div class="result-group">
+            <div class="result-label">Aktueller Bestand ca.:</div>
+            <div id="resultValue" class="result-number">0</div>
+            <div class="result-label">Stück</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // FIXE KONSTANTEN
+    const D_INNER = 35.0; // Kern-Durchmesser in cm
+    const PI = Math.PI;
+    
+    // VARIABLE FÜR DIE AKTUELL GEWÄHLTE SPULENGRÖSSE
+    let currentDMax = 76.0; 
+    const D_MAX_98 = 98.0;
+    const D_MAX_76 = 76.0;
+
+    /**
+     * Schaltet zwischen den Spulengrößen um.
+     * @param {number} newMaxD Der neue maximale Durchmesser (98 oder 76).
+     */
+    function setSpoolSize(newMaxD) {
+        currentDMax = newMaxD;
+        
+        document.getElementById('maxDDisplay').innerText = newMaxD + ' cm';
+        document.getElementById('btn-98').classList.remove('active');
+        document.getElementById('btn-76').classList.remove('active');
+        document.getElementById('btn-' + newMaxD).classList.add('active');
+
+        // Output zurücksetzen
+        document.getElementById('outputRefD').innerText = '-';
+        document.getElementById('outputCurrD').innerText = '-';
+        document.getElementById('outputFactorF').innerText = '-';
+        
+        // Fehler und Ergebnis zurücksetzen
+        document.getElementById('errorBox').style.display = 'none';
+        document.getElementById('resultBox').style.display = 'none';
+    }
+
+    /**
+     * Führt die Hauptberechnung durch.
+     */
+    function calculate() {
+        // Elemente holen
+        const elRefHalfD = document.getElementById('refHalfD');
+        const elRefCount = document.getElementById('refCount');
+        const elCPM = document.getElementById('cpm'); // Kontakte pro Meter NEU
+        const elCurrHalfD = document.getElementById('currHalfD');
+        
+        const elResultBox = document.getElementById('resultBox');
+        const elResultVal = document.getElementById('resultValue');
+        const elOutputRefD = document.getElementById('outputRefD');
+        const elOutputCurrD = document.getElementById('outputCurrD');
+        const elOutputFactorF = document.getElementById('outputFactorF');
+        const elError = document.getElementById('errorBox');
+
+        // Werte auslesen
+        const d_ref_half_measured = parseFloat(elRefHalfD.value);
+        const count_ref = parseFloat(elRefCount.value);
+        const cpm = parseFloat(elCPM.value); // NEU: Kontakte pro Meter
+        const d_curr_half_measured = parseFloat(elCurrHalfD.value);
+
+        // Reset Outputs
+        elOutputRefD.innerText = '-';
+        elOutputCurrD.innerText = '-';
+        elOutputFactorF.innerText = '-';
+        elError.style.display = 'none';
+        elResultBox.style.display = 'none';
+
+        // --- 1. DATENPRÜFUNG ---
+        if (isNaN(d_ref_half_measured) || isNaN(count_ref) || isNaN(d_curr_half_measured) || isNaN(cpm) || cpm <= 0) {
+            showError("Bitte füllen Sie alle vier Felder mit gültigen Zahlen aus (Kontakte/m muss > 0 sein).");
+            return;
+        }
+
+        // --- 2. BERECHNUNG DER DURCHMESSER ---
+        const d_ref_calculated = currentDMax - (d_ref_half_measured * 2);
+        const d_current_calculated = currentDMax - (d_curr_half_measured * 2);
+
+        // --- 3. GÜLTIGKEITSPRÜFUNG ---
+        if (d_ref_calculated <= D_INNER || d_current_calculated <= D_INNER) {
+            showError("Eine Messung ist zu groß. Der berechnete Durchmesser liegt unter dem Kern (" + D_INNER + " cm).");
+            return;
+        }
+        if (d_ref_calculated > currentDMax || d_current_calculated > currentDMax) {
+            showError("Eine Messung ist zu klein. Der berechnete Durchmesser ist größer als D_Max (" + currentDMax + " cm).");
+            return;
+        }
+
+        // --- 4. KALIBRIERUNG (Flächenfaktor F) ---
+        
+        // 4a. Länge der Referenzspule in Metern
+        const L_ref_m = count_ref / cpm;
+
+        // 4b. Querschnittsfläche der Referenzwicklung in cm²
+        // R_ref = d_ref_calculated / 2; R_inner = D_INNER / 2;
+        // A = PI * (R_ref^2 - R_inner^2)
+        const area_ref_cm2 = PI * (Math.pow(d_ref_calculated / 2, 2) - Math.pow(D_INNER / 2, 2));
+
+        // 4c. Kalibrierfaktor F (Fläche pro Meter)
+        const factor_F = area_ref_cm2 / L_ref_m;
+
+        // --- 5. BERECHNUNG AKTUELLER BESTAND ---
+        
+        // 5a. Aktuelle Querschnittsfläche in cm²
+        const area_curr_cm2 = PI * (Math.pow(d_current_calculated / 2, 2) - Math.pow(D_INNER / 2, 2));
+
+        // 5b. Aktuelle Länge in Metern (Länge = Fläche / Faktor F)
+        const L_curr_m = area_curr_cm2 / factor_F;
+
+        // 5c. Aktuelle Stückzahl (Stückzahl = Länge * CPM)
+        let resultCount = Math.floor(L_curr_m * cpm);
+
+        // --- 6. AUSGABE ---
+        elOutputRefD.innerText = d_ref_calculated.toFixed(1) + ' cm';
+        elOutputCurrD.innerText = d_current_calculated.toFixed(1) + ' cm';
+        elOutputFactorF.innerText = factor_F.toFixed(4) + ' cm²/m';
+        
+        elResultVal.innerText = resultCount.toLocaleString('de-DE');
+        elResultBox.style.display = 'block';
+    }
+
+    function showError(msg) {
+        const elError = document.getElementById('errorBox');
+        elError.innerText = msg;
+        elError.style.display = 'block';
+    }
+
+    // Initialisierung beim Laden
+    window.onload = function() {
+        setSpoolSize(D_MAX_76);
+    };
+</script>
+</section>
+
+<script>
+  const bS=document.getElementById("tabBtnStrom"), bZ=document.getElementById("tabBtnZeit"), bSp=document.getElementById("tabBtnSpule");
+  const pS=document.getElementById("tab-strom"), pZ=document.getElementById("tab-zeit"), pSp=document.getElementById("tab-spule");
+  function activate(t){
+    bS.classList.remove("active"); bZ.classList.remove("active"); bSp.classList.remove("active");
+    pS.classList.remove("active"); pZ.classList.remove("active"); pSp.classList.remove("active");
+    if(t==="strom"){bS.classList.add("active");pS.classList.add("active");}
+    else if(t==="zeit"){bZ.classList.add("active");pZ.classList.add("active");}
+    else{bSp.classList.add("active");pSp.classList.add("active");}
+  }
+  bS.addEventListener("click",()=>activate("strom"));
+  bZ.addEventListener("click",()=>activate("zeit"));
+  bSp.addEventListener("click",()=>activate("spule"));
+</script>
+</body>
+</html>
