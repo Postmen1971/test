@@ -1,1 +1,61 @@
-
+{
+  "generated_at": "2026-08-22T19:45:00Z",
+  "generated_at_display": "22.08.2026 21:45",
+  "sources_checked": 12,
+  "items": [
+    {
+      "id": "seed-luce-20260115",
+      "title": "AAVantgarde Completes Enrollment in LUCE-1 Phase 1/2 Clinical Trial of AAVB-081 for Usher Syndrome Type 1B",
+      "title_de": "AAVantgarde schließt die Rekrutierung der LUCE-1-Phase-1/2-Studie zu AAVB-081 für Usher 1B ab",
+      "summary_de": "AAVantgarde meldete am 15. Januar 2026 den Abschluss der Rekrutierung von LUCE-1. Die Studie untersucht AAVB-081 als Dual-AAV-Gentherapie gegen MYO7A-bedingte Usher-1B-Retinitis pigmentosa.",
+      "why_relevant": "Das ist ein wichtiger klinischer Meilenstein; weitere Updates wurden für 2026 angekündigt.",
+      "url": "https://www.aavantgarde.com/en/news/aavantgarde-completes-enrollment-in-luce-1-phase-12-clinical-trial-of-aavb-081-for-usher-syndrome-type-b-associated-retinitis-pigmentosa/",
+      "source": "AAVantgarde",
+      "country": "Italien",
+      "published": "2026-01-15",
+      "published_display": "15.01.2026",
+      "topic": "usher",
+      "category": "aavantgarde",
+      "evidence": "Früh",
+      "evidence_key": "frueh",
+      "study_phase": "Phase 1/2",
+      "priority": 100
+    },
+    {
+      "id": "seed-clinicaltrials-usher",
+      "title": "Study of Subretinally Injected AAVB-081 in Patients With Usher Syndrome Type 1B Retinitis Pigmentosa",
+      "title_de": "Studie zu subretinal injiziertem AAVB-081 bei Usher-1B-Retinitis pigmentosa",
+      "summary_de": "ClinicalTrials.gov führt die Studie NCT06591793. Ziel ist die Untersuchung von Sicherheit und Verträglichkeit einer einmaligen subretinalen AAVB-081-Injektion.",
+      "why_relevant": "Direkte Primärquelle für den klinischen Studienstatus.",
+      "url": "https://clinicaltrials.gov/study/NCT06591793",
+      "source": "ClinicalTrials.gov",
+      "country": "USA",
+      "published": "",
+      "published_display": "",
+      "topic": "usher",
+      "category": "clinicaltrial",
+      "evidence": "Früh",
+      "evidence_key": "frueh",
+      "study_phase": "Phase 1/2",
+      "priority": 95
+    },
+    {
+      "id": "seed-cgm-20260514",
+      "title": "CGM verbessert Blutzuckerkontrolle auch unter moderner Typ-2-Diabetes-Therapie",
+      "title_de": "CGM verbessert die Blutzuckerkontrolle auch unter moderner Typ-2-Diabetes-Therapie",
+      "summary_de": "Eine 2026 veröffentlichte randomisierte Studie berichtet einen Nutzen von kontinuierlichem Glukosemonitoring bei Menschen mit Typ-2-Diabetes unter Basalinsulin und modernen Antidiabetika.",
+      "why_relevant": "Das ist klinische Evidenz dafür, dass CGM auch bei bestimmten Typ-2-Diabetes-Konstellationen einen Nutzen haben kann.",
+      "url": "https://www.aerzteblatt.de/news/cgm-verbessert-blutzuckerkontrolle-auch-unter-moderner-typ-2-diabetes-therapie-45e17e4e-1183-4e22-9378-04177f5c9a28",
+      "source": "Deutsches Ärzteblatt",
+      "country": "Deutschland",
+      "published": "2026-05-14",
+      "published_display": "14.05.2026",
+      "topic": "diabetes",
+      "category": "cgm",
+      "evidence": "Interessant",
+      "evidence_key": "interessant",
+      "study_phase": "randomisierte Studie",
+      "priority": 70
+    }
+  ]
+}
