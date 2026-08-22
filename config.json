@@ -1,0 +1,20 @@
+{
+  "project": "Gesundheits- & Forschungsmonitor",
+  "regions": ["Deutschland","China","USA","Europa","Japan","Südkorea","Australien","weltweit"],
+  "usher": {
+    "priority": ["LUCE-1","AAVB-081","AAVantgarde","MYO7A","USH1B","Tübingen"],
+    "keywords": ["Usher 1B","USH1B","MYO7A","LUCE-1","AAVB-081","gene therapy","dual AAV","CRISPR","gene editing","retinitis pigmentosa"]
+  },
+  "diabetes": {
+    "priority": ["Typ-2-Diabetes","CGM","rtCGM","AOK Baden-Württemberg","Göppingen","Plochingen","Esslingen"],
+    "keywords": ["type 2 diabetes","Diabetes Typ 2","GLP-1","GIP","retatrutide","CGM","rtCGM","gene therapy","gene editing","AAV"]
+  },
+  "evidence": {
+    "stark": "Belastbare Human- oder große randomisierte Daten",
+    "interessant": "Gute erste klinische Daten",
+    "frueh": "Kleine oder frühe klinische Studie",
+    "praeklinisch": "Zell- oder Tiermodell",
+    "ansatz": "Noch keine belastbare Wirksamkeit beim Menschen",
+    "vorsicht": "Unklare Quelle, Marketing oder widersprüchliche Daten"
+  }
+}
