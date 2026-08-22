@@ -1,1 +1,902 @@
-gg
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Gesundheits- & Forschungsmonitor</title>
+
+<style>
+:root{
+  --bg:#f4f6f8;
+  --card:#fff;
+  --text:#17202a;
+  --muted:#68737e;
+  --line:#e1e6eb;
+  --dark:#111827;
+  --blue:#315efb;
+  --red:#b42318;
+  --green:#18794e;
+  --orange:#b54708;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+}
+
+.app{
+  max-width:780px;
+  margin:auto;
+  padding:15px 14px 42px;
+}
+
+header{
+  background:var(--dark);
+  color:#fff;
+  border-radius:22px;
+  padding:20px;
+  margin-bottom:14px;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.date{
+  font-size:13px;
+  opacity:.68;
+}
+
+h1{
+  font-size:25px;
+  margin:4px 0 5px;
+}
+
+.sub{
+  font-size:14px;
+  line-height:1.45;
+  opacity:.78;
+}
+
+.status{
+  font-size:12px;
+  background:#193b2b;
+  color:#b8f0d1;
+  border-radius:999px;
+  padding:7px 10px;
+  white-space:nowrap;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+  margin-top:17px;
+}
+
+.stat{
+  background:#1d2635;
+  border-radius:13px;
+  padding:11px;
+}
+
+.stat b{
+  display:block;
+  font-size:23px;
+}
+
+.stat span{
+  font-size:11px;
+  opacity:.68;
+}
+
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin:14px 0;
+}
+
+.tab{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:13px;
+  font-weight:750;
+  text-align:left;
+  cursor:pointer;
+}
+
+.tab.active{
+  border-color:var(--blue);
+  box-shadow:0 0 0 2px #e8edff;
+}
+
+.tab small{
+  display:block;
+  color:var(--muted);
+  font-weight:500;
+  margin-top:3px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:16px;
+  margin-bottom:12px;
+}
+
+.section{
+  font-size:15px;
+  font-weight:800;
+  margin:19px 2px 9px;
+}
+
+.item{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  margin-top:9px;
+}
+
+.item.red{
+  border-left:4px solid var(--red);
+}
+
+.item.blue{
+  border-left:4px solid var(--blue);
+}
+
+.item.green{
+  border-left:4px solid var(--green);
+}
+
+.item.orange{
+  border-left:4px solid var(--orange);
+}
+
+.badge{
+  display:inline-block;
+  background:#eef1f5;
+  color:#46515d;
+  border-radius:7px;
+  padding:5px 8px;
+  font-size:11px;
+  font-weight:800;
+}
+
+.badge.red{
+  background:#fdecec;
+  color:var(--red);
+}
+
+.badge.green{
+  background:#e9f7ef;
+  color:var(--green);
+}
+
+.badge.blue{
+  background:#edf2ff;
+  color:#2949b7;
+}
+
+h2{
+  font-size:18px;
+  margin:0 0 5px;
+}
+
+h3{
+  font-size:16px;
+  margin:7px 0 4px;
+}
+
+p{
+  font-size:14px;
+  line-height:1.5;
+  color:#4f5b67;
+  margin:6px 0;
+}
+
+.source{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:9px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:10px 12px;
+  font-weight:750;
+  cursor:pointer;
+}
+
+.primary{
+  background:var(--blue);
+  color:#fff;
+}
+
+.secondary{
+  background:#eef1f5;
+  color:#26313b;
+}
+
+.notice{
+  background:#f8fafc;
+  border:1px dashed #cbd3dc;
+  border-radius:13px;
+  padding:13px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+
+.hidden{
+  display:none;
+}
+
+.search{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.search input{
+  flex:1;
+  min-width:0;
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:11px;
+  font-size:16px;
+}
+
+footer{
+  text-align:center;
+  color:#7c8792;
+  font-size:11px;
+  margin-top:20px;
+  line-height:1.5;
+}
+
+@media(max-width:520px){
+
+  .top{
+    flex-direction:column;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .stats .stat:last-child{
+    grid-column:1/-1;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="app">
+
+<header>
+
+<div class="top">
+
+<div>
+
+<div class="date" id="date"></div>
+
+<h1>
+🧬 Gesundheits- & Forschungsmonitor
+</h1>
+
+<div class="sub">
+Weltweite Forschung, neue Therapien und konkrete Versorgung – verständlich und mit Evidenz bewertet.
+</div>
+
+</div>
+
+<div class="status">
+● Heute geprüft
+</div>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+<b>2</b>
+<span>Hauptbereiche</span>
+</div>
+
+<div class="stat">
+<b>🌍</b>
+<span>weltweit</span>
+</div>
+
+<div class="stat">
+<b>✓</b>
+<span>Evidenz-Check</span>
+</div>
+
+</div>
+
+</header>
+
+
+<!-- HAUPTBEREICHE -->
+
+<div class="tabs">
+
+<button class="tab active" data-tab="usher">
+
+🧬 USHER 1B
+
+<small>
+Gentherapie · MYO7A · LUCE-1
+</small>
+
+</button>
+
+
+<button class="tab" data-tab="diabetes">
+
+🩸 DIABETES TYP 2
+
+<small>
+Forschung · Medikamente · Versorgung
+</small>
+
+</button>
+
+</div>
+
+
+
+<!-- ========================= -->
+<!-- USHER 1B -->
+<!-- ========================= -->
+
+<section id="usher">
+
+<div class="section">
+🔴 Besonders wichtig
+</div>
+
+
+<div class="card">
+
+<div class="item red">
+
+<span class="badge red">
+LUCE-1 · AAVB-081
+</span>
+
+<h3>
+Klinische Gentherapie für USH1B
+</h3>
+
+<p>
+Der Monitor verfolgt AAVantgarde, LUCE-1/AAVB-081,
+neue Patientendaten, Sicherheit, Wirksamkeit,
+Studienstatus und Veröffentlichungen.
+</p>
+
+<div class="source">
+Priorität: sehr hoch · Originalquelle wird künftig automatisch verknüpft
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="section">
+🇩🇪 Tübingen – Auge & Ohr
+</div>
+
+
+<div class="card">
+
+<div class="item blue">
+
+<span class="badge blue">
+UNIVERSITÄTSKLINIKUM TÜBINGEN
+</span>
+
+<h3>
+Augenklinik · HNO · ZSE
+</h3>
+
+<p>
+Überwacht werden erbliche Netzhautdegenerationen,
+Usher-Syndrom, kombinierte Seh- und Hörbehinderungen,
+Studien und Therapieforschung.
+</p>
+
+<div class="source">
+Augenklinik · HNO · Zentrum für seltene Erkrankungen
+</div>
+
+<div class="actions">
+
+<button
+class="primary"
+data-url="https://www.medizin.uni-tuebingen.de/de/das-klinikum/einrichtungen/kliniken/augenklinik/ambulanzen-sprechstunden/erbliche-netzhautdegenerationen">
+Tübingen öffnen
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="section">
+🌏 Weltweite Forschung
+</div>
+
+
+<div class="card">
+
+<div class="item">
+
+<span class="badge">
+GLOBAL
+</span>
+
+<h3>
+USA · China · Europa · Japan · Korea · Australien
+</h3>
+
+<p>
+Gesucht werden wissenschaftliche Publikationen,
+Studien, Gentherapie, Dual-AAV, Gen-Editing und
+relevante Entwicklungen – nicht nur unter dem Begriff
+„Usher 1B“, sondern auch unter MYO7A und verwandten
+Forschungsbegriffen.
+</p>
+
+</div>
+
+
+<div class="item">
+
+<span class="badge">
+🇨🇳 CHINA
+</span>
+
+<h3>
+Chinesische Quellen ausdrücklich eingeschlossen
+</h3>
+
+<p>
+Chinesische Universitäten, Kliniken, Forschungsgruppen,
+Biotech-Unternehmen, Studien und wissenschaftliche
+Veröffentlichungen werden berücksichtigt und für die
+App ins Deutsche zusammengefasst.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- DIABETES -->
+<!-- ========================= -->
+
+<section id="diabetes" class="hidden">
+
+
+<div class="section">
+🔴 Besonders wichtig
+</div>
+
+
+<div class="card">
+
+<div class="item red">
+
+<span class="badge red">
+DIABETES TYP 2
+</span>
+
+<h3>
+Neue Medikamente & Therapien
+</h3>
+
+<p>
+Überwacht werden neue Wirkstoffe, GLP-1/GIP/
+Triple-Agonisten, Insulinstrategien,
+Betazell-Regeneration, Gentherapie, AAV,
+Gen-Editing und klinische Studien.
+</p>
+
+<div class="source">
+Bewertung nach Studienphase und Qualität der Evidenz
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="section">
+🏥 Krankenkasse & Versorgung
+</div>
+
+
+<div class="card">
+
+<div class="item green">
+
+<span class="badge green">
+AOK BADEN-WÜRTTEMBERG
+</span>
+
+<h3>
+Was kann ich tatsächlich bekommen?
+</h3>
+
+<p>
+Der Monitor soll neue oder geänderte AOK-Leistungen
+für Diabetes erkennen: CGM/rtCGM, Messsysteme,
+Hilfsmittel, Schulungen, DMP, digitale Angebote,
+Versorgungsverträge und Genehmigungsregeln.
+</p>
+
+<div class="source">
+Wichtig: Leistungen und Voraussetzungen können sich ändern
+und werden deshalb mit Datum und Originalquelle gespeichert.
+</div>
+
+
+<div class="actions">
+
+<button
+class="primary"
+data-url="https://www.aok.de/pk/bw/">
+AOK Baden-Württemberg
+</button>
+
+
+<button
+class="secondary"
+data-url="https://www.aok.de/pk/leistungen/hilfsmittel/kontinuierliche-glukosemessung-rtcgm/">
+CGM-Info
+</button>
+
+</div>
+
+</div>
+
+
+
+<div class="item blue">
+
+<span class="badge blue">
+REGIONAL
+</span>
+
+<h3>
+Göppingen · Plochingen · Esslingen
+</h3>
+
+<p>
+Zusätzlich soll die App regionale Versorgungsangebote,
+Facharztprogramme, Verträge und relevante Einrichtungen
+im Raum Landkreis Göppingen und Landkreis Esslingen
+beobachten.
+</p>
+
+</div>
+
+</div>
+
+
+
+<div class="section">
+⭐ „Hat das wirklich Hand und Fuß?“
+</div>
+
+
+<div class="card">
+
+<div class="item">
+
+<h3>
+Evidenzbewertung
+</h3>
+
+<p>
+<b>🟢 Stark:</b>
+belastbare Human- oder große randomisierte Daten
+</p>
+
+<p>
+<b>🟡 Interessant:</b>
+gute erste klinische Daten
+</p>
+
+<p>
+<b>🟠 Früh:</b>
+kleine/Frühphasen-Studie
+</p>
+
+<p>
+<b>🔵 Präklinisch:</b>
+Zell- oder Tiermodell
+</p>
+
+<p>
+<b>⚪ Forschungsansatz:</b>
+noch keine belastbare Wirksamkeit beim Menschen
+</p>
+
+<p>
+<b>🔴 Vorsicht:</b>
+Marketing, unklare Quelle oder widersprüchliche Daten
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- TAGESSTATUS -->
+
+<div class="section">
+📌 Tagesstatus
+</div>
+
+
+<div class="card">
+
+<div class="notice" id="status">
+
+Heute wurden noch keine Live-Daten in diese HTML-Datei geladen.
+In der endgültigen Version wird hier automatisch angezeigt,
+was seit dem letzten Lauf neu ist.
+
+</div>
+
+</div>
+
+
+
+<!-- SUCHE -->
+
+<div class="section">
+🔎 Suche
+</div>
+
+
+<div class="card">
+
+<div class="search">
+
+<input
+id="q"
+placeholder="z. B. MYO7A, CGM, AOK, Retatrutide"
+>
+
+<button
+class="primary"
+id="go">
+Suchen
+</button>
+
+</div>
+
+<p id="result"></p>
+
+</div>
+
+
+
+<footer>
+
+Prototyp – modernes, bewusst schlichtes Design.<br>
+
+Die nächste technische Stufe ist die automatische
+weltweite Recherche, Duplikaterkennung, Quellenprüfung,
+Evidenzbewertung und tägliche Aktualisierung.
+
+</footer>
+
+</main>
+
+
+
+<script>
+
+(function(){
+
+/* =========================
+   DATUM
+   ========================= */
+
+const date = new Date();
+
+document.getElementById("date").textContent =
+date.toLocaleDateString(
+"de-DE",
+{
+weekday:"long",
+day:"2-digit",
+month:"long",
+year:"numeric"
+}
+);
+
+
+
+/* =========================
+   TAB-SYSTEM
+   ========================= */
+
+const tabs =
+document.querySelectorAll(".tab");
+
+const sections = {
+
+usher:
+document.getElementById("usher"),
+
+diabetes:
+document.getElementById("diabetes")
+
+};
+
+
+tabs.forEach(function(tab){
+
+tab.addEventListener("click",function(){
+
+tabs.forEach(function(item){
+
+item.classList.remove("active");
+
+});
+
+
+tab.classList.add("active");
+
+
+Object.keys(sections).forEach(function(key){
+
+sections[key].classList.toggle(
+"hidden",
+key !== tab.dataset.tab
+);
+
+});
+
+});
+
+});
+
+
+
+/* =========================
+   EXTERNE LINKS
+   ========================= */
+
+document
+.querySelectorAll("[data-url]")
+.forEach(function(button){
+
+button.addEventListener(
+"click",
+function(){
+
+window.open(
+button.dataset.url,
+"_blank",
+"noopener"
+);
+
+});
+
+});
+
+
+
+/* =========================
+   SUCHFUNKTION
+   ========================= */
+
+document
+.getElementById("go")
+.addEventListener("click",function(){
+
+const q =
+document.getElementById("q")
+.value
+.trim();
+
+const result =
+document.getElementById("result");
+
+
+if(!q){
+
+result.textContent =
+"Bitte Suchbegriff eingeben.";
+
+return;
+
+}
+
+
+result.textContent =
+"„" +
+q +
+"“ ist als Suchbegriff vorgemerkt. " +
+"Die Live-Websuche wird im Backend der endgültigen Version ausgeführt.";
+
+});
+
+
+
+/* ENTER IM SUCHFELD */
+
+document
+.getElementById("q")
+.addEventListener("keydown",function(event){
+
+if(event.key === "Enter"){
+
+document
+.getElementById("go")
+.click();
+
+}
+
+});
+
+
+})();
+
+</script>
+
+</body>
+</html>
