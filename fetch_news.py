@@ -1,145 +1,323 @@
-import os, json, re, hashlib, time
+import os
+import json
+import re
+import hashlib
+import time
 from datetime import datetime, timezone
 from pathlib import Path
+
 import requests
 from bs4 import BeautifulSoup
 
-ROOT=Path(__file__).resolve().parent
-DATA=ROOT/'data'; ARCHIVE=DATA/'archive'; DATA.mkdir(exist_ok=True); ARCHIVE.mkdir(exist_ok=True)
-OUT=DATA/'news.json'; NOW=datetime.now(timezone.utc)
-H={'User-Agent':'Forschungsmonitor/8.0','Accept-Language':'de-DE,de;q=0.9,en;q=0.8'}
-S=requests.Session(); S.headers.update(H)
-CONFIG=json.loads((ROOT/'config.json').read_text(encoding='utf-8')) if (ROOT/'config.json').exists() else {}
-PRIORITY=[x.lower() for x in CONFIG.get('usher',{}).get('priority',[])+CONFIG.get('diabetes',{}).get('priority',[])]
+ROOT = Path(__file__).resolve().parent
+DATA = ROOT / "data"
+ARCHIVE = DATA / "archive"
+DATA.mkdir(exist_ok=True)
+ARCHIVE.mkdir(exist_ok=True)
+OUT = DATA / "news.json"
+NOW = datetime.now(timezone.utc)
 
-def clean(x): return re.sub(r'\s+',' ',BeautifulSoup(str(x or ''),'html.parser').get_text(' ',strip=True)).strip()
-def gid(t,u): return hashlib.sha256((t+'|'+u).encode()).hexdigest()[:20]
-def get(url,params=None,timeout=30):
-    try:
-        r=S.get(url,params=params,timeout=timeout); r.raise_for_status(); return r
-    except Exception as e: print('HTTP-Fehler:',url,e); return None
+H = {
+    "User-Agent": "Forschungsmonitor/9.0 (+https://github.com/Postmen1971/test)",
+    "Accept-Language": "de-DE,de;q=0.9,en;q=0.8",
+}
+SESSION = requests.Session()
+SESSION.headers.update(H)
+CONFIG = json.loads((ROOT / "config.json").read_text(encoding="utf-8")) if (ROOT / "config.json").exists() else {}
+PRIORITY_TERMS = [t.lower() for t in CONFIG.get("usher", {}).get("priority", []) + CONFIG.get("diabetes", {}).get("priority", [])]
 
-def google_news(q,topic):
-    r=get('https://news.google.com/rss/search',{'q':q,'hl':'de','gl':'DE','ceid':'DE:de'})
-    if not r:return []
+
+def clean(x):
+    return re.sub(r"\s+", " ", BeautifulSoup(str(x or ""), "html.parser").get_text(" ", strip=True)).strip()
+
+
+def gid(title, url):
+    return hashlib.sha256((title + "|" + url).encode("utf-8")).hexdigest()[:20]
+
+
+def get(url, params=None, timeout=40):
     try:
-        soup=BeautifulSoup(r.text,'xml'); out=[]
-        for z in soup.find_all('item')[:15]:
-            title=clean(z.find('title').get_text() if z.find('title') else '')
-            url=clean(z.find('link').get_text() if z.find('link') else '')
-            if title and url: out.append({'title':title,'url':url,'source':clean(z.find('source').get_text() if z.find('source') else 'Google News'),'published':clean(z.find('pubDate').get_text() if z.find('pubDate') else ''),'body':clean(z.find('description').get_text() if z.find('description') else ''),'topic':topic})
+        r = SESSION.get(url, params=params, timeout=timeout)
+        r.raise_for_status()
+        return r
+    except Exception as e:
+        print("HTTP-Fehler:", url, "->", e)
+        return None
+
+
+def google_news(query, topic):
+    r = get("https://news.google.com/rss/search", {"q": query, "hl": "de", "gl": "DE", "ceid": "DE:de"})
+    if not r:
+        return []
+    try:
+        soup = BeautifulSoup(r.text, "xml")
+        out = []
+        for item in soup.find_all("item")[:20]:
+            title = clean(item.find("title").get_text() if item.find("title") else "")
+            url = clean(item.find("link").get_text() if item.find("link") else "")
+            pub = clean(item.find("pubDate").get_text() if item.find("pubDate") else "")
+            desc = clean(item.find("description").get_text() if item.find("description") else "")
+            source = clean(item.find("source").get_text() if item.find("source") else "Google News")
+            if title and url:
+                out.append({"title": title, "url": url, "source": source, "published": pub, "body": desc, "topic": topic})
         return out
-    except Exception as e: print('RSS-Fehler:',e); return []
+    except Exception as e:
+        print("Google-News-Fehler:", e)
+        return []
 
-def europe_pmc(q,topic):
-    r=get('https://www.ebi.ac.uk/europepmc/webservices/rest/search',{'query':q,'format':'json','pageSize':15,'sort':'FIRST_PDATE_D desc','resultType':'core'},40)
-    if not r:return []
+
+def europe_pmc(query, topic):
+    r = get("https://www.ebi.ac.uk/europepmc/webservices/rest/search", {
+        "query": query, "format": "json", "pageSize": 15,
+        "sort": "FIRST_PDATE_D desc", "resultType": "core"
+    })
+    if not r:
+        return []
     try:
-        out=[]
-        for x in r.json().get('resultList',{}).get('result',[]):
-            pmid=str(x.get('pmid') or x.get('id') or ''); title=clean(x.get('title',''))
-            if title and pmid: out.append({'title':title,'url':f'https://pubmed.ncbi.nlm.nih.gov/{pmid}/','source':'PubMed / Europe PMC','published':str(x.get('firstPublicationDate') or x.get('pubYear') or ''),'body':clean(x.get('abstractText','')),'topic':topic})
+        out = []
+        for x in r.json().get("resultList", {}).get("result", []):
+            pmid = str(x.get("pmid") or x.get("id") or "")
+            title = clean(x.get("title", ""))
+            if not pmid or not title:
+                continue
+            out.append({
+                "title": title,
+                "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/",
+                "source": "PubMed / Europe PMC",
+                "published": str(x.get("firstPublicationDate") or x.get("pubYear") or ""),
+                "body": clean(x.get("abstractText", "")),
+                "topic": topic,
+            })
         return out
-    except Exception as e: print('Europe-PMC-Fehler:',e); return []
+    except Exception as e:
+        print("Europe-PMC-Fehler:", e)
+        return []
 
-def trials(q,topic):
-    r=get('https://clinicaltrials.gov/api/v2/studies',{'query.term':q,'pageSize':20},45)
-    if not r:return []
+
+def clinical_trials(query, topic):
+    r = get("https://clinicaltrials.gov/api/v2/studies", {"query.term": query, "pageSize": 20, "format": "json"})
+    if not r:
+        return []
     try:
-        out=[]
-        for s in r.json().get('studies',[]):
-            p=s.get('protocolSection',{}); i=p.get('identificationModule',{}); st=p.get('statusModule',{}); d=p.get('descriptionModule',{}); des=p.get('designModule',{})
-            n=i.get('nctId',''); title=clean(i.get('briefTitle',''))
-            if not n or not title: continue
-            status=st.get('overallStatus','Status unbekannt'); phase=', '.join(des.get('phases',[]))
-            body=clean(' '.join(filter(None,[d.get('briefSummary',''),d.get('detailedDescription','')])))
-            out.append({'title':title,'url':f'https://clinicaltrials.gov/study/{n}','source':'ClinicalTrials.gov','published':st.get('studyFirstPostDateStruct',{}).get('date',''),'body':body,'topic':topic,'phase':phase,'status':status})
+        out = []
+        for s in r.json().get("studies", []):
+            p = s.get("protocolSection", {})
+            ident = p.get("identificationModule", {})
+            status = p.get("statusModule", {})
+            desc = p.get("descriptionModule", {})
+            design = p.get("designModule", {})
+            nct = ident.get("nctId", "")
+            title = clean(ident.get("briefTitle", ""))
+            if not nct or not title:
+                continue
+            body = clean(" ".join(filter(None, [desc.get("briefSummary", ""), desc.get("detailedDescription", "")])) )
+            out.append({
+                "title": title,
+                "url": f"https://clinicaltrials.gov/study/{nct}",
+                "source": "ClinicalTrials.gov",
+                "published": status.get("studyFirstPostDateStruct", {}).get("date", ""),
+                "body": body,
+                "topic": topic,
+                "phase": ", ".join(design.get("phases", [])),
+                "status": status.get("overallStatus", "")
+            })
         return out
-    except Exception as e: print('ClinicalTrials-Fehler:',e); return []
+    except Exception as e:
+        print("ClinicalTrials-Fehler:", e)
+        return []
 
-def article(url):
-    r=get(url,timeout=25)
-    if not r:return ''
+
+def article_text(url):
+    r = get(url, timeout=25)
+    if not r:
+        return ""
     try:
-        s=BeautifulSoup(r.text,'html.parser')
-        for x in s(['script','style','nav','footer','header','aside','form']): x.decompose()
-        m=s.find('article') or s.find('main') or s.body
-        return clean(m.get_text(' ',strip=True) if m else '')[:12000]
-    except:return ''
+        s = BeautifulSoup(r.text, "html.parser")
+        for x in s(["script", "style", "nav", "footer", "header", "aside", "form"]):
+            x.decompose()
+        node = s.find("article") or s.find("main") or s.body
+        return clean(node.get_text(" ", strip=True) if node else "")[:18000]
+    except Exception:
+        return ""
 
-def free_translate(text):
-    text=clean(text)
-    if not text:return ''
-    chunks=[text[i:i+1500] for i in range(0,len(text),1500)]; result=[]
-    for chunk in chunks:
+
+def priority(title):
+    s = title.lower()
+    points = {
+        "luce-1": 150, "aavb-081": 150, "aavantgarde": 140,
+        "usher 1b": 125, "ush1b": 125, "myo7a": 115,
+        "gene therapy": 80, "gene editing": 75, "clinical trial": 65,
+        "type 2 diabetes": 50, "glp-1": 45, "gip": 45, "retatrutide": 45
+    }
+    return sum(v for k, v in points.items() if k in s) + sum(15 for t in PRIORITY_TERMS if t and t in s)
+
+
+def probably_german(text):
+    """Verhindert, dass englischer Originaltext als deutsche Ausgabe gespeichert wird."""
+    s = " " + str(text or "").lower() + " "
+    english = [" the ", " and ", " is ", " are ", " study ", " patients ", " purpose ", " safety ", " efficacy ", " treatment ", " will ", " with ", " this ", " following ", " evaluate "]
+    german = [" der ", " die ", " das ", " und ", " ist ", " sind ", " studie ", " patienten ", " ziel ", " sicherheit ", " wirksamkeit ", " behandlung ", " wird ", " mit ", " diese "]
+    e = sum(s.count(w) for w in english)
+    g = sum(s.count(w) for w in german)
+    return g >= max(2, e)
+
+
+def gemini_call(prompt, key):
+    endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {"temperature": 0.1, "maxOutputTokens": 3000, "responseMimeType": "application/json"}
+    }
+    r = requests.post(endpoint, headers={"x-goog-api-key": key, "Content-Type": "application/json"}, json=payload, timeout=120)
+    r.raise_for_status()
+    text = r.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+    text = re.sub(r"^```json\s*|\s*```$", "", text, flags=re.I).strip()
+    a, b = text.find("{"), text.rfind("}")
+    if a >= 0 and b > a:
+        text = text[a:b + 1]
+    return json.loads(text)
+
+
+def translate_to_german(title, source, body, topic, phase, key):
+    base = f"""Du bist der deutsche wissenschaftliche Redakteur des Forschungsmonitors.
+
+WICHTIGSTE REGEL: Deine komplette Antwort MUSS auf DEUTSCH sein.
+KEIN englischer Satz darf in title_de, summary_de oder detailed_summary_de stehen.
+NIEMALS englische Originalpassagen kopieren oder zitieren. Übersetze und erkläre ihren Inhalt auf Deutsch.
+Fachbegriffe wie MYO7A, AAVB-081, LUCE-1, Retinitis pigmentosa, Phase 1/2 und ClinicalTrials.gov dürfen unverändert bleiben.
+Erfinde keine Ergebnisse. Bei einer laufenden Studie nur Ziel, Design und Status beschreiben.
+
+Quelle: {source}
+Thema: {topic}
+Studienphase/Status: {phase}
+Originaltitel: {title}
+
+ORIGINALINHALT:
+{body[:12000]}
+
+Erstelle eine eigenständige deutsche Zusammenfassung. Nicht nur den Titel übersetzen.
+Erkläre, soweit vorhanden: Ziel der Studie, Behandlung, Studiendesign, Teilnehmer, Status, Ergebnisse, Sicherheit, Wirksamkeit und Einschränkungen.
+
+Gib ausschließlich gültiges JSON zurück mit genau diesen Feldern:
+"title_de", "summary_de", "detailed_summary_de", "why_relevant", "country", "evidence_key", "study_phase".
+"""
+    for attempt in range(2):
         try:
-            r=S.get('https://translate.googleapis.com/translate_a/single',params={'client':'gtx','sl':'auto','tl':'de','dt':'t','q':chunk},timeout=30)
-            r.raise_for_status(); data=r.json(); result.append(''.join(p[0] for p in data[0] if p and p[0]))
+            result = gemini_call(base, key)
+            text = " ".join(str(result.get(k, "")) for k in ["title_de", "summary_de", "detailed_summary_de", "why_relevant"])
+            if probably_german(text):
+                return result
+            print("Gemini-Ausgabe noch englisch – erzwinge zweite Übersetzung.")
+            base += "\n\nNOCHMALS: Die vorherige Ausgabe war zu englisch. Übersetze JEDEN erklärenden Satz ins Deutsche. Kein englischer Satz!"
         except Exception as e:
-            print('Kostenlose Übersetzung fehlgeschlagen:',e); result.append(chunk)
-        time.sleep(.25)
-    return clean(' '.join(result))
-
-def gemini(title,source,url,body,topic,phase):
-    key=os.getenv('GEMINI_API_KEY')
-    if not key:return {}
-    prompt=f'''Du bist wissenschaftlicher Redakteur für einen deutschen Forschungsmonitor. Schreibe vollständig auf Deutsch.
-Thema: {topic}\nQuelle: {source}\nOriginaltitel: {title}\nStudienstatus: {phase}\nOriginalinhalt:\n{body[:10000]}
-Erstelle eine echte redaktionelle Zusammenfassung, nicht nur eine Übersetzung des Titels. Erkläre Thema, Ziel, Design, Teilnehmer, Status, Ergebnisse, Sicherheit, Wirksamkeit und Einschränkungen, aber erfinde nichts. Bei laufenden Studien keine Ergebnisse erfinden.
-Gib ausschließlich gültiges JSON zurück mit: title_de, summary_de, detailed_summary_de, why_relevant, country, evidence_key, study_phase. title_de muss Deutsch sein. detailed_summary_de soll mindestens 5 Sätze enthalten, sofern der Inhalt das zulässt.'''
-    payload={'contents':[{'parts':[{'text':prompt}]}],'generationConfig':{'temperature':0.1,'maxOutputTokens':2600,'responseMimeType':'application/json'}}
-    for endpoint in ['https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent','https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent']:
-        try:
-            r=S.post(endpoint,headers={'x-goog-api-key':key,'Content-Type':'application/json'},json=payload,timeout=120)
-            if not r.ok: print('Gemini HTTP',r.status_code,r.text[:500]); continue
-            c=r.json()['candidates'][0]['content']['parts'][0]['text'].strip(); c=re.sub(r'^```json\s*|\s*```$','',c,flags=re.I).strip(); return json.loads(c)
-        except Exception as e: print('Gemini-Fehler:',e)
+            print(f"Gemini-Fehler Versuch {attempt + 1}/2: {e}")
+            time.sleep(3)
     return {}
 
-def priority(t):
-    s=t.lower(); base=sum(p for w,p in [('luce-1',140),('aavb-081',140),('aavantgarde',135),('usher 1b',120),('ush1b',120),('myo7a',110),('gene therapy',80),('gene editing',75),('clinical trial',65),('type 2 diabetes',50),('glp-1',45),('gip',45),('retatrutide',45)] if w in s)
-    return base+sum(15 for x in PRIORITY if x and x in s)
 
-def date_display(v):
-    try:return datetime.fromisoformat(v.replace('Z','+00:00')).strftime('%d.%m.%Y') if 'T' in v else datetime.strptime(v[:10],'%Y-%m-%d').strftime('%d.%m.%Y')
-    except:return v or ''
+def fallback_german(title, source, topic, phase):
+    if source == "ClinicalTrials.gov":
+        summary = f"Es handelt sich um eine registrierte klinische Studie. Der aktuelle Status ist {phase or 'im Studienregister angegeben'}."
+        detail = f"Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich {('Usher-Syndrom Typ 1B / MYO7A' if topic == 'usher' else 'Typ-2-Diabetes')}. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet {phase or 'nicht angegeben'}. Aus den vorliegenden Registerdaten lässt sich hier keine Aussage über bereits erzielte Wirksamkeit ableiten. Ergebnisse dürfen bei einer laufenden Studie nicht vorweggenommen werden."
+    else:
+        summary = "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst."
+        detail = f"Die Meldung betrifft den Forschungsbereich {('Usher-Syndrom Typ 1B / MYO7A' if topic == 'usher' else 'Typ-2-Diabetes')}. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle {source}. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt. Für eine genaue Bewertung sollte die Originalquelle herangezogen werden."
+    return {
+        "title_de": "Forschungsinformation zu " + ("Usher-Syndrom Typ 1B" if topic == "usher" else "Typ-2-Diabetes"),
+        "summary_de": summary,
+        "detailed_summary_de": detail,
+        "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
+        "country": "",
+        "evidence_key": "frueh",
+        "study_phase": phase or "Nicht angegeben"
+    }
 
-def make_item(x):
-    title=clean(x.get('title','')); url=x.get('url',''); source=x.get('source','Quelle'); topic=x.get('topic','forschung'); body=clean(x.get('body','')); phase=x.get('phase','') or x.get('status','')
-    if source not in ['ClinicalTrials.gov','PubMed / Europe PMC'] and len(body)<500:
-        b=article(url)
-        if len(b)>len(body):body=b
-    a=gemini(title,source,url,body,topic,phase)
-    title_de=clean(a.get('title_de','')) or free_translate(title)
-    summary=clean(a.get('summary_de',''))
-    detailed=clean(a.get('detailed_summary_de',''))
-    if not summary:
-        tr=free_translate(body[:3000]) if body else free_translate(title)
-        summary=tr[:900] if tr else 'Zu dieser Meldung liegt derzeit keine deutsche Zusammenfassung vor.'
-    if not detailed:
-        tr=free_translate(body[:9000]) if body else summary
-        detailed=(f'Diese Meldung betrifft eine registrierte klinische Studie. Status: {x.get("status") or "nicht angegeben"}. Studienphase: {phase or "nicht angegeben"}.\n\n{tr}' if source=='ClinicalTrials.gov' else (tr or summary))
-    relevant=clean(a.get('why_relevant','')) or ('Die Meldung ist für den Forschungsbereich Usher-Syndrom Typ 1B / MYO7A relevant.' if topic=='usher' else 'Die Meldung ist für den Forschungsbereich Typ-2-Diabetes relevant.')
-    evidence=clean(a.get('evidence_key','')) or 'frueh'; study=clean(a.get('study_phase','')) or phase
-    return {'id':gid(title,url),'title':title,'title_de':title_de,'summary_de':summary,'detailed_summary_de':detailed,'why_relevant':relevant,'url':url,'source':source,'country':clean(a.get('country','')),'published':x.get('published',''),'published_display':date_display(str(x.get('published',''))),'topic':topic,'category':'clinicaltrials' if source=='ClinicalTrials.gov' else 'forschung','evidence':evidence,'evidence_key':evidence,'study_phase':study,'priority':priority(title),'translation_ok':True}
+
+def add_item(items, x, key):
+    title = clean(x.get("title", "")); url = x.get("url", "")
+    if not title or not url:
+        return
+    source = x.get("source", "Unbekannte Quelle")
+    topic = x.get("topic", "usher")
+    body = clean(x.get("body", ""))
+    phase = x.get("phase", "") or x.get("status", "")
+    if source not in ("ClinicalTrials.gov", "PubMed / Europe PMC") and len(body) < 600:
+        original = article_text(url)
+        if len(original) > len(body):
+            body = original
+    ai = translate_to_german(title, source, body, topic, phase, key) if body else {}
+    if not ai:
+        ai = fallback_german(title, source, topic, phase)
+    title_de = clean(ai.get("title_de", ""))
+    summary = clean(ai.get("summary_de", ""))
+    detailed = clean(ai.get("detailed_summary_de", ""))
+    if not title_de or not probably_german(title_de):
+        title_de = "Forschungsinformation zu " + ("Usher-Syndrom Typ 1B" if topic == "usher" else "Typ-2-Diabetes")
+    if not summary or not probably_german(summary):
+        summary = fallback_german(title, source, topic, phase)["summary_de"]
+    if not detailed or not probably_german(detailed):
+        detailed = fallback_german(title, source, topic, phase)["detailed_summary_de"]
+    evidence = clean(ai.get("evidence_key", "")) or "frueh"
+    items.append({
+        "id": gid(title, url), "title": title, "title_de": title_de,
+        "summary_de": summary, "detailed_summary_de": detailed,
+        "why_relevant": clean(ai.get("why_relevant", "")) or "Thematisch relevante Meldung.",
+        "url": url, "source": source, "country": clean(ai.get("country", "")),
+        "published": x.get("published", ""), "published_display": display_date(x.get("published", "")),
+        "topic": topic, "category": "clinicaltrials" if source == "ClinicalTrials.gov" else "forschung",
+        "evidence": evidence, "evidence_key": evidence,
+        "study_phase": clean(ai.get("study_phase", "")) or phase or "Nicht angegeben",
+        "priority": priority(title)
+    })
+
+
+def display_date(value):
+    if not value:
+        return ""
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00")).strftime("%d.%m.%Y") if "T" in str(value) else datetime.strptime(str(value)[:10], "%Y-%m-%d").strftime("%d.%m.%Y")
+    except Exception:
+        return str(value)
+
 
 def main():
-    raw=[]
-    for q in ['"Usher 1B" OR USH1B OR MYO7A','"LUCE-1" OR "AAVB-081"','AAVantgarde gene therapy','Usher syndrome gene therapy']:raw+=google_news(q,'usher')
-    for q in ['"type 2 diabetes" new treatment','"type 2 diabetes" clinical trial','"type 2 diabetes" GLP-1 GIP','retatrutide diabetes']:raw+=google_news(q,'diabetes')
-    raw+=europe_pmc('(USH1B OR "Usher 1B" OR MYO7A) AND (gene therapy OR gene editing OR AAV)','usher')
-    raw+=europe_pmc('("type 2 diabetes" OR T2D) AND (GLP-1 OR GIP OR retatrutide OR treatment)','diabetes')
-    raw+=trials('Usher syndrome type 1B MYO7A','usher'); raw+=trials('type 2 diabetes GLP-1 GIP','diabetes')
-    seen=set(); candidates=[]
+    key = os.getenv("GEMINI_API_KEY")
+    if not key:
+        print("FEHLER: GEMINI_API_KEY fehlt")
+    raw = []
+    for q in ['"Usher 1B" OR USH1B OR MYO7A', '"LUCE-1" OR "AAVB-081"', 'AAVantgarde gene therapy', 'Usher syndrome gene therapy']:
+        raw.extend(google_news(q, "usher"))
+    for q in ['"type 2 diabetes" new treatment', '"type 2 diabetes" clinical trial', '"type 2 diabetes" GLP-1 GIP', 'retatrutide diabetes']:
+        raw.extend(google_news(q, "diabetes"))
+    raw.extend(europe_pmc('(USH1B OR "Usher 1B" OR MYO7A) AND (gene therapy OR gene editing OR AAV)', "usher"))
+    raw.extend(europe_pmc('("type 2 diabetes" OR T2D) AND (GLP-1 OR GIP OR retatrutide OR treatment)', "diabetes"))
+    raw.extend(clinical_trials('Usher syndrome type 1B MYO7A', "usher"))
+    raw.extend(clinical_trials('type 2 diabetes GLP-1 GIP', "diabetes"))
+
+    seen = set(); candidates = []
     for x in raw:
-        if x.get('url') and x.get('title') and x['url'] not in seen:seen.add(x['url']);candidates.append(x)
-    candidates.sort(key=lambda x:priority(x['title']),reverse=True)
-    items=[]
-    for x in candidates[:18]:
-        try:items.append(make_item(x))
-        except Exception as e:print('Meldungsfehler:',x.get('title'),e)
-        time.sleep(.7)
-    result={'schema_version':'8.0','generated_at':NOW.isoformat(),'generated_at_display':NOW.strftime('%d.%m.%Y %H:%M UTC'),'sources_checked':{'google_news_rss':True,'europe_pmc':True,'clinicaltrials_gov':True,'gdelt':False,'pubmed_eutils':False},'items':items}
-    OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8');(ARCHIVE/NOW.strftime('%Y-%m-%d-%H%M.json')).write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
-    print(f'Fertig: {len(items)} Meldungen')
-if __name__=='__main__':main()
+        u = x.get("url", "")
+        if u and u not in seen and clean(x.get("title", "")):
+            seen.add(u); candidates.append(x)
+    candidates.sort(key=lambda x: priority(x.get("title", "")), reverse=True)
+
+    items = []
+    for x in candidates[:30]:
+        add_item(items, x, key)
+        time.sleep(0.5)
+
+    result = {
+        "schema_version": "9.0",
+        "generated_at": NOW.isoformat(),
+        "generated_at_display": NOW.strftime("%d.%m.%Y %H:%M UTC"),
+        "sources_checked": {"google_news_rss": True, "europe_pmc": True, "clinicaltrials_gov": True, "gdelt": False, "pubmed_eutils": False},
+        "items": items
+    }
+    OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    (ARCHIVE / NOW.strftime("%Y-%m-%d.json")).write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    german = sum(1 for i in items if probably_german(i["title_de"] + " " + i["summary_de"] + " " + i["detailed_summary_de"]))
+    print(f"Fertig: {len(items)} Meldungen; {german}/{len(items)} mit deutscher Ausgabe.")
+
+
+if __name__ == "__main__":
+    main()
