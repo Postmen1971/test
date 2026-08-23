@@ -2,24 +2,19 @@ name: Tägliche Forschungsrecherche
 
 on:
   schedule:
-    # Jeden Tag um 05:00 UTC
-    # = 07:00 Uhr in Deutschland während der Sommerzeit
-    # = 06:00 Uhr während der Winterzeit
-    - cron: "0 5 * * *"
-
-  # Ermöglicht zusätzlich einen manuellen Start
+    - cron: "17 5 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
+  models: read
 
 jobs:
   research:
-    name: Internet-Recherche
+    name: Recherche und deutsche Zusammenfassung
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Repository herunterladen
         uses: actions/checkout@v4
 
@@ -27,30 +22,25 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: "pip"
 
       - name: Abhängigkeiten installieren
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Forschungsrecherche starten
+      - name: Recherche starten
         env:
-          NCBI_EMAIL: ${{ secrets.NCBI_EMAIL }}
-          NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
-        run: |
-          python fetch_news.py
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python fetch_news.py
 
-      - name: Neue Recherche-Ergebnisse speichern
+      - name: Ergebnisse speichern
         run: |
-          git config user.name "Usher-Diabetes Research Bot"
+          git config user.name "Forschungsmonitor Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git add data/news.json data/archive/
-
           if git diff --cached --quiet; then
-            echo "Keine Änderungen gefunden."
+            echo "Keine neuen Änderungen."
           else
-            git commit -m "Automatische tägliche Forschungsrecherche"
+            git commit -m "Automatische Forschungsrecherche"
             git push
           fi
