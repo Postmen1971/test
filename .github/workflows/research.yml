@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  models: read
 
 jobs:
   research:
@@ -30,7 +29,7 @@ jobs:
 
       - name: Recherche starten
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.FORSCHUNGSMONITOR }}
         run: python fetch_news.py
 
       - name: Ergebnisse speichern
