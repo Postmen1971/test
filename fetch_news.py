@@ -18,7 +18,7 @@ OUT = DATA / "news.json"
 NOW = datetime.now(timezone.utc)
 
 H = {
-    "User-Agent": "Forschungsmonitor/9.0 (+https://github.com/Postmen1971/test)",
+    "User-Agent": "Forschungsmonitor/10.0 (+https://github.com/Postmen1971/test)",
     "Accept-Language": "de-DE,de;q=0.9,en;q=0.8",
 }
 SESSION = requests.Session()
@@ -106,11 +106,42 @@ def clinical_trials(query, topic):
             status = p.get("statusModule", {})
             desc = p.get("descriptionModule", {})
             design = p.get("designModule", {})
+            arms = p.get("armsInterventionsModule", {})
+            outcomes = p.get("outcomesModule", {})
+            eligibility = p.get("eligibilityModule", {})
             nct = ident.get("nctId", "")
             title = clean(ident.get("briefTitle", ""))
             if not nct or not title:
                 continue
-            body = clean(" ".join(filter(None, [desc.get("briefSummary", ""), desc.get("detailedDescription", "")])) )
+
+            interventions = []
+            for it in arms.get("interventions", [])[:8]:
+                name = clean(it.get("name", ""))
+                typ = clean(it.get("type", ""))
+                description = clean(it.get("description", ""))
+                if name:
+                    interventions.append(f"{name} ({typ})" + (f": {description}" if description else ""))
+
+            primary_outcomes = []
+            for o in outcomes.get("primaryOutcomes", [])[:8]:
+                name = clean(o.get("measure", ""))
+                time_frame = clean(o.get("timeFrame", ""))
+                if name:
+                    primary_outcomes.append(name + (f"; Zeitraum: {time_frame}" if time_frame else ""))
+
+            body_parts = [
+                desc.get("briefSummary", ""),
+                desc.get("detailedDescription", ""),
+                "Studientyp: " + str(design.get("studyType", "")),
+                "Phasen: " + ", ".join(design.get("phases", [])),
+                "Randomisierung: " + str(design.get("designInfo", {}).get("allocation", "")),
+                "Verblindung: " + str(design.get("designInfo", {}).get("maskingInfo", {}).get("masking", "")),
+                "Geplante Teilnehmerzahl: " + str(design.get("enrollmentInfo", {}).get("count", "")),
+                "Interventionen: " + " | ".join(interventions),
+                "Primäre Endpunkte: " + " | ".join(primary_outcomes),
+                "Teilnahmevoraussetzungen: " + clean(eligibility.get("eligibilityCriteria", "")),
+            ]
+            body = clean(" ".join(x for x in body_parts if x and x not in ("Studientyp: ", "Phasen: ", "Randomisierung: ", "Verblindung: ")))
             out.append({
                 "title": title,
                 "url": f"https://clinicaltrials.gov/study/{nct}",
@@ -153,20 +184,38 @@ def priority(title):
 
 
 def probably_german(text):
-    """Verhindert, dass englischer Originaltext als deutsche Ausgabe gespeichert wird."""
+    """Strenge Prüfung, damit englische Sätze nicht als deutsche Ausgabe durchrutschen."""
     s = " " + str(text or "").lower() + " "
-    english = [" the ", " and ", " is ", " are ", " study ", " patients ", " purpose ", " safety ", " efficacy ", " treatment ", " will ", " with ", " this ", " following ", " evaluate "]
-    german = [" der ", " die ", " das ", " und ", " ist ", " sind ", " studie ", " patienten ", " ziel ", " sicherheit ", " wirksamkeit ", " behandlung ", " wird ", " mit ", " diese "]
+    english = [
+        " the ", " and ", " is ", " are ", " study ", " patients ", " purpose ",
+        " safety ", " efficacy ", " treatment ", " will ", " with ", " this ",
+        " following ", " evaluate ", " single ", " injection ", " administered ",
+        " participants ", " results ", " randomized ", " placebo ", " primary endpoint "
+    ]
+    german = [
+        " der ", " die ", " das ", " und ", " ist ", " sind ", " studie ",
+        " patienten ", " ziel ", " sicherheit ", " wirksamkeit ", " behandlung ",
+        " wird ", " mit ", " diese ", " teilnehmer ", " ergebnisse ", " primäre ",
+        " injektion ", " endpunkt ", " randomisiert ", " auswertung "
+    ]
     e = sum(s.count(w) for w in english)
     g = sum(s.count(w) for w in german)
-    return g >= max(2, e)
+    return g >= 2 and g >= e
+
+
+def clinical_title_is_generic(title):
+    t = clean(title).lower()
+    return not t or t.startswith("forschungsinformation zu") or t in {
+        "forschungsinformation zu usher-syndrom typ 1b",
+        "forschungsinformation zu typ-2-diabetes"
+    }
 
 
 def gemini_call(prompt, key):
     endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.1, "maxOutputTokens": 3000, "responseMimeType": "application/json"}
+        "generationConfig": {"temperature": 0.1, "maxOutputTokens": 3500, "responseMimeType": "application/json"}
     }
     r = requests.post(endpoint, headers={"x-goog-api-key": key, "Content-Type": "application/json"}, json=payload, timeout=120)
     r.raise_for_status()
@@ -179,13 +228,22 @@ def gemini_call(prompt, key):
 
 
 def translate_to_german(title, source, body, topic, phase, key):
+    clinical = source == "ClinicalTrials.gov"
     base = f"""Du bist der deutsche wissenschaftliche Redakteur des Forschungsmonitors.
 
-WICHTIGSTE REGEL: Deine komplette Antwort MUSS auf DEUTSCH sein.
-KEIN englischer Satz darf in title_de, summary_de oder detailed_summary_de stehen.
-NIEMALS englische Originalpassagen kopieren oder zitieren. Übersetze und erkläre ihren Inhalt auf Deutsch.
-Fachbegriffe wie MYO7A, AAVB-081, LUCE-1, Retinitis pigmentosa, Phase 1/2 und ClinicalTrials.gov dürfen unverändert bleiben.
-Erfinde keine Ergebnisse. Bei einer laufenden Studie nur Ziel, Design und Status beschreiben.
+ABSOLUTE REGELN:
+1. title_de, summary_de, detailed_summary_de und why_relevant MÜSSEN vollständig auf Deutsch geschrieben sein.
+2. Kein englischer erklärender Satz darf übernommen werden. Übersetze den Inhalt sinngemäß ins Deutsche.
+3. Fachbegriffe, Eigennamen, Gennamen, Medikamentennamen, Studiennamen, NCT-Nummern und offizielle Quellenbezeichnungen dürfen unverändert bleiben.
+4. Erfinde niemals Ergebnisse, Teilnehmerzahlen, Sicherheitsdaten oder Wirksamkeitsdaten.
+5. Wenn etwas im Originalinhalt nicht angegeben ist, schreibe ausdrücklich „nicht angegeben“ oder lasse die Aussage weg.
+
+BESONDERS WICHTIG FÜR CLINICALTRIALS.GOV:
+- title_de MUSS eine echte, möglichst genaue deutsche Übersetzung des Originaltitels sein.
+- Verwende NICHT „Forschungsinformation zu Usher-Syndrom Typ 1B“ als Ersatz für den Studientitel.
+- Übersetze den kompletten Studientitel einschließlich Therapie, Erkrankung und Studienstatus, sofern diese Bestandteile im Originaltitel stehen.
+- detailed_summary_de muss den tatsächlich gelieferten Registerinhalt erklären: Ziel, Therapie/Intervention, Studiendesign, Phase, Status, geplante Teilnehmer, Endpunkte und relevante Ein-/Ausschlusskriterien, soweit vorhanden.
+- Bei einer laufenden Studie darfst du keine Ergebnisse erfinden. Beschreibe stattdessen, was untersucht und welche Ergebnisse künftig bewertet werden.
 
 Quelle: {source}
 Thema: {topic}
@@ -193,32 +251,35 @@ Studienphase/Status: {phase}
 Originaltitel: {title}
 
 ORIGINALINHALT:
-{body[:12000]}
+{body[:14000]}
 
-Erstelle eine eigenständige deutsche Zusammenfassung. Nicht nur den Titel übersetzen.
-Erkläre, soweit vorhanden: Ziel der Studie, Behandlung, Studiendesign, Teilnehmer, Status, Ergebnisse, Sicherheit, Wirksamkeit und Einschränkungen.
+Erstelle eine eigenständige deutsche Zusammenfassung und NICHT nur eine allgemeine Beschreibung der Meldung.
 
 Gib ausschließlich gültiges JSON zurück mit genau diesen Feldern:
 "title_de", "summary_de", "detailed_summary_de", "why_relevant", "country", "evidence_key", "study_phase".
 """
-    for attempt in range(2):
+    for attempt in range(3):
         try:
             result = gemini_call(base, key)
-            text = " ".join(str(result.get(k, "")) for k in ["title_de", "summary_de", "detailed_summary_de", "why_relevant"])
-            if probably_german(text):
+            fields = ["title_de", "summary_de", "detailed_summary_de", "why_relevant"]
+            values = {k: clean(result.get(k, "")) for k in fields}
+            valid = all(probably_german(values[k]) for k in fields)
+            if clinical:
+                valid = valid and not clinical_title_is_generic(values["title_de"])
+            if valid:
                 return result
-            print("Gemini-Ausgabe noch englisch – erzwinge zweite Übersetzung.")
-            base += "\n\nNOCHMALS: Die vorherige Ausgabe war zu englisch. Übersetze JEDEN erklärenden Satz ins Deutsche. Kein englischer Satz!"
+            print(f"Gemini-Ausgabe noch nicht ausreichend deutsch/konkret – neuer Versuch {attempt + 1}/3.")
+            base += "\n\nFEHLERKORREKTUR: Deine letzte Antwort war nicht ausreichend. Liefere diesmal eine echte deutsche Übersetzung des Originaltitels und eine konkrete deutsche Zusammenfassung des gelieferten Inhalts. Kein englischer Erklärungssatz. Keine generische Überschrift."
         except Exception as e:
-            print(f"Gemini-Fehler Versuch {attempt + 1}/2: {e}")
+            print(f"Gemini-Fehler Versuch {attempt + 1}/3: {e}")
             time.sleep(3)
     return {}
 
 
 def fallback_german(title, source, topic, phase):
     if source == "ClinicalTrials.gov":
-        summary = f"Es handelt sich um eine registrierte klinische Studie. Der aktuelle Status ist {phase or 'im Studienregister angegeben'}."
-        detail = f"Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich {('Usher-Syndrom Typ 1B / MYO7A' if topic == 'usher' else 'Typ-2-Diabetes')}. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet {phase or 'nicht angegeben'}. Aus den vorliegenden Registerdaten lässt sich hier keine Aussage über bereits erzielte Wirksamkeit ableiten. Ergebnisse dürfen bei einer laufenden Studie nicht vorweggenommen werden."
+        summary = f"Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist {phase or 'im Studienregister angegeben'}."
+        detail = f"Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich {('Usher-Syndrom Typ 1B / MYO7A' if topic == 'usher' else 'Typ-2-Diabetes')}. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet {phase or 'nicht angegeben'}. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten. Ergebnisse dürfen bei einer laufenden Studie nicht vorweggenommen werden."
     else:
         summary = "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst."
         detail = f"Die Meldung betrifft den Forschungsbereich {('Usher-Syndrom Typ 1B / MYO7A' if topic == 'usher' else 'Typ-2-Diabetes')}. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle {source}. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt. Für eine genaue Bewertung sollte die Originalquelle herangezogen werden."
@@ -245,14 +306,14 @@ def add_item(items, x, key):
         original = article_text(url)
         if len(original) > len(body):
             body = original
-    ai = translate_to_german(title, source, body, topic, phase, key) if body else {}
+    ai = translate_to_german(title, source, body, topic, phase, key) if body and key else {}
     if not ai:
         ai = fallback_german(title, source, topic, phase)
     title_de = clean(ai.get("title_de", ""))
     summary = clean(ai.get("summary_de", ""))
     detailed = clean(ai.get("detailed_summary_de", ""))
-    if not title_de or not probably_german(title_de):
-        title_de = "Forschungsinformation zu " + ("Usher-Syndrom Typ 1B" if topic == "usher" else "Typ-2-Diabetes")
+    if not title_de or not probably_german(title_de) or (source == "ClinicalTrials.gov" and clinical_title_is_generic(title_de)):
+        title_de = fallback_german(title, source, topic, phase)["title_de"]
     if not summary or not probably_german(summary):
         summary = fallback_german(title, source, topic, phase)["summary_de"]
     if not detailed or not probably_german(detailed):
@@ -307,7 +368,7 @@ def main():
         time.sleep(0.5)
 
     result = {
-        "schema_version": "9.0",
+        "schema_version": "10.0",
         "generated_at": NOW.isoformat(),
         "generated_at_display": NOW.strftime("%d.%m.%Y %H:%M UTC"),
         "sources_checked": {"google_news_rss": True, "europe_pmc": True, "clinicaltrials_gov": True, "gdelt": False, "pubmed_eutils": False},
