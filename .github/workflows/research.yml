@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: taegliche-forschungsrecherche-main
+  cancel-in-progress: false
+
 jobs:
   research:
     if: github.actor != 'github-actions[bot]'
@@ -39,14 +43,38 @@ jobs:
         run: python fetch_news.py
 
       - name: Ergebnisse speichern
+        env:
+          GEMINI_API_KEY: ${{ secrets.FORSCHUNGSMONITOR }}
         run: |
+          set -e
           git config user.name "Forschungsmonitor Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/news.json data/archive/
-          if git diff --cached --quiet; then
-            echo "Keine neuen Änderungen."
-          else
+
+          # Während der Recherche kann ein anderer Lauf neue news.json/archive-Dateien
+          # nach main geschrieben haben. Statt diese großen JSON-Dateien zu mergen,
+          # holen wir den neuesten main-Stand und führen die Recherche darauf erneut aus.
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "Recherche erneut auf aktuellem main-Stand (Versuch $attempt)"
+            python fetch_news.py
+
+            git add data/news.json data/archive/
+            if git diff --cached --quiet; then
+              echo "Keine neuen Änderungen."
+              exit 0
+            fi
+
             git commit -m "Automatische Forschungsrecherche"
-            git pull --rebase origin main
-            git push origin HEAD:main
-          fi
+
+            if git push origin HEAD:main; then
+              echo "Ergebnisse erfolgreich gespeichert."
+              exit 0
+            fi
+
+            echo "Push-Konflikt - neuer main-Stand wird geholt und Recherche erneut ausgeführt."
+          done
+
+          echo "Konnte Ergebnisse nach 3 Versuchen nicht speichern."
+          exit 1
