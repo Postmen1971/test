@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Repository herunterladen
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Python einrichten
         uses: actions/setup-python@v5
@@ -45,5 +47,6 @@ jobs:
             echo "Keine neuen Änderungen."
           else
             git commit -m "Automatische Forschungsrecherche"
-            git push
+            git pull --rebase origin main
+            git push origin HEAD:main
           fi
