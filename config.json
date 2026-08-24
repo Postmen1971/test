@@ -2,12 +2,12 @@
   "project": "Gesundheits- & Forschungsmonitor",
   "regions": ["Deutschland","China","USA","Europa","Japan","Südkorea","Australien","weltweit"],
   "usher": {
-    "priority": ["LUCE-1","AAVB-081","AAVantgarde","MYO7A","USH1B","Tübingen"],
-    "keywords": ["Usher 1B","USH1B","MYO7A","LUCE-1","AAVB-081","gene therapy","dual AAV","CRISPR","gene editing","retinitis pigmentosa"]
+    "priority": ["LUCE-1","AAVB-081","AAVantgarde","MYO7A","USH1B","Tübingen","Hannover","MHH","Medizinische Hochschule Hannover","Axel Schambach","Michael Morgan","Michael Wendt","EuroVision","iHEAR","MY-O-SENSES"],
+    "keywords": ["Usher 1B","USH1B","MYO7A","LUCE-1","AAVB-081","AAVantgarde","gene therapy","dual AAV","CRISPR","gene editing","retinitis pigmentosa","Hannover","MHH","Medizinische Hochschule Hannover","Axel Schambach","Michael Morgan","Michael Wendt","EuroVision","iHEAR","MY-O-SENSES"]
   },
   "ophthalmology": {
-    "priority": ["Augenheilkunde","Ophthalmologie","Netzhaut","Retina","retinale Erkrankung","Sehkraft","Gentherapie","Gen-Editing","CRISPR","Stammzelltherapie"],
-    "keywords": ["ophthalmology","retina","retinal disease","inherited retinal disease","vision restoration","blindness","eye disease","gene therapy","cell therapy","CRISPR"]
+    "priority": ["Augenheilkunde","Ophthalmologie","Netzhaut","Retina","retinale Erkrankung","Sehkraft","Gentherapie","Gen-Editing","CRISPR","Stammzelltherapie","MHH","Hannover","MYO7A","Usher"],
+    "keywords": ["ophthalmology","retina","retinal disease","inherited retinal disease","vision restoration","blindness","eye disease","gene therapy","cell therapy","CRISPR","MYO7A","Usher syndrome","Usher 1B","Hannover","MHH","Medizinische Hochschule Hannover"]
   },
   "diabetes": {
     "priority": ["Typ-2-Diabetes","CGM","rtCGM","AOK Baden-Württemberg","Göppingen","Plochingen","Esslingen","GLP-1","GIP","Retatrutide","Orforglipron","Tirzepatid"],
