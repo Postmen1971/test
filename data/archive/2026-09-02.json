@@ -1,7 +1,7 @@
 {
-  "schema_version": "13.0",
-  "generated_at": "2026-09-02T09:49:02.482386+00:00",
-  "generated_at_display": "02.09.2026 09:49 UTC",
+  "schema_version": "11.0",
+  "generated_at": "2026-09-02T09:42:13.955033+00:00",
+  "generated_at_display": "02.09.2026 09:42 UTC",
   "sources_checked": {
     "google_news_rss": true,
     "press_eye_news": true,
@@ -13,7 +13,7 @@
     {
       "id": "59b4f629639d9ac05c80",
       "title": "Study of Subretinally Injected AAVB-081 in Patients With Usher Syndrome Type IB (USH1B) Retinitis Pigmentosa",
-      "title_de": "Studie zu subretinal injiziertem AAVB-081 in bei Patienten mit Usher-Syndrom Typ 1B (USH1B) Retinitis pigmentosa",
+      "title_de": "Study of Subretinally Injected AAVB-081 in Patients With Usher Syndrome Type IB (USH1B) Retinitis Pigmentosa",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist PHASE1, PHASE2.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Usher-Syndrom Typ 1B / MYO7A. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet PHASE1, PHASE2. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -33,7 +33,7 @@
     {
       "id": "eed88e87d7ee9e17a333",
       "title": "Gene Supplementation of MYO7A or activation of Myo7b for treatment of Usher syndrome 1B",
-      "title_de": "Neue Forschung zu Usher-Syndrom Typ 1B / MYO7A",
+      "title_de": "Gene Supplementation of MYO7A or activation of Myo7b for treatment of Usher syndrome 1B",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Usher-Syndrom Typ 1B / MYO7A. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -53,7 +53,7 @@
     {
       "id": "84c4f26c548dffad4e3d",
       "title": "Clinical manifestations of dual-gene variants in retinitis pigmentosa.",
-      "title_de": "Clinical manifestations of dual-gene variants in Retinitis pigmentosa.",
+      "title_de": "Clinical manifestations of dual-gene variants in retinitis pigmentosa.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Usher-Syndrom Typ 1B / MYO7A. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -73,7 +73,7 @@
     {
       "id": "a5b6140fc49a2683a8af",
       "title": "Investigation of the Effect of Date Consumption on Hedonic Hunger and Appetite in Adult Individuals With Type 2 Diabetes",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Investigation of the Effect of Date Consumption on Hedonic Hunger and Appetite in Adult Individuals With Type 2 Diabetes",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -93,7 +93,7 @@
     {
       "id": "4f3040ef9efd72bfb67d",
       "title": "Tox regulates hair cell stereocilia development and Cdh23 expression in mice and zebrafish.",
-      "title_de": "Neue Forschung zu Usher-Syndrom Typ 1B / MYO7A",
+      "title_de": "Tox regulates hair cell stereocilia development and Cdh23 expression in mice and zebrafish.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Usher-Syndrom Typ 1B / MYO7A. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -113,7 +113,7 @@
     {
       "id": "c8e8347cf28612b59119",
       "title": "Whole exome sequencing of paediatric patients with Cogan's syndrome to identify monogenic mimics.",
-      "title_de": "Whole exome sequencing of paediatric bei Patienten mit Cogan's syndrome to identify monogenic mimics.",
+      "title_de": "Whole exome sequencing of paediatric patients with Cogan's syndrome to identify monogenic mimics.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Usher-Syndrom Typ 1B / MYO7A. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -133,7 +133,7 @@
     {
       "id": "9fad97cc7725dd89a979",
       "title": "Mesenchymal drift in ciliopathy iPSC-derived RPE reveals a convergent pathogenic cell state.",
-      "title_de": "Neue Forschung zu Usher-Syndrom Typ 1B / MYO7A",
+      "title_de": "Mesenchymal drift in ciliopathy iPSC-derived RPE reveals a convergent pathogenic cell state.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Usher-Syndrom Typ 1B / MYO7A. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -153,7 +153,7 @@
     {
       "id": "66e61bd9c535036d5721",
       "title": "Effectiveness of Combined GLP-1/GIP Dual Agonist Therapy and Structured Exercise on Skeletal Muscle Morphology, Quality, and Physical Function in Overweight and Obese Individuals",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Effectiveness of Combined GLP-1/GIP Dual Agonist Therapy and Structured Exercise on Skeletal Muscle Morphology, Quality, and Physical Function in Overweight and Obese Individuals",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -173,7 +173,7 @@
     {
       "id": "bf5bb2db309fb985dd57",
       "title": "Separate and Combined Extrapancreatic Effects of the Incretin Hormones",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Separate and Combined Extrapancreatic Effects of the Incretin Hormones",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -193,7 +193,7 @@
     {
       "id": "68a80e7c081b7858056b",
       "title": "A Study to Examine Changes in GIP Plasma Levels Following Gastric Bypass Surgery in Obese Patients",
-      "title_de": "A Studie to Examine Changes in GIP Plasma Levels Following Gastric Bypass Surgery in Obese Patients",
+      "title_de": "A Study to Examine Changes in GIP Plasma Levels Following Gastric Bypass Surgery in Obese Patients",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist TERMINATED.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet TERMINATED. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -213,7 +213,7 @@
     {
       "id": "b78947348b5149ac1409",
       "title": "Is Insulin Resistance and/or Glucose Intolerance Pathogenetic in the Development of a Reduced Incretin Effect",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Is Insulin Resistance and/or Glucose Intolerance Pathogenetic in the Development of a Reduced Incretin Effect",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -233,7 +233,7 @@
     {
       "id": "a9c943154d00997abc48",
       "title": "Role of Neural and Hormonal Regulation Factors on Insulin Secretion After Gastric Bypass Surgery",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Role of Neural and Hormonal Regulation Factors on Insulin Secretion After Gastric Bypass Surgery",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist EARLY_PHASE1.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet EARLY_PHASE1. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -253,7 +253,7 @@
     {
       "id": "89b46aa8f8716724d794",
       "title": "Estimating the Impact of Obesity Medications on Clinical and Economic Outcomes",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Estimating the Impact of Obesity Medications on Clinical and Economic Outcomes",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist ENROLLING_BY_INVITATION.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet ENROLLING_BY_INVITATION. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -273,7 +273,7 @@
     {
       "id": "7539cef0dd2fcc3eb11b",
       "title": "Tonotopic specialization of MYO7A isoforms in auditory hair cells.",
-      "title_de": "Neue Forschung zu Usher-Syndrom Typ 1B / MYO7A",
+      "title_de": "Tonotopic specialization of MYO7A isoforms in auditory hair cells.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Usher-Syndrom Typ 1B / MYO7A. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -293,7 +293,7 @@
     {
       "id": "a98ece0e7225d454dddb",
       "title": "Genetic Landscape of Hearing Loss in Brazilian Patients Reveals Population-Specific Variants and Clinical Correlations.",
-      "title_de": "Neue Forschung zu Usher-Syndrom Typ 1B / MYO7A",
+      "title_de": "Genetic Landscape of Hearing Loss in Brazilian Patients Reveals Population-Specific Variants and Clinical Correlations.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Usher-Syndrom Typ 1B / MYO7A. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -313,7 +313,7 @@
     {
       "id": "150e1a14d3156904a717",
       "title": "Rare missense variants in MYO7A and OTOP2 genes in a South Korean Meniere's disease cohort.",
-      "title_de": "Neue Forschung zu Usher-Syndrom Typ 1B / MYO7A",
+      "title_de": "Rare missense variants in MYO7A and OTOP2 genes in a South Korean Meniere's disease cohort.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Usher-Syndrom Typ 1B / MYO7A. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -333,7 +333,7 @@
     {
       "id": "d0be69b5b1e86369487e",
       "title": "Intraileal Glucose vs. Saline Infusion on Hormone Secretion and Glycemic Excursions",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Intraileal Glucose vs. Saline Infusion on Hormone Secretion and Glycemic Excursions",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -353,7 +353,7 @@
     {
       "id": "4213d7027dc5f1b7961a",
       "title": "Fat Metabolites and Gut Hormones",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Fat Metabolites and Gut Hormones",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -373,7 +373,7 @@
     {
       "id": "0e8cd76956d243bebe3f",
       "title": "Immediate and Long-term Induction of Incretin Release by Artificial Sweeteners 2",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Immediate and Long-term Induction of Incretin Release by Artificial Sweeteners 2",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -393,7 +393,7 @@
     {
       "id": "b962691a6cf2376eaa01",
       "title": "Enteroendocrine Hormonal Response After the Ingestion of Cola Beverages With Sucrose and Non-nutritive Sweeteners",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Enteroendocrine Hormonal Response After the Ingestion of Cola Beverages With Sucrose and Non-nutritive Sweeteners",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -413,7 +413,7 @@
     {
       "id": "c23ef532bb1bf3455b77",
       "title": "Oral small-molecule GLP-1 receptor agonist for type 2 diabetes and obesity.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Oral small-molecule GLP-1 receptor agonist for type 2 diabetes and obesity.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -433,7 +433,7 @@
     {
       "id": "929a6043c7f50fb0fde0",
       "title": "Burden and Risk of Depression in Patients Receiving Semaglutide: A Systematic Review and Meta-Analysis.",
-      "title_de": "Burden and Risk of Depression bei Patienten Receiving Semaglutide: A Systematic Review and Meta-Analysis.",
+      "title_de": "Burden and Risk of Depression in Patients Receiving Semaglutide: A Systematic Review and Meta-Analysis.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -453,7 +453,7 @@
     {
       "id": "5ee2d86e8a85d0062683",
       "title": "GLP-1 Receptor Agonist Use and A1 Pulley Release After Corticosteroid Injection for Trigger Finger in Type 2 Diabetes.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "GLP-1 Receptor Agonist Use and A1 Pulley Release After Corticosteroid Injection for Trigger Finger in Type 2 Diabetes.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -473,7 +473,7 @@
     {
       "id": "0bac5fab0dc369b4ea07",
       "title": "Model-Informed Approaches for Pediatric Type 2 Diabetes Evidence Generation: Insights from a Model-Based Longitudinal HbA1c Meta-Analysis from EMA Marketing Authorization Applications.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Model-Informed Approaches for Pediatric Type 2 Diabetes Evidence Generation: Insights from a Model-Based Longitudinal HbA1c Meta-Analysis from EMA Marketing Authorization Applications.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -493,7 +493,7 @@
     {
       "id": "e86626d0836bb785b176",
       "title": "Efficacy of finerenone in reducing proteinuria in diabetic kidney disease on dapagliflozin and telmisartan: A disease-modifying approach.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Efficacy of finerenone in reducing proteinuria in diabetic kidney disease on dapagliflozin and telmisartan: A disease-modifying approach.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -513,7 +513,7 @@
     {
       "id": "4e6dd98e523e43ae130e",
       "title": "Antihyperglycemic Drugs and Risk of Asthma Exacerbation in Patients With Asthma and Type 2 Diabetes: A Multinational Retrospective Cohort Study.",
-      "title_de": "Antihyperglycemic Drugs and Risk of Asthma Exacerbation in bei Patienten mit Asthma and Type 2 Diabetes: A Multinational Retrospective Cohort Studie.",
+      "title_de": "Antihyperglycemic Drugs and Risk of Asthma Exacerbation in Patients With Asthma and Type 2 Diabetes: A Multinational Retrospective Cohort Study.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -533,7 +533,7 @@
     {
       "id": "09273c900b5457d4e036",
       "title": "GLP-1 Mediating DPP-4 Inhibition in Type 2 Diabetes",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "GLP-1 Mediating DPP-4 Inhibition in Type 2 Diabetes",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist PHASE4.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet PHASE4. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -553,7 +553,7 @@
     {
       "id": "f8510cb19b29f8c7d65c",
       "title": "Endovascular Denervation (EDN) for the Treatment of Type 2 Diabetes Mellitus",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Endovascular Denervation (EDN) for the Treatment of Type 2 Diabetes Mellitus",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -573,7 +573,7 @@
     {
       "id": "60375a292a4ca28e129d",
       "title": "Comparative Efficacy of Tirzepatide Versus Semaglutide for Weight Loss in Adults With Overweight or Obesity: A Systematic Review and Meta-Analysis of Head-to-Head Studies.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Comparative Efficacy of Tirzepatide Versus Semaglutide for Weight Loss in Adults With Overweight or Obesity: A Systematic Review and Meta-Analysis of Head-to-Head Studies.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -593,7 +593,7 @@
     {
       "id": "8e3c11b79229fc46d8e2",
       "title": "Liver Fat Changes in Patients With Type 2 Diabetes by Presence of Genetic Hepatic Steatosis: A Post Hoc Analysis of SURPASS-3 MRI.",
-      "title_de": "Liver Fat Changes in bei Patienten mit Type 2 Diabetes by Presence of Genetic Hepatic Steatosis: A Post Hoc Analysis of SURPASS-3 MRI.",
+      "title_de": "Liver Fat Changes in Patients With Type 2 Diabetes by Presence of Genetic Hepatic Steatosis: A Post Hoc Analysis of SURPASS-3 MRI.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -613,7 +613,7 @@
     {
       "id": "646b73e132fc351936ba",
       "title": "A Study of Tirzepatide (LY3298176) Versus Placebo in Participants With Type 2 Diabetes Inadequately Controlled on Insulin Glargine With or Without Metformin",
-      "title_de": "A Studie zu Tirzepatide (LY3298176) Versus Placebo in Participants With Type 2 Diabetes Inadequately Controlled on Insulin Glargine With or Without Metformin",
+      "title_de": "A Study of Tirzepatide (LY3298176) Versus Placebo in Participants With Type 2 Diabetes Inadequately Controlled on Insulin Glargine With or Without Metformin",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist PHASE3.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet PHASE3. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -633,7 +633,7 @@
     {
       "id": "4eb555b5e320b48282d4",
       "title": "Title: Therapeutic Targets in African-American Youth With Type 2 Diabetes",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Title: Therapeutic Targets in African-American Youth With Type 2 Diabetes",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist PHASE1, PHASE2.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet PHASE1, PHASE2. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -653,7 +653,7 @@
     {
       "id": "c2c12ffb3d06e33a7ab4",
       "title": "Revisiting retinal and macular degeneration in the genomics era.",
-      "title_de": "Neue Forschung zu Usher-Syndrom Typ 1B / MYO7A",
+      "title_de": "Revisiting retinal and macular degeneration in the genomics era.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Usher-Syndrom Typ 1B / MYO7A. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -673,7 +673,7 @@
     {
       "id": "a30973cb014beade0e58",
       "title": "Hepatic Steatosis: A Pandemic Disease Causing Serious Secondary Diseases.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Hepatic Steatosis: A Pandemic Disease Causing Serious Secondary Diseases.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -693,7 +693,7 @@
     {
       "id": "4711b939123a99881916",
       "title": "Investigating the effects of Orthosiphon stamineus on blood glucose regulation via pancreatic endocrine and exocrine functions in Type 3c Diabetes Mellitus Wistar Bonn/Kobori (WBN/Kob) pancreatitis rat model.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Investigating the effects of Orthosiphon stamineus on blood glucose regulation via pancreatic endocrine and exocrine functions in Type 3c Diabetes Mellitus Wistar Bonn/Kobori (WBN/Kob) pancreatitis rat model.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -713,7 +713,7 @@
     {
       "id": "a56d7f5a1e3afac4d35a",
       "title": "Type 1 diabetes in the era of obesity: Pathophysiology and therapeutic implications.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Type 1 diabetes in the era of obesity: Pathophysiology and therapeutic implications.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -733,7 +733,7 @@
     {
       "id": "ecde0389da2c126f2b55",
       "title": "Evaluating Whole Fruit Feijoa Powder for Type 2 Diabetes Risk Prevention: A Randomised Controlled Trial.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Evaluating Whole Fruit Feijoa Powder for Type 2 Diabetes Risk Prevention: A Randomised Controlled Trial.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -753,7 +753,7 @@
     {
       "id": "33da351ce450ce971a3e",
       "title": "Staged Management of Extensive Suprapubic Wound Necrosis After Hysterectomy Using Negative Pressure Wound Therapy and Delayed Skin Grafting.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Staged Management of Extensive Suprapubic Wound Necrosis After Hysterectomy Using Negative Pressure Wound Therapy and Delayed Skin Grafting.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -773,7 +773,7 @@
     {
       "id": "0b100f80963d980ffbd9",
       "title": "Qualitative and Quantitative Health-Related Quality-of-Life Outcomes From an 8-year Follow-Up After Gastric Bypass Surgery in People With Type 2 Diabetes.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Qualitative and Quantitative Health-Related Quality-of-Life Outcomes From an 8-year Follow-Up After Gastric Bypass Surgery in People With Type 2 Diabetes.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -793,7 +793,7 @@
     {
       "id": "ff2afedd210ea90bb625",
       "title": "Potential Involvement of Redox and Inflammatory Signalling in the Antihyperglycemic and Antioxidant Effects of Harmaline in Male Mice With Type 2 Diabetes.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Potential Involvement of Redox and Inflammatory Signalling in the Antihyperglycemic and Antioxidant Effects of Harmaline in Male Mice With Type 2 Diabetes.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -810,13 +810,5 @@
       "study_phase": "Nicht angegeben",
       "priority": 60
     }
-  ],
-  "full_refresh": true,
-  "translation_check": {
-    "checked": 40,
-    "repaired": 0,
-    "language": "de",
-    "source_content_refetched": true,
-    "gemini_batches": 10
-  }
+  ]
 }
