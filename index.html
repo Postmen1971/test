@@ -1,65 +1,2065 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#071522">
-<title>GigaBlue Receiver Manager</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#002855" /><!-- NEU: färbt die Browserleiste auf Mobilgeräten dunkelblau -->
+<title>Galvanik Tools – Strom & Zeit</title>
+
+<!-- =====================================================================
+     CHANGELOG dieser überarbeiteten Version (zum Vergleich mit der alten):
+
+     BUGFIXES
+     [1] Zeitrechner: jsonblob-"Ersteinrichtung" (POST + alert bei JEDER Eingabe) entfernt.
+         Speicherung jetzt rein lokal, außer man trägt ZEIT_ONLINE_ID manuell ein.
+     [2] Zeitrechner: nach dem asynchronen Laden der letzten Suche wird jetzt neu berechnet.
+     [3] QR lesen: Regex-Lookbehind entfernt (SyntaxError auf älteren iPhones, riss den
+         gesamten Code-Tab mit runter). Jetzt kompatibel ab iOS 12.
+     [4] QR lesen / Protokoll: HTML-Escaping für alle Fremddaten (gescannte QR-Inhalte,
+         Notizen). Kein Inline-onclick mit Nutzerdaten mehr.
+     [5] Tab-Wechsel stoppt jetzt eine laufende Kamera.
+     [6] Alte Fußball-Caches (_v1 bis _v12) werden einmalig aus localStorage entfernt.
+
+     LOGIK
+     [7] Superwitz: sofort lokal anzeigen, Internet-Witze laden im Hintergrund nach und
+         ersetzen den Witz in 50 % der Fälle (statt 1,5 % Trefferchance im 130er-Topf).
+     [8] Zitat: sofort ein Fallback-Zitat anzeigen, Live-Zitat ersetzt es im Hintergrund.
+     [9] Fußball: Cache-TTL 5 → 15 Min (schont den Test-Key), Fallback-Hinweistext korrigiert.
+
+     UX
+     [10] Spulenrechner Durchmesser: Auto-Berechnung bei Eingabe, Kalibrierwerte werden
+          gespeichert, Beschriftung eindeutig ("Spulenrand → Wicklung").
+     [11] QR-Generator: Passwortfeld startet verdeckt.
+     [12] Tab-Buttons etwas größer (12,5 px, mehr Padding).
+     [13] Gemeinsame Helfer (parseDeNumber, escapeHtml, fuenffachTipp) zentral im Head.
+     [14] Toter Code entfernt (dayOfYear, quoteMode, aktuellesQrObjekt, wirkungslose
+          step/min-Attribute auf Textfeldern).
+     [15] jsQR wird mit "defer" geladen (schnellerer erster Seitenaufbau).
+
+     BEWUSST NICHT GEÄNDERT: Witz-Inhalte, SPETE-Popup-Inhalt (siehe Kommentar dort).
+     ===================================================================== -->
+
 <style>
-:root{--bg:#071522;--card:#14283a;--muted:#a9bfd0;--text:#f5f8fb;--blue:#1598ff;--green:#20d879;--border:#29445b;--orange:#e7831d}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}body{min-height:100vh;padding-bottom:78px}.app{max-width:560px;margin:auto;padding:16px 14px 24px}.top{display:flex;align-items:center;justify-content:space-between;padding:4px 4px 18px}.brand{font-size:27px;font-weight:800;letter-spacing:2px}.sub{font-size:13px;color:#91a9bc;text-align:center;margin-top:-13px;margin-bottom:15px}.gear{font-size:27px}.connection{background:linear-gradient(135deg,#172d40,#102335);border:1px solid var(--border);border-radius:22px;padding:18px;margin-bottom:14px}.connrow{display:flex;justify-content:space-between;gap:12px;align-items:center}.model{font-size:21px;font-weight:700}.small{color:var(--muted);font-size:15px;margin-top:4px}.status{font-size:18px;color:var(--green);font-weight:700}.ip{font-size:14px;color:var(--muted);margin-top:5px}.btn{border:1px solid #3b5870;background:#22394d;color:#fff;border-radius:14px;padding:11px 15px;font-size:15px;font-weight:600}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tile{min-height:142px;border-radius:20px;padding:18px 16px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid rgba(255,255,255,.16);box-shadow:0 8px 25px rgba(0,0,0,.12)}.tile b{font-size:19px;line-height:1.15}.tile span{font-size:14px;line-height:1.35;opacity:.9}.blue{background:linear-gradient(145deg,#159cff,#0758ca)}.green{background:linear-gradient(145deg,#0fbd74,#087c55)}.purple{background:linear-gradient(145deg,#6256dc,#3e32a7)}.orange{background:linear-gradient(145deg,#ed8a20,#bc5a0d)}.cyan{background:linear-gradient(145deg,#079fc0,#08748e)}.slate{background:linear-gradient(145deg,#344b5e,#223545)}.icon{font-size:32px}.section{margin-top:18px;background:#102536;border:1px solid var(--border);border-radius:20px;padding:16px}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.section h2{font-size:18px;margin:0}.muted{color:var(--muted);font-size:13px}.folders{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.folder{background:#1b3448;border:1px solid #315067;border-radius:14px;padding:13px}.folder strong{display:block;font-size:15px;margin-top:7px}.folder code{font-size:13px;color:#c7d7e4}.bottom{position:fixed;bottom:0;left:0;right:0;background:rgba(7,21,34,.94);backdrop-filter:blur(18px);border-top:1px solid #29445b;display:flex;justify-content:center;z-index:5}.nav{width:min(560px,100%);display:grid;grid-template-columns:repeat(4,1fr)}.nav button{background:none;border:0;color:#9eb2c3;padding:10px 3px 9px;font-size:12px}.nav button.active{color:#24a5ff}.nav .ni{display:block;font-size:23px;margin-bottom:3px}.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:10;padding:20px}.modal.show{display:flex;align-items:flex-end}.sheet{background:#102536;border:1px solid #315067;border-radius:24px 24px 0 0;padding:20px;width:100%;max-width:560px;margin:auto}.sheet h2{margin:0 0 16px}.input{width:100%;background:#091b2a;border:1px solid #355168;color:white;border-radius:12px;padding:13px;font-size:16px;margin-bottom:10px}.actions{display:flex;gap:10px}.actions .btn{flex:1}.toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#19364b;border:1px solid #40617a;padding:11px 16px;border-radius:14px;display:none;z-index:20;font-size:14px}.toast.show{display:block}@media(max-width:390px){.app{padding:12px 10px}.tile{min-height:132px;padding:14px 13px}.tile b{font-size:17px}.tile span{font-size:13px}.brand{font-size:23px}.connection{padding:15px}.grid{gap:9px}.folders{gap:8px}}
+  :root{--orange:#F58025;--orange-dark:#d96a15;--darkblue:#002855;--blue-mid:#0f3d73;--lightgray:#f7f7f7;--bg:#f4f5f7;--border:#e5e7eb;--muted:#6b7280}
+  *{box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--bg);
+    margin:0;
+    padding: 0 8px 24px;
+    display:flex;
+    justify-content:center;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .app-header{
+    width:calc(100% + 16px);
+    background:var(--darkblue);
+    color:#fff;
+    text-align:center;
+    padding:8px 14px;
+    margin:0 -8px;
+    -webkit-user-select:none;
+    user-select:none;
+    -webkit-touch-callout:none;
+  }
+  .app-header h1{margin:0;font-size:.95rem;font-weight:500;letter-spacing:.2px;}
+  .app-header p{margin:2px 0 0;font-size:.72rem;color:#c9d4e6;}
+
+  .topbar{
+    position:sticky;
+    top:0;
+    left:0;
+    right:0;
+    width:calc(100% + 16px);
+    margin:0 -8px;
+    background:#ffffffee;
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+    padding:8px 8px;
+    z-index:1000;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+
+  /* GEÄNDERT [12]: 11px -> 12.5px, mehr Padding für bessere Bedienbarkeit */
+  .tabbtn{border:1.5px solid var(--darkblue);color:var(--darkblue);background:#fff;padding:7px 11px;
+          border-radius:999px;cursor:pointer;font-weight:700;font-size:12.5px;
+          transition:background .15s,color .15s,transform .08s;}
+  .tabbtn:active{transform:scale(.96);}
+  .tabbtn.active{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 2px 6px rgba(245,128,37,.35);}
+  section.tab-pane{display:none}section.tab-pane.active{display:block}
+
+  .container{
+    width:calc(100% - 16px);
+    max-width:500px;
+    background:#fff;
+    padding:14px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    box-shadow:0 4px 14px rgba(0,40,85,.07);
+    position:relative;
+    margin-top:14px;
+    margin-bottom: 8px;
+  }
+
+  h2{text-align:center;color:var(--darkblue);margin-top:0;font-size:1.15rem;margin-bottom:12px;font-weight:700;}
+  label{display:block;margin-top:10px;
+        font-weight:600;color:var(--muted);font-size:12.5px;}
+  input[type=number], input[type=text], input[type=password], select{
+    width:100%;
+    padding:10px;
+    font-size:16px;
+    margin-top:4px;
+    border:1px solid var(--border);border-radius:8px;box-sizing:border-box;
+    background:#fafafa;
+    transition:border-color .15s,background .15s;
+  }
+  input[type=number]:focus, input[type=text]:focus, input[type=password]:focus, select:focus{
+    outline:none;border-color:var(--orange);background:#fff;
+  }
+
+  .ergebnis{margin-top:14px;padding:14px;background:#fff4e8;font-size:19px;line-height:1.4;
+            text-align:center;border-radius:10px;color:var(--orange-dark);border:1px solid #ffd9a8;font-weight:800}
+  .haftungshinweis{letter-spacing:.2px;text-align:center;font-size:10px;margin-top:8px;color:#999}
+  #counter{position:fixed;bottom:6px;right:6px;font-size:12px;color:var(--darkblue);font-weight:bold;font-family:monospace;background:#fff;padding:3px 9px;border-radius:10px;border:1px solid var(--darkblue);box-shadow:0 2px 6px rgba(0,0,0,.15);opacity:1;z-index:10000}
+
+  .zeit-container .row{display:flex;gap:6px}
+  .zeit-container select, .zeit-container button{padding:9px;font-size:16px;border-radius:8px;}
+  .zeit-container button{background:var(--blue-mid);color:#fff;border:none;font-weight:700;cursor:pointer;transition:background .15s;}
+  .zeit-container button:hover{background:var(--darkblue)}
+  .zeit-result{margin-top:10px;padding:12px;background:#eaf7ec;border-radius:10px;font-weight:700;color:#0b4f0b;border:1px solid #bfe0bf;font-size:14.5px;line-height:1.4;text-align:center}
+
+  .panel{margin-top:10px;padding:10px;border-radius:10px;border:1px solid var(--border)}
+  .tip-panel{background:#fff7ea;border-color:#f2c58a;color:#8a5400}
+  .quote-panel{background:#eef5ff;border-color:#cbdcff;color:#143a66;font-style:italic}
+  .football-panel{background:#eefaf0;border-color:#bfe8cb;color:#0f3d1e;font-style:normal}
+  .football-panel .liga{font-weight:bold;margin-top:6px;color:#0b4f0b}
+  .football-panel .liga:first-child{margin-top:0}
+  .football-panel .spiel{padding:2px 0;font-size:12px}
+  .football-panel .spiel .datum{color:#777;font-size:10.5px}
+  .panel h3{margin:0 0 4px 0;font-size:12.5px;color:#333;font-style:normal}
+  .small{font-size:10.5px;color:#666}
+
+  /* ===== Spulenrechner ===== */
+  #tab-spule{font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+  #tab-spule .container{
+      background-color: white;
+      max-width: 500px;
+      width: calc(100% - 16px);
+      border-radius: 14px;
+      border:1px solid var(--border);
+      box-shadow: 0 4px 14px rgba(0,40,85,.07);
+      overflow: hidden;
+      margin-top: 14px;
+      margin-bottom: 8px;
+      padding:0;
+  }
+  #tab-spule .header { background-color: var(--darkblue); color: white; padding: 8px; text-align: center; }
+  #tab-spule .header h2 { margin: 0; font-size: 1rem; color: #fff; }
+  #tab-spule .section { padding: 8px; border-bottom: 1px solid #eee; }
+  #tab-spule .section-title { font-weight: bold; color: #555; margin-bottom: 4px; font-size: 0.68rem; }
+  #tab-spule .bg-blue { background-color: #eef6ff; border-left: 4px solid #0066cc; }
+  #tab-spule .bg-green { background-color: #f5f5f5; border-left: 4px solid var(--orange); }
+  #tab-spule .bg-result { background-color: var(--darkblue); }
+  #tab-spule label { display: block; margin-bottom: 2px; margin-top:0; font-weight: 600; color: #333; font-size: 0.74rem; }
+  #tab-spule input[type="number"], #tab-spule input[type="text"] {
+      width: 100%; padding: 9px; font-size: 16px; border: 1px solid var(--border); border-radius: 8px;
+      background:#fafafa; box-sizing: border-box; margin-bottom: 4px; margin-top:0;
+  }
+  #tab-spule input[type="number"]:focus, #tab-spule input[type="text"]:focus{ outline:none;border-color:var(--orange);background:#fff; }
+  #tab-spule button {
+      width: 100%; padding: 11px; background-color: var(--darkblue); color: white; font-size: 14px;
+      border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 6px;
+  }
+  #tab-spule .result-area { text-align: center; padding: 14px; color: white; display: none; }
+  #tab-spule .result-group { margin-bottom: 6px; }
+  #tab-spule .result-number { font-size: 2rem; font-weight: bold; color: var(--orange); line-height: 1.2; }
+  #tab-spule .result-label { font-size: 1rem; color: #eee; }
+  #tab-spule .error-msg { color: red; text-align: center; padding: 6px; font-size: 0.78rem; display: none; }
+  #tab-spule .small-output { color: #f7b731; font-weight: bold; font-size: 0.9rem; margin-top: -2px; margin-bottom: 6px; display: block; }
+  #tab-spule .switch-container { display: flex; justify-content: space-around; padding: 5px 0; background-color: #f0f0f0; }
+  #tab-spule .switch-button {
+      padding: 6px 8px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem;
+      transition: background-color 0.2s, color 0.2s; flex-grow: 1; text-align: center; margin: 0 4px;
+  }
+  #tab-spule .switch-button.active { background-color: var(--orange); color: white; border-color: #c96a1f; }
+  #tab-spule .sub-auswahl-label { font-size: 0.75rem; color: #666; padding: 6px 8px 2px 8px; background-color: #fff; }
+  #tab-spule .switch-container.sub { background-color: #fff; padding: 0 0 6px 0; }
+  #tab-spule .switch-button.sub { padding: 5px 8px; font-size: 0.75rem; font-weight: normal; border-radius: 5px; background-color: #f7f7f7; }
+  #tab-spule .switch-button.sub.active { background-color: #ffe0bf; color: #7a3e0a; border-color: #e8a366; }
+
+  /* ===== QR-Code / Barcode Generator ===== */
+  #tab-code .switch-container{ display:flex; justify-content:space-around; padding:5px 0; background-color:#f0f0f0; border-radius:8px; margin-bottom:12px; }
+  #tab-code .switch-button{ padding:8px 10px; border:1px solid #ddd; border-radius:6px; cursor:pointer; font-weight:bold; font-size:0.85rem; flex-grow:1; text-align:center; margin:0 4px; }
+  #tab-code .switch-button.active{ background-color:var(--orange); color:#fff; border-color:#c96a1f; }
+  #tab-code .code-panel{ display:none; }
+  #tab-code .code-panel.active{ display:block; }
+  #tab-code .hinweis{ font-size:11.5px; color:#666; background:#fff7ea; border:1px solid #f2c58a; border-radius:10px; padding:8px; margin-top:10px; line-height:1.4; }
+  #tab-code .code-ausgabe{ display:flex; flex-direction:column; align-items:center; justify-content:center; margin-top:14px; min-height:60px; }
+  #tab-code .code-ausgabe img, #tab-code .code-ausgabe canvas{ background:#fff; padding:8px; border-radius:8px; }
+  #tab-code .code-ausgabe svg{ background:#fff; padding:8px; border-radius:8px; max-width:100%; }
+  #tab-code button.teilen-btn{
+      width:100%; display:block; background-color:#28a745 !important; color:#ffffff !important; font-size:19px !important;
+      font-weight:bold; padding:16px 10px !important; margin-top:14px !important; border:none; border-radius:10px;
+      box-shadow:0 3px 8px rgba(0,0,0,.18); text-decoration:none !important; letter-spacing:.2px;
+  }
+  #tab-code h2{ font-size:1.5rem; margin-bottom:14px; }
+  #tab-code label{ font-size:16px; margin-top:14px; }
+  #tab-code input[type="text"], #tab-code input[type="password"]{ font-size:17px; padding:10px; margin-top:5px; }
+  #tab-code .switch-button{ padding:11px 12px; font-size:1rem; border-radius:8px; }
+  #tab-code button{ font-size:16px; padding:12px; background-color:var(--darkblue); color:#fff; border:none; border-radius:8px; cursor:pointer; }
+  #tab-code .hinweis{ font-size:13px; padding:11px; }
+  #tab-code .passwort-zeile{ display:flex; gap:8px; align-items:center; }
+  #tab-code .passwort-zeile input{ flex:1; }
+  #tab-code .augen-btn{
+      width:44px; height:44px; flex-shrink:0; border:1px solid var(--border); border-radius:8px;
+      background:#f5f5f5; cursor:pointer; margin-top:5px; display:flex; align-items:center; justify-content:center; color:#333;
+  }
 </style>
+
+<!-- NEU [13]: Gemeinsame Helfer, die von mehreren Tabs benutzt werden -->
+<script>
+  // Wandelt Eingaben mit Komma ODER Punkt als Dezimaltrennzeichen zuverlässig in eine Zahl um.
+  function parseDeNumber(str) {
+    if (str === null || str === undefined) return NaN;
+    return parseFloat(String(str).trim().replace(',', '.'));
+  }
+
+  // Macht beliebigen Text sicher für die Anzeige in innerHTML (verhindert HTML-Injection,
+  // z.B. durch präparierte QR-Codes oder Notizen mit < > " ').
+  function escapeHtml(s) {
+    return String(s === null || s === undefined ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  // Versteckter Zugang: 5x auf ein Element tippen, alle 5 Tipps innerhalb von fensterMs.
+  function fuenffachTipp(el, callback, fensterMs) {
+    fensterMs = fensterMs || 10000;
+    let anzahl = 0, ersterTipp = 0;
+    el.addEventListener("click", function(){
+      const jetzt = Date.now();
+      if (anzahl === 0 || (jetzt - ersterTipp) > fensterMs) { anzahl = 1; ersterTipp = jetzt; }
+      else { anzahl++; }
+      if (anzahl >= 5) { anzahl = 0; callback(); }
+    });
+  }
+</script>
+
+<!-- >>> HIER DEN UNVERÄNDERTEN QRCode.js-BLOCK AUS DER ALTEN DATEI EINFÜGEN <<<
+     (der komplette <script>var QRCode;!function(){ ... }();</script>-Block) -->
+
+<!-- >>> HIER DEN UNVERÄNDERTEN JsBarcode-BLOCK AUS DER ALTEN DATEI EINFÜGEN <<<
+     (der komplette <script>/*! JsBarcode v3.12.3 ... */ ... </script>-Block) -->
+
+<!-- GEÄNDERT [15]: defer - wird erst beim Kamera-Start gebraucht, blockiert so nicht den Seitenaufbau -->
+<script defer src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 <body>
-<main class="app">
-  <header class="top"><div class="brand">GIGABLUE</div><div class="gear">⚙️</div></header>
-  <div class="sub">Receiver Manager</div>
 
-  <section class="connection">
-    <div class="connrow">
-      <div><div class="model" id="receiverName">Trio 4K</div><div class="small" id="receiverVersion">OpenATV / Enigma2</div></div>
-      <div style="text-align:right"><div class="status">● Verbunden</div><div class="ip" id="receiverIp">IP: nicht konfiguriert</div></div>
+<div class="app-header">
+  <h1>Galvanik Tools</h1>
+</div>
+
+<!-- Verstecktes Popup (Long-Press auf Header).
+     HINWEIS: Der Inhalt steht im Klartext im Quelltext und ist für jeden mit der URL per
+     "Seite anzeigen" lesbar. Bewusst unverändert gelassen - bitte selbst entscheiden, ob
+     das hier hingehört. -->
+<div id="spetePopupOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:10001; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;">
+  <div style="max-width:320px; width:100%; margin:0 auto; background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.3);">
+    <div style="padding:26px 20px 20px; text-align:center;">
+      <div style="font-size:1.6rem; font-weight:bold; color:var(--darkblue); letter-spacing:.5px;">SPETE</div>
+      <div style="margin-top:8px; font-size:1.05rem; color:#333; font-family:monospace;">spe33180931</div>
     </div>
-    <button class="btn" style="margin-top:14px;width:100%" onclick="openSettings()">Verbindung ändern</button>
-  </section>
+    <button type="button" onclick="document.getElementById('spetePopupOverlay').style.display='none';" style="width:100%; padding:14px; background:var(--orange); color:#fff; border:none; font-size:1rem; font-weight:bold; cursor:pointer;">Schließen</button>
+  </div>
+</div>
 
-  <section class="grid">
-    <button class="tile blue" onclick="toast('Komplettes Backup wird vorbereitet…')"><div class="icon">⬇️</div><b>Komplettes<br>Backup</b><span>Wichtige Settings sichern</span></button>
-    <button class="tile green" onclick="toast('Wiederherstellung geöffnet')"><div class="icon">⬆️</div><b>Backup<br>wiederherstellen</b><span>Settings auf die Box</span></button>
-    <button class="tile purple" onclick="location.hash='files'"><div class="icon">📄</div><b>Dateimanager</b><span>Dateien anzeigen, sichern, übertragen</span></button>
-    <button class="tile orange" onclick="toast('Dateiauswahl wird geöffnet…')"><div class="icon">☰</div><b>Einzelne Datei</b><span>Gezielt sichern oder übertragen</span></button>
-    <button class="tile slate" onclick="toast('Bouquet-Verwaltung geöffnet')"><div class="icon">📋</div><b>Senderlisten</b><span>Bouquets sichern und wiederherstellen</span></button>
-    <button class="tile cyan" onclick="toast('Neustart-Funktionen geöffnet')"><div class="icon">⚙️</div><b>Receiver<br>Neustarten</b><span>Enigma2 neu laden oder rebooten</span></button>
-  </section>
+<nav class="topbar">
+  <button id="tabBtnStrom" class="tabbtn">⚡ Stromrechner</button>
+  <button id="tabBtnZeit" class="tabbtn active">⏱️ Zeitrechner</button>
+  <button id="tabBtnSpule" class="tabbtn">🧵 Spulenrechner</button>
+  <button id="tabBtnCode" class="tabbtn">🔳 QR/Strichcode</button>
+  <button id="tabBtnMde" class="tabbtn">📱 MDE-Anleitung</button>
+</nav>
 
-  <section class="section" id="files">
-    <div class="sectionhead"><h2>Schnellzugriff</h2><span class="muted">Wichtige Ordner</span></div>
-    <div class="folders">
-      <button class="folder" onclick="selectPath('/etc/enigma2')"><div class="icon">📁</div><strong>/etc/enigma2</strong><code>Settings &amp; Bouquets</code></button>
-      <button class="folder" onclick="selectPath('/media/hdd')"><div class="icon">📁</div><strong>/media/hdd</strong><code>Festplatte</code></button>
-      <button class="folder" onclick="selectPath('/media/usb')"><div class="icon">📁</div><strong>/media/usb</strong><code>USB</code></button>
-      <button class="folder" onclick="selectPath('/etc/network')"><div class="icon">📁</div><strong>/etc/network</strong><code>Netzwerk</code></button>
+<div id="counter"></div>
+
+<!-- ================================================================== -->
+<section id="tab-strom" class="tab-pane">
+  <div class="container">
+    <h2>Galvanik-Stromrechner</h2>
+
+    <label for="istStrom">Aktueller Strom (A):</label>
+    <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="istStrom" placeholder="z. B. 4" value="4">
+
+    <label for="istSchicht">Aktuelle Schichtdicke (µm):</label>
+    <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="istSchicht" placeholder="z. B. 1.0" value="1.0">
+
+    <label for="zielSchicht">Ziel-Schichtdicke (µm):</label>
+    <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="zielSchicht" placeholder="z. B. 2.5" value="2.5">
+
+    <label for="istGeschw">Aktuelle Bandgeschwindigkeit (m/min):</label>
+    <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="istGeschw" placeholder="z. B. 7" value="7">
+
+    <label for="neuGeschw">Neue Bandgeschwindigkeit (m/min):</label>
+    <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="neuGeschw" placeholder="z. B. 7" value="7">
+
+    <div class="ergebnis" id="ergebnis">Ergebnis wird hier angezeigt</div>
+    <div class="haftungshinweis">Alle Angaben ohne Gewähr – es wird keine Haftung übernommen.</div>
+  </div>
+
+  <div id="stromProtokollOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; overflow-y:auto; padding:12px; box-sizing:border-box;">
+    <div style="max-width:500px; margin:0 auto; background:#fff; border-radius:12px; overflow:hidden;">
+      <div style="background:var(--darkblue); color:#fff; padding:14px; display:flex; justify-content:space-between; align-items:center;">
+        <strong style="font-size:1.05rem;">Mess-Protokoll (Strom → Schichtdicke)</strong>
+        <button type="button" onclick="versteckeProtokoll()" style="width:auto;background:none;border:none;color:#fff;font-size:1.4rem;line-height:1;cursor:pointer;padding:0 4px;">✕</button>
+      </div>
+      <div style="padding:14px;">
+        <div style="font-size:0.85rem;color:#666;margin-bottom:10px;">Trage hier echte Messwerte ein, wenn du den Strom manuell angepasst hast. Damit sammeln wir über die Zeit reale Datenpunkte für eine genauere Berechnung.</div>
+
+        <div style="display:flex;gap:8px;">
+          <div style="flex:1;">
+            <label for="pStromAlt">Strom vorher (A)</label>
+            <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="pStromAlt" placeholder="z.B. 4,0">
+          </div>
+          <div style="flex:1;">
+            <label for="pStromNeu">Strom nachher (A)</label>
+            <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="pStromNeu" placeholder="z.B. 3,6">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div style="flex:1;">
+            <label for="pSchichtAlt">Schichtdicke vorher (µm)</label>
+            <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="pSchichtAlt" placeholder="z.B. 1,2">
+          </div>
+          <div style="flex:1;">
+            <label for="pSchichtNeu">Schichtdicke nachher (µm)</label>
+            <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="pSchichtNeu" placeholder="z.B. 0,8">
+          </div>
+        </div>
+        <label for="pGeschw">Bandgeschwindigkeit (m/min) - optional</label>
+        <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="pGeschw" placeholder="z.B. 7">
+
+        <label for="pNotiz">Notiz - optional</label>
+        <input type="text" id="pNotiz" placeholder="z.B. Auftrag XY, Bad frisch angesetzt...">
+
+        <div id="pFehler" style="color:red;font-size:0.85rem;margin-top:6px;display:none;"></div>
+        <button type="button" onclick="speichereProtokollEintrag()" style="margin-top:10px;background:var(--darkblue);color:#fff;border:none;padding:11px;border-radius:8px;font-weight:bold;width:100%;cursor:pointer;">Eintrag speichern</button>
+
+        <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;">
+          <strong style="font-size:0.95rem;">Bisherige Einträge</strong>
+          <button type="button" onclick="exportiereProtokoll()" style="width:auto;background:none;border:1px solid var(--darkblue);color:var(--darkblue);padding:5px 10px;border-radius:6px;font-size:0.8rem;cursor:pointer;">📋 Alle kopieren</button>
+        </div>
+        <div id="pListe" style="margin-top:8px;"></div>
+      </div>
     </div>
-  </section>
-</main>
+  </div>
 
-<nav class="bottom"><div class="nav">
-  <button class="active"><span class="ni">⌂</span>Start</button>
-  <button onclick="location.hash='files'"><span class="ni">□</span>Dateien</button>
-  <button onclick="toast('Backups werden später hier angezeigt')"><span class="ni">◷</span>Backups</button>
-  <button onclick="openSettings()"><span class="ni">☰</span>Mehr</button>
-</div></nav>
+  <script>
+    const STROM_KEY="galvanikStromLetzteWerte";
+    const stromFelder=["istStrom","istSchicht","zielSchicht","istGeschw","neuGeschw"];
 
-<div class="modal" id="modal"><div class="sheet"><h2>GigaBlue Verbindung</h2><input class="input" id="ip" placeholder="IP-Adresse, z. B. 192.168.178.50"><input class="input" id="name" placeholder="Receivername, z. B. Trio 4K"><input class="input" id="version" placeholder="Software, z. B. OpenATV 8.0"><div class="actions"><button class="btn" onclick="closeSettings()">Abbrechen</button><button class="btn" style="background:#168ef0;border-color:#168ef0" onclick="saveSettings()">Speichern</button></div></div></div>
-<div class="toast" id="toast"></div>
+    function ladeLetzteStromWerte(){
+      try{
+        const gespeichert=JSON.parse(localStorage.getItem(STROM_KEY));
+        if(gespeichert){
+          stromFelder.forEach(id=>{
+            if(gespeichert[id]!==undefined && gespeichert[id]!=="") document.getElementById(id).value=gespeichert[id];
+          });
+        }
+      }catch(e){}
+    }
+
+    function speichereLetzteStromWerte(){
+      try{
+        const werte={};
+        stromFelder.forEach(id=>{ werte[id]=document.getElementById(id).value; });
+        localStorage.setItem(STROM_KEY, JSON.stringify(werte));
+      }catch(e){}
+    }
+
+    function berechne(){
+      const I_alt=parseDeNumber(document.getElementById("istStrom").value);
+      const S_alt=parseDeNumber(document.getElementById("istSchicht").value);
+      const S_neu=parseDeNumber(document.getElementById("zielSchicht").value);
+      const V_alt=parseDeNumber(document.getElementById("istGeschw").value);
+      const V_neu=parseDeNumber(document.getElementById("neuGeschw").value);
+
+      if(!I_alt||!S_alt||!S_neu||!V_alt||!V_neu){document.getElementById("ergebnis").innerText="Bitte alle Werte eingeben.";return;}
+
+      const I_neu=I_alt*(S_neu/S_alt)*(V_neu/V_alt);
+      document.getElementById("ergebnis").innerText=`Benötigter Strom: ${I_neu.toFixed(2)} A`;
+      speichereLetzteStromWerte();
+    }
+
+    ladeLetzteStromWerte();
+    document.querySelectorAll("#tab-strom input").forEach(i=>i.addEventListener("input",berechne));
+    document.addEventListener("DOMContentLoaded", berechne);
+
+    // ===== Verstecktes Mess-Protokoll =====
+    const PROTOKOLL_KEY = "galvanikStromProtokoll";
+
+    function ladeProtokoll(){
+      try{ return JSON.parse(localStorage.getItem(PROTOKOLL_KEY)) || []; }catch(e){ return []; }
+    }
+    function speichereProtokollListe(liste){
+      try{ localStorage.setItem(PROTOKOLL_KEY, JSON.stringify(liste)); }catch(e){}
+    }
+    function zeigeProtokoll(){
+      document.getElementById('stromProtokollOverlay').style.display = 'block';
+      renderProtokollListe();
+    }
+    function versteckeProtokoll(){
+      document.getElementById('stromProtokollOverlay').style.display = 'none';
+    }
+
+    function speichereProtokollEintrag(){
+      const stromAlt = parseDeNumber(document.getElementById('pStromAlt').value);
+      const stromNeu = parseDeNumber(document.getElementById('pStromNeu').value);
+      const schichtAlt = parseDeNumber(document.getElementById('pSchichtAlt').value);
+      const schichtNeu = parseDeNumber(document.getElementById('pSchichtNeu').value);
+      const geschw = document.getElementById('pGeschw').value.trim();
+      const notiz = document.getElementById('pNotiz').value.trim();
+      const elFehler = document.getElementById('pFehler');
+
+      if(isNaN(stromAlt) || isNaN(stromNeu) || isNaN(schichtAlt) || isNaN(schichtNeu)){
+        elFehler.innerText = 'Bitte mindestens Strom vorher/nachher und Schichtdicke vorher/nachher ausfüllen.';
+        elFehler.style.display = 'block';
+        return;
+      }
+      elFehler.style.display = 'none';
+
+      const liste = ladeProtokoll();
+      liste.unshift({
+        datum: new Date().toLocaleString('de-DE'),
+        stromAlt, stromNeu, schichtAlt, schichtNeu,
+        geschw: geschw || null,
+        notiz: notiz || null
+      });
+      speichereProtokollListe(liste);
+
+      ['pStromAlt','pStromNeu','pSchichtAlt','pSchichtNeu','pGeschw','pNotiz'].forEach(id=>document.getElementById(id).value='');
+      renderProtokollListe();
+    }
+
+    function loescheProtokollEintrag(index){
+      const liste = ladeProtokoll();
+      liste.splice(index, 1);
+      speichereProtokollListe(liste);
+      renderProtokollListe();
+    }
+
+    function renderProtokollListe(){
+      const liste = ladeProtokoll();
+      const el = document.getElementById('pListe');
+      if(liste.length === 0){
+        el.innerHTML = '<div style="color:#888;font-size:0.85rem;">Noch keine Einträge.</div>';
+        return;
+      }
+      // GEÄNDERT [4]: alle Nutzertexte durch escapeHtml
+      el.innerHTML = liste.map((e, i) => `
+        <div style="background:#f7f7f7;border:1px solid #ddd;border-radius:6px;padding:8px 10px;margin-bottom:6px;font-size:0.85rem;position:relative;">
+          <div style="color:#888;font-size:0.75rem;">${escapeHtml(e.datum)}</div>
+          <div><strong>${escapeHtml(e.stromAlt)} A → ${escapeHtml(e.stromNeu)} A</strong> &nbsp;|&nbsp; <strong>${escapeHtml(e.schichtAlt)} µm → ${escapeHtml(e.schichtNeu)} µm</strong></div>
+          ${e.geschw ? `<div>Geschwindigkeit: ${escapeHtml(e.geschw)} m/min</div>` : ''}
+          ${e.notiz ? `<div style="color:#555;">${escapeHtml(e.notiz)}</div>` : ''}
+          <button type="button" onclick="loescheProtokollEintrag(${i})" style="position:absolute;top:6px;right:6px;width:auto;background:none;border:none;color:#cc0000;font-size:0.9rem;cursor:pointer;padding:2px 6px;">🗑</button>
+        </div>
+      `).join('');
+    }
+
+    function exportiereProtokoll(){
+      const liste = ladeProtokoll();
+      if(liste.length === 0){ return; }
+      const text = liste.map(e =>
+        `${e.datum}: ${e.stromAlt}A -> ${e.stromNeu}A | ${e.schichtAlt}µm -> ${e.schichtNeu}µm` +
+        (e.geschw ? ` | ${e.geschw} m/min` : '') + (e.notiz ? ` | ${e.notiz}` : '')
+      ).join('\n');
+      if(navigator.clipboard){
+        navigator.clipboard.writeText(text).then(()=>{ alert('Protokoll wurde in die Zwischenablage kopiert.'); }).catch(()=>{ alert(text); });
+      } else {
+        alert(text);
+      }
+    }
+
+    // GEÄNDERT [13]: gemeinsamer Helfer statt Kopie
+    fuenffachTipp(document.getElementById("ergebnis"), zeigeProtokoll);
+
+    // Besucherzähler (unverändert)
+    const ZAEHLER_SCHLUESSEL = "postmen1971-galvanik-tools-besucher";
+    const LOKALER_ZAEHLER_KEY = "galvanikCounter";
+
+    function zeigeLokalenZaehler(){
+      let count = localStorage.getItem(LOKALER_ZAEHLER_KEY);
+      count = count ? parseInt(count) + 1 : 1;
+      localStorage.setItem(LOKALER_ZAEHLER_KEY, count);
+      document.getElementById("counter").innerText = `#${count}`;
+    }
+
+    fetch(`https://countapi.mileshilliard.com/api/v1/hit/${ZAEHLER_SCHLUESSEL}`, {cache:"no-store"})
+      .then(res => { if(!res.ok) throw new Error('Netzwerkfehler'); return res.json(); })
+      .then(data => {
+        if(data && typeof data.value !== "undefined"){ document.getElementById("counter").innerText = `#${data.value}`; }
+        else{ throw new Error('Ungültige Antwort'); }
+      })
+      .catch(() => { zeigeLokalenZaehler(); });
+  </script>
+</section>
+
+<!-- ================================================================== -->
+<section id="tab-zeit" class="tab-pane active">
+  <div class="container zeit-container">
+    <h2>Galvanik-Zeitrechner</h2>
+
+    <div class="row">
+      <div style="flex:1">
+        <label for="speedInput">Geschwindigkeit (m/min)</label>
+        <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="speedInput" placeholder="z. B. 7" value="7">
+      </div>
+    </div>
+    <div class="row">
+      <div style="flex:1">
+        <label for="startSel">Startpunkt</label>
+        <select id="startSel"></select>
+      </div>
+      <div style="flex:1">
+        <label for="endSel">Endpunkt</label>
+        <select id="endSel"></select>
+      </div>
+    </div>
+
+    <div class="zeit-result" id="zeitResult">Bitte wähle Start, Ende und Geschwindigkeit.</div>
+
+    <div class="panel tip-panel">
+      <h3>😄 Superwitz</h3>
+      <div id="jokeOfDay">Witz wird geladen…</div>
+      <div class="small">Bei jedem Öffnen ein neuer Witz.</div>
+    </div>
+
+    <div class="panel quote-panel">
+      <h3>Zitat des Tages</h3>
+      <div id="quoteGeneral">–</div>
+    </div>
+
+    <div class="panel football-panel">
+      <h3 style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 14px;">
+        <span>⚽ Topspiele</span>
+        <a href="https://liveonsat.com/" target="_blank" rel="noopener" title="Zeigt, welcher TV-Sender/Stream das Spiel überträgt" style="display:inline-flex;align-items:center;gap:4px;text-decoration:underline;color:#0066cc;font-weight:normal;font-size:0.8em;">📺 Sender-Übersicht</a>
+      </h3>
+      <div id="footballBox">Spiele werden geladen…</div>
+      <div class="small">Nächste Spiele deiner Lieblingsvereine.</div>
+    </div>
+  </div>
+
+  <script>
+    /* --- Zeitmarken (Basis: 7 m/min) --- */
+    const punkte=[
+      ["Start","0:00"],
+      ["Hot Wash","5:10"],
+      ["Nickel 1","6:32"],
+      ["Nickel 6","7:25"],
+      ["Nickel 12","8:27"],
+      ["Pd 1","9:10"],
+      ["Pd 3","9:40"],
+      ["Pd 5","10:12"],
+      ["Pd 7","10:40"],
+      ["U-Turn Mitte","11:47"],
+      ["Gold 1","14:52"],
+      ["Gold 3","15:22"],
+      ["Gold 5","15:40"],
+      ["Gold Stripper","16:11"],
+      ["Zinn 1","17:20"],
+      ["Zinn 3","17:41"],
+      ["Zinn 5","18:03"],
+      ["Zinn 7","18:25"],
+      ["Zinn 9","19:00"],
+      ["Zinn Stripper","19:25"],
+      ["Nach-Fön","20:31"],
+      ["Speicher","22:17"],
+      ["Getriebe vor Befettung","25:43"]
+    ];
+
+    function zeitInSekunden(t){const[m,s]=t.split(":").map(Number);return m*60+s;}
+    function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+    const startSel=document.getElementById("startSel"),endSel=document.getElementById("endSel"),speedInput=document.getElementById("speedInput");
+    punkte.forEach(([n])=>{startSel.add(new Option(n,n));endSel.add(new Option(n,n));});
+
+    /* --- Letzte Suche ---
+       GEÄNDERT [1]: Die automatische jsonblob-"Ersteinrichtung" ist raus. Sie lief bei JEDER
+       Eingabe (POST + alert), weil ZEIT_ONLINE_ID leer ist. Jetzt: rein lokal pro Gerät.
+       Wer wirklich einen geräteübergreifenden Speicher will, legt EINMAL manuell einen Blob an
+       (POST an https://jsonblob.com/api/jsonBlob) und trägt die ID hier ein. Achtung: dann
+       überschreiben sich alle Nutzer gegenseitig. */
+    const ZEIT_KEY="galvanikZeitLetzteSuche";
+    const ZEIT_ONLINE_ID="";
+    const ZEIT_ONLINE_URL = ZEIT_ONLINE_ID ? ("https://jsonblob.com/api/jsonBlob/" + ZEIT_ONLINE_ID) : null;
+
+    function fetchMitTimeout(url, optionen, timeoutMs){
+      const controller = new AbortController();
+      const timer = setTimeout(()=>controller.abort(), timeoutMs);
+      return fetch(url, Object.assign({}, optionen, {signal: controller.signal})).finally(()=>clearTimeout(timer));
+    }
+
+    function wendeLetzteSucheAn(werte){
+      if(!werte) return;
+      if(werte.speed) speedInput.value=werte.speed;
+      if(werte.start && punkte.some(p=>p[0]===werte.start)) startSel.value=werte.start;
+      if(werte.end && punkte.some(p=>p[0]===werte.end)) endSel.value=werte.end;
+    }
+    function ladeLetzteSucheLokal(){
+      try{ return JSON.parse(localStorage.getItem(ZEIT_KEY)); }catch(e){ return null; }
+    }
+    async function ladeLetzteSuche(){
+      if(ZEIT_ONLINE_URL){
+        try{
+          const antwort = await fetchMitTimeout(ZEIT_ONLINE_URL, {cache:"no-store"}, 3000);
+          if(antwort.ok){ wendeLetzteSucheAn(await antwort.json()); return; }
+        }catch(e){}
+      }
+      wendeLetzteSucheAn(ladeLetzteSucheLokal());
+    }
+
+    async function speichereLetzteSuche(){
+      const werte={speed:speedInput.value, start:startSel.value, end:endSel.value};
+      if(ZEIT_ONLINE_URL){
+        try{
+          await fetchMitTimeout(ZEIT_ONLINE_URL, {method:"PUT", headers:{"Content-Type":"application/json"}, body: JSON.stringify(werte)}, 3000);
+        }catch(e){}
+      }
+      try{ localStorage.setItem(ZEIT_KEY, JSON.stringify(werte)); }catch(e){}
+    }
+
+    function berechnenZeit(){
+      const v=parseDeNumber(speedInput.value);
+      const s=startSel.value, e=endSel.value, out=document.getElementById("zeitResult");
+      if(!v||!s||!e){out.textContent="Bitte Start, Ende und Geschwindigkeit wählen/eingeben.";return;}
+      if(v <= 0){out.textContent="Die Geschwindigkeit muss größer als 0 sein.";return;}
+      const iS=punkte.findIndex(p=>p[0]===s), iE=punkte.findIndex(p=>p[0]===e);
+      if(iS>iE){out.textContent="Rückwärtslauf ist nicht erlaubt.";return;}
+      const tStart7=zeitInSekunden(punkte[iS][1]), tEnd7=zeitInSekunden(punkte[iE][1]);
+      const total=Math.round((tEnd7 - tStart7)*(7/v));
+      const m=Math.floor(total/60), sec=total%60;
+      out.innerHTML=`Von "${s}" bis "${e}"<br>dauert es bei ${v.toFixed(1)} m/min<br>${m} min ${sec} s.`;
+      speichereLetzteSuche();
+    }
+
+    // Sofort Default setzen + rechnen, dann gespeicherte Werte laden und NEU rechnen (GEÄNDERT [2])
+    if(!startSel.value) startSel.value="Start";
+    if(!endSel.value) endSel.value="Hot Wash";
+    speedInput.addEventListener("input", berechnenZeit);
+    startSel.addEventListener("change", berechnenZeit);
+    endSel.addEventListener("change", berechnenZeit);
+    berechnenZeit();
+    ladeLetzteSuche().then(function(){
+      if(!startSel.value) startSel.value="Start";
+      if(!endSel.value) endSel.value="Hot Wash";
+      berechnenZeit();
+    });
+
+    /* --- Superwitz --- */
+    const GUTE_WITZE=[
+      "Fragt der Chef: 'Warum kommen Sie erst um 11 Uhr?' – 'Wegen der Verkehrsschilder.' – 'Was für Verkehrsschilder?' – 'Vorsicht, Arbeit beginnt um 8 Uhr.'",
+      "Zwei Kannibalen essen einen Clown. Fragt der eine: 'Schmeckt der komisch?'",
+      "Ich habe eine Leiter aus Zwiebeln gebaut. Damit kann man richtig hoch steigen, ohne dass es einem an die Nieren geht.",
+      "Sagt der Arzt zum Patienten: 'Ich hab schlechte Nachrichten und noch schlechtere.' – 'Die schlechten zuerst.' – 'Sie haben noch 24 Stunden zu leben.' – 'Und die noch schlechteren?' – 'Ich wollte es Ihnen schon gestern sagen.'",
+      "Was ist der Unterschied zwischen einer Katze und einem Komma? Die Katze hat Pfoten vorne, das Komma hat Pause hinten.",
+      "Treffen sich zwei Freunde. Sagt der eine: 'Ich hab meiner Frau zum Geburtstag ein Grab gekauft.' – 'Wieso das denn?' – 'Na, letztes Jahr hat sie sich auch nichts gewünscht, was man mehrmals benutzen kann.'",
+      "Kommt ein Skelett in die Bar und bestellt ein Bier und einen Mopp.",
+      "Warum können Marathonläufer so gut rechnen? Weil sie ständig einen Läufer im Kopf haben.",
+      "Sagt der Chef zu seinem neuen Mitarbeiter: 'Wenn Sie einen Fehler machen, tun Sie so, als wär es Absicht.' Am nächsten Tag verschüttet der Mitarbeiter Kaffee über das ganze Büro und ruft: 'Kunst!'",
+      "Was sagt ein Vulkan zum anderen? Ich lava dich.",
+      "Zwei Blondinen springen von einer Brücke. Warum? Weil sie den Sprung ins kalte Wasser wagen wollten.",
+      "Kellner, ist das ein Haar in meiner Suppe? Nein, das ist mein Toupet, ich muss die Küche verlassen.",
+      "Warum tragen Bienen gestreifte Anzüge? Weil die geringelten in der Reinigung sind.",
+      "Chef fragt den Mitarbeiter: 'Warum haben Sie sich für diesen Beruf entschieden?' – 'Wegen der spannenden Aufgaben und der Herausforderung.' – 'Und warum sind Sie dann seit 15 Jahren hier?'",
+      "Kommt ein Mann zum Zahnarzt. Der Zahnarzt sagt: 'Das wird wehtun.' Der Mann fragt: 'Warum?' Der Zahnarzt: 'Ich bin Ihnen gerade auf den Fuß getreten.'",
+      "Sitzen zwei Särge im Wartezimmer. Sagt der eine: 'Hustest du auch schon so lange?'",
+      "Meine Oma sagte immer: 'Was dich nicht umbringt, macht dich stärker.' Bis es sie dann doch umgebracht hat.",
+      "Ich hab meiner Frau gesagt, dass ich Ärger mit meinem Gedächtnis habe. Sie meinte: 'Welcher Ärger?'",
+      "Zwei Särge unterhalten sich beim Bestatter. Fragt der eine: 'Kommst du auch aus Eiche?' – 'Nein, aus Altersgründen.'",
+      "Warum bringen Selbstmörder immer eine Leiter mit? Für den Fall, dass es doch nicht klappt.",
+      "Ein Mann kommt in die Notaufnahme: 'Doktor, ich hab Amnesie!' Der Arzt: 'Seit wann?' Der Mann: 'Seit wann was?'",
+      "Sagt der Bestatter zum Angehörigen: 'Wollen Sie eine Feuerbestattung oder Erdbestattung?' – 'Was ist günstiger?' – 'Feuer, aber es dauert ein bisschen mit der Auszahlung der Asche.'",
+      "Auf meinem Grabstein soll später stehen: 'Er wollte gerade aufhören zu rauchen.'",
+      "Ich hab meinem Anwalt gesagt, ich will nach meinem Tod alles der Wissenschaft spenden. Er meinte, dafür müsste ich erstmal was leisten.",
+      "Warum haben Gespenster so wenig Erfolg beim Lügen? Weil man ihnen alles durchschaut.",
+      "Sagt der Arzt: 'Ich muss Ihnen leider mitteilen, dass Sie nur noch 10 Sekunden zu leben haben.' Der Patient: 'Kann ich noch was—' Der Arzt: '9, 8, 7...'",
+      "Mein Opa hat auf dem Sterbebett gesagt: 'Nie im Leben verkaufe ich meine Lebensversicherung.' Es war sein letzter Satz, aber wenigstens konsequent.",
+      "Ein Mann fällt vom zwanzigsten Stock. Auf Höhe des zehnten Stocks ruft er: 'Bis hierhin lief alles gut!'",
+      "Ich hab neulich einen Sarg-Discounter entdeckt. Werbeslogan: 'Bei uns liegen Sie günstig.'",
+      "Warum nehmen Geister nie den Fahrstuhl? Weil das drückt aufs Gemüt.",
+      "Zwei Freunde beim Grab des dritten: 'War er ein guter Mensch?' – 'Na ja, er hat wenigstens niemandem geschadet, außer sich selbst - und den Kollegen, denen er im Weg stand.'",
+      "Meine Lebensversicherung hat mich angerufen und gefragt, ob bei mir alles in Ordnung sei. Ich glaub, die hoffen auf was anderes.",
+      "Ich hab meinem Chef gesagt, ich brauch einen Tag frei, weil bei uns jemand gestorben ist. Er hat gefragt wer. Ich meinte: 'Meine Motivation.'",
+      "Der Optimist sagt: Das Glas ist halb voll. Der Pessimist sagt: Das Glas ist halb leer. Der Bestatter sagt: Das Glas reicht noch für die Nachfeier.",
+      "Ich war beim Wahrsager. Er sagte, ich hätte nur noch kurze Zeit zu leben. Ich fragte: 'Wie lange denn?' Er meinte: '10... 9... 8...'",
+      "Sagt der Arzt: 'Sie haben noch ein Jahr.' Fragt der Patient: 'Und wenn ich mich gesund ernähre?' Arzt: 'Dann kommt es Ihnen wie zwei vor.'",
+      "Warum haben Mumien keine Angst vor dem Tod? Sie haben ihn schon länger hinter sich.",
+      "Mein Therapeut meinte, ich solle über meine dunklen Gedanken reden. Jetzt reden wir beide nicht mehr, er ist in Rente gegangen.",
+      "Ein Mann springt von der Brücke. Ein Passant ruft: 'Warum tun Sie das?' Der Mann: 'Kredit abbezahlt, jetzt bin ich frei!'",
+      "Was ist der Unterschied zwischen einem Optimisten und einem Skelett? Keiner, beide haben nichts mehr zu verlieren.",
+      "Ich hab meinem Anwalt gesagt: 'Regeln Sie alles für den Fall meines Todes.' Er meinte: 'Sie haben also endlich ein Testament gemacht?' Ich: 'Nein, ich hab einfach aufgehört, die Miete zu zahlen.'",
+      "Der Sensenmann klopft an. Fragt der Bewohner: 'Kommen Sie zu mir?' Sensenmann: 'Nein, ich verkauf nur Zeitschriften-Abos, das mit der Sense ist Privatvergnügen.'",
+      "Warum sind Beerdigungen so leise? Weil da niemand mehr was zu sagen hat.",
+      "Ich hab dem Notarzt gesagt, es sei dringend. Er fragte: 'Wie dringend?' Ich: 'Na ja, ich hab schon die Kerzen für die Trauerfeier bestellt.'",
+      "Auf dem Totenschein meines Nachbarn stand als Todesursache: 'Hat sich zu Tode gefreut.' Er hatte im Lotto gewonnen und dann direkt seine Steuererklärung gesehen.",
+      "Warum ist der Friedhof der ruhigste Ort der Stadt? Weil da alle unter der Erde bleiben, außer den Sorgen, die kommen wieder hoch.",
+      "Fragt der Trainer: 'Was ist Offside?' Antwortet der Spieler: 'Das, was ich immer bin, wenn ich mal ein Tor schieße.'",
+      "Warum können Fußballer so schlecht rechnen? Weil sie immer erst nach dem Elfmeter zählen, wie viele Chancen sie vergeben haben.",
+      "Kommt ein Schiedsrichter zum Optiker. Sagt der Optiker: 'Tut mir leid, gegen Betriebsblindheit kann ich nichts machen.'",
+      "Fragt der Reporter den Trainer: 'Wie erklären Sie sich die 0:6-Niederlage?' – 'Ganz einfach: Wir hätten mehr Tore schießen müssen als der Gegner.'",
+      "Warum nehmen Torhüter immer ihr Handy mit ins Tor? Für den Fall, dass mal wieder nichts reinkommt.",
+      "Sagt der Trainer in der Halbzeitpause: 'Jungs, wir müssen anders spielen!' Fragt ein Spieler: 'Wie denn?' – 'Besser.'",
+      "Was ist der Unterschied zwischen einem Fußballfan und einem Baby? Irgendwann hört das Baby auf zu weinen.",
+      "Fragt der Journalist: 'Glauben Sie an Wunder?' Der Trainer: 'Muss ich wohl, wir stehen im Abstiegskampf.'",
+      "Warum bringt der Stürmer immer einen Regenschirm mit? Für den Fall, dass es Chancen regnet, die er dann trotzdem nicht nutzt.",
+      "Kommt ein Fan zum Arzt: 'Doktor, ich hab Herzrasen.' – 'Seit wann?' – 'Seit dem Elfmeterschießen letzte Woche.'",
+      "Fragt der Norddeutsche den Bayern: 'Wie sagt ihr zu Guten Morgen?' – 'Grias di.' – 'Und zu Auf Wiedersehen?' – 'Servus.' – 'Praktisch, ihr braucht ja gar keine Uhr.'",
+      "Treffen sich ein Schwabe und ein Berliner. Sagt der Schwabe: 'Des macht mr net.' Sagt der Berliner: 'Wat willste damit sagen, wa?' Am Ende verstehen sich beide nur über Kopfnicken.",
+      "Warum spart der Schwabe beim Reden Buchstaben? Damit noch was für den Kontostand übrig bleibt.",
+      "Fragt der Sachse: 'Wat machn mer heit?' Der Rheinländer versteht nur Bahnhof, aber lacht trotzdem mit, wie immer.",
+      "Kommt ein Bayer nach Hamburg und bestellt eine Weißwurst. Der Kellner fragt: 'Mit oder ohne Senf?' Der Bayer: 'Hauptsach ned mit Fischsoß'n.'",
+      "Warum verstehen sich Kölner und Düsseldorfer beim Bier nie ganz? Weil der eine Kölsch bestellt und der andere sich beleidigt fühlt, wenn man's Alt nennt.",
+      "Ruft der Ostfriese beim Wetterbericht an: 'Wat mook wi morgen?' – 'Regen.' – 'Und übermorgen?' – 'Auch Regen.' – 'Gut, dann weiß ich Bescheid für's ganze Jahr.'",
+      "Sagt der Berliner zum Touristen: 'Wat guckste?' Der Tourist: 'Ich hab nur gefragt, wo der Bahnhof ist.' – 'Da kannste ooch fragen, wa.'",
+      "Sagt der Chef: 'Wir sind hier eine große Familie!' – Fragt der Mitarbeiter: 'Heißt das, ich erbe irgendwann die Firma?'",
+      "Meeting-Einladung: 'Kurzes Update, 15 Minuten.' Zwei Stunden später ist noch nicht mal die Agenda durch.",
+      "Fragt der Chef beim Bewerbungsgespräch: 'Wo sehen Sie sich in 5 Jahren?' – 'Ehrlich gesagt, in Ihrem Büro.'",
+      "Sagt der Praktikant: 'Ich hab eine Idee, wie wir Zeit sparen können.' Der Chef: 'Sehr gut, dann fangen Sie mal mit den Meetings über Zeitersparnis an.'",
+      "Warum hat der Chef immer offene Bürotür-Politik? Damit er sieht, wer pünktlich geht.",
+      "E-Mail vom Chef um 23 Uhr: 'Keine Eile, aber bis morgen früh brauch ich das.'",
+      "Sagt der Mitarbeiter: 'Ich brauch mehr Gehalt, die Preise steigen ja überall.' Der Chef: 'Ja, deshalb steigt auch meine Rendite nicht mehr so wie früher.'",
+      "Warum lieben Chefs das Wort 'Synergie'? Weil man damit 'mehr Arbeit, gleiches Geld' viel eleganter verpacken kann.",
+      "Ruft der Kunde beim Handwerker an: 'Wann kommen Sie?' – 'Zwischen 8 und 16 Uhr.' – 'An welchem Tag?' – 'Das sag ich dann kurzfristig.'",
+      "Fragt der Azubi: 'Wie lang dauert das Projekt?' Der Meister: 'Doppelt so lang, wie ich sage, plus die Zeit, bis das Material da ist.'",
+      "Warum haben Handwerker immer einen Bleistift hinterm Ohr? Damit sie ihn garantiert nicht finden, wenn sie ihn brauchen.",
+      "Sagt der Kunde: 'Das war aber schnell repariert!' Der Handwerker: 'Ja, der Fehler war klein. Die Anfahrt war das Problem.'",
+      "Kommt der Handwerker zur vereinbarten Zeit. Alle im Haus erschrecken sich zu Tode.",
+      "Fragt der Meister den Lehrling: 'Wie misst man zweimal?' – 'Genau. Und dann schneidet man trotzdem einmal falsch.'",
+      "Warum bringen gute Handwerker immer Ersatzteile mit? Weil beim ersten Versuch eh meistens was kaputtgeht, was vorher noch ganz war.",
+      "Fragt der Chef den Programmierer: 'Wie lange dauert das noch?' – 'Es funktioniert doch schon fast, nur noch ein kleiner Bug.' (Das war vor drei Wochen.)",
+      "Warum haben Programmierer Angst vor echten Menschen? Weil die sich nicht wie erwartet verhalten und man dafür keine Fehlermeldung bekommt.",
+      "Support-Hotline: 'Haben Sie es schon mal aus- und wieder eingeschaltet?' – 'Ja.' – 'Und jetzt nochmal, aber diesmal wirklich.'",
+      "Warum ist der Computer immer traurig? Er hat zu viele ungelöste Probleme und niemand fragt ihn, wie es ihm geht.",
+      "Sagt der IT-Mitarbeiter: 'Es ist kein Bug, das ist ein Feature.' Sagt der Kunde: 'Dann will ich das Feature zurückgeben.'",
+      "Zwei Bits treffen sich. Fragt das eine: 'Bist du 0 oder 1?' – 'Kommt drauf an, wer fragt.'",
+      "Warum benutzen Programmierer gerne dunklen Modus? Weil Bugs sich im Hellen besser verstecken können, sagen sie zumindest.",
+      "Sagt der Patient: 'Doktor, ich hab Schmerzen, wenn ich mit dem Finger hier drücke.' Der Arzt: 'Dann lassen Sie es einfach.'",
+      "Fragt der Arzt: 'Trinken, rauchen Sie?' – 'Nein.' – 'Treiben Sie Sport?' – 'Nein.' – 'Warum wollen Sie dann überhaupt 100 werden?'",
+      "Sagt der Arzt: 'Sie müssen abnehmen, Sport machen und weniger stressen.' Der Patient: 'Und wenn ich einfach nur die Pille dagegen nehme?'",
+      "Kommt ein Mann zum Arzt: 'Ich hör immer ein Piepen.' Der Arzt: 'Das ist Ihr Handy im Wartezimmer, Sie haben es dort liegen lassen.'",
+      "Fragt der Patient: 'Wie stehen meine Chancen?' Der Arzt: 'Gut, solange Sie nicht googeln, was Sie haben.'",
+      "Sagt der Arzt: 'Die Diagnose ist eindeutig.' Der Patient: 'Und die wäre?' Der Arzt: 'Sie warten schon zu lange mit dem Arztbesuch.'",
+      "Fragt der Reiseleiter: 'Alle da?' Ruft einer: 'Nein, meinem Koffer geht's noch schlechter als mir, der ist in Istanbul geblieben.'",
+      "Sagt der Tourist: 'Ist das Wasser hier sauber?' Der Einheimische: 'Klar, das trinken hier nur die Touristen nicht.'",
+      "Warum ist der Koffer immer schwerer auf dem Rückflug? Weil er den ganzen Urlaub mitträgt, den man nicht hatte.",
+      "Fragt der Mann am Check-in-Schalter: 'Wird das Gepäck auch nach München fliegen?' – 'Nein, das bleibt hier und schickt Ihnen Postkarten.'",
+      "Sagt der Hotelgast: 'Mein Zimmer hat Meerblick!' – 'Ja, wenn Sie sich auf den Balkon stellen, aufs Dach klettern und ein Fernglas benutzen.'",
+      "Warum bucht man Pauschalreisen? Damit man wenigstens weiß, worüber man sich beschweren wird.",
+      "Sagt der Mann: 'Schatz, ich hab die Fernbedienung nicht gefunden.' Sie: 'Steht doch alles im Familienkalender, wo sie liegt.'",
+      "Fragt die Frau: 'Woran denkst du gerade?' – 'An nichts.' – 'Nach 20 Jahren Ehe kann ich dir sagen: Das ist unmöglich, aber ich glaub's dir trotzdem.'",
+      "Sagt der Paartherapeut: 'Reden Sie miteinander!' Beide gleichzeitig: 'Genau das sag ich ihm/ihr doch dauernd!'",
+      "Streiten sich zwei Eheleute, wer öfter nachgibt. Am Ende gibt einer nach, um den Streit zu beenden.",
+      "Sagt der Mann: 'Ich hab nachgegeben, damit endlich Ruhe ist.' Fragt der Kollege: 'Und, ist Ruhe?' – 'Nein, jetzt reden wir darüber, warum ich immer erst nachgebe.'",
+      "Fragt der Standesbeamte: 'Wollen Sie sich das Ja-Wort geben?' Beide: 'Ja.' Er murmelt: 'Das war jetzt schon das schwierigste Wort für die nächsten 30 Jahre.'",
+      "Fragt der Bürger: 'Wie lange dauert der Antrag?' Der Beamte: 'Das kommt drauf an, wie schnell Sie das Formular für den anderen Antrag ausfüllen.'",
+      "Sagt der Beamte: 'Zuständig bin ich nicht, aber ich sag Ihnen, wer auch nicht zuständig ist.'",
+      "Warum hat das Amt immer Mittagspause, wenn man kommt? Damit es fair bleibt, schließlich hat jeder mal Pech.",
+      "Fragt der Bürger: 'Welche Unterlagen brauche ich?' – 'Alle, die Sie nicht dabei haben.'",
+      "Sagt der Sachbearbeiter: 'Ihr Antrag ist unvollständig.' – 'Was fehlt denn?' – 'Das sag ich Ihnen erst beim nächsten Termin in sechs Wochen.'",
+      "Warum sind Formulare beim Amt immer doppelt auszufüllen? Damit man sicher zweimal in der Schlange steht.",
+      "Fragt der Lehrer: 'Wer kann mir sagen, was 'Zerstreutheit' bedeutet?' Der Schüler steht auf, denkt nach und setzt sich wieder hin, ohne was zu sagen.",
+      "Sagt der Lehrer: 'Die Hausaufgabe hat mich meine Frau gefressen.' – 'Ich hab keine Frau.' – 'Dann eben der Hund.'",
+      "Fragt der Direktor: 'Warum kommen Sie zu spät?' Der Lehrer: 'Ein Schild sagte: Schule verlangsamen.'",
+      "Sagt der Lehrer: 'In 20 Jahren wird euch keiner mehr fragen, was ihr in Mathe hattet.' Schüler: 'Warum lernen wir's dann jetzt?'",
+      "Fragt die Lehrerin: 'Wer hat das Fenster kaputt gemacht?' Schweigen. 'Gut, dann übt der Ball weiter Elfmeter in der Pause.'",
+      "Warum haben Lehrer die meiste Geduld der Welt? Weil sie jedes Jahr aufs Neue erklären, warum man nicht mit dem Handy während der Stunde spielt.",
+      "Fragt der Trainer: 'Warum haben Sie das Training verpasst?' – 'Mein Wecker war auf Ruhetag eingestellt.'",
+      "Sagt der Fitnesstrainer: 'Noch 3 Wiederholungen!' Der Kursteilnehmer denkt sich: 'Das hat er auch vor 10 Wiederholungen schon gesagt.'",
+      "Warum ist Golf der teuerste Sport? Weil man für einen kleinen weißen Ball ständig neue braucht, weil man ihn im Wasser versenkt.",
+      "Fragt der Jogger den Radfahrer: 'Wie weit noch?' – 'Kommt drauf an, ob wir dieselbe Vorstellung von 'kurz um den Block' haben.'",
+      "Sagt der Neujahrsvorsatz: 'Ich geh jetzt regelmäßig ins Fitnessstudio.' Sagt der Februar: 'Ach, wirklich?'",
+      "Warum ist Bowling der ehrlichste Sport? Weil die Kegel wenigstens sofort zeigen, wie schlecht man wirklich ist.",
+      "Fragt der Gast: 'Ist das Fleisch hier zart?' Der Kellner: 'So zart, dass Sie das Messer eigentlich gar nicht bräuchten - außer zum Anschauen.'",
+      "Sagt der Kellner: 'Kann ich Ihnen die Rechnung bringen?' Der Gast: 'Ich hab noch gar nicht bestellt.' – 'Ich bin halt effizient.'",
+      "Fragt der Gast: 'Was empfehlen Sie?' Der Kellner: 'Ein anderes Restaurant, aber wenn Sie hierbleiben wollen, die Suppe.'",
+      "Sagt der Koch: 'Das Gericht braucht noch 20 Minuten.' Der Kellner zum Gast: 'Der Koch ist gerade sehr kreativ, das dauert.'",
+      "Fragt der Kellner: 'War alles zu Ihrer Zufriedenheit?' Der Gast: 'Ja, bis auf das Warten, das Essen und die Rechnung.'",
+      "Warum ist Trinkgeld freiwillig? Damit man wenigstens bei einer Sache im Restaurant noch selbst entscheiden darf."
+    ];
+
+    const WITZ_VERLAUF_KEY="galvanikWitzVerlauf";
+    const WITZ_VERLAUF_MAX=25;
+    function ladeWitzVerlauf(){ try{ return JSON.parse(localStorage.getItem(WITZ_VERLAUF_KEY))||[]; }catch(e){ return []; } }
+    function speichereWitzVerlauf(liste){ try{ localStorage.setItem(WITZ_VERLAUF_KEY, JSON.stringify(liste.slice(-WITZ_VERLAUF_MAX))); }catch(e){} }
+
+    async function uebersetzeInsDeutsche(text){
+      try{
+        const res=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|de`, {cache:"no-store"});
+        if(!res.ok) throw new Error('Übersetzungsfehler');
+        const data=await res.json();
+        const uebersetzt=data && data.responseData && data.responseData.translatedText;
+        if(!uebersetzt) throw new Error('Keine Übersetzung erhalten');
+        return uebersetzt;
+      }catch(e){ return text; }
+    }
+
+    async function holeJokeApiWitzRoh(){
+      try{
+        const res=await fetch('https://v2.jokeapi.dev/joke/Misc,Dark,Spooky,Christmas,Programming?blacklistFlags=nsfw,racist,sexist,religious,political&safe-mode&type=single', {cache:"no-store"});
+        if(!res.ok) throw new Error('Netzwerkfehler');
+        const data=await res.json();
+        if(data.error || !data.joke) throw new Error('Keine Antwort');
+        return {id:data.id, text:data.joke};
+      }catch(e){ return null; }
+    }
+    async function holeJokeApiWitz(){
+      const verlauf=ladeWitzVerlauf();
+      let roh=null;
+      for(let i=0;i<5;i++){
+        const kandidat=await holeJokeApiWitzRoh();
+        if(!kandidat) break;
+        roh=kandidat;
+        if(!verlauf.includes(kandidat.id)) break;
+      }
+      if(!roh) return null;
+      speichereWitzVerlauf([...verlauf, roh.id]);
+      return await uebersetzeInsDeutsche(roh.text);
+    }
+    async function holeOfficialJokeApiWitz(){
+      try{
+        const kategorie = Math.random()<0.5 ? 'general' : 'programming';
+        const res=await fetch(`https://official-joke-api.appspot.com/jokes/${kategorie}/random`, {cache:"no-store"});
+        if(!res.ok) throw new Error('Netzwerkfehler');
+        const data=await res.json();
+        const eintrag = Array.isArray(data) ? data[0] : data;
+        if(!eintrag || !eintrag.setup || !eintrag.punchline) throw new Error('Ungültige Antwort');
+        return await uebersetzeInsDeutsche(`${eintrag.setup} — ${eintrag.punchline}`);
+      }catch(e){ return null; }
+    }
+
+    // GEÄNDERT [7]: sofort lokalen Witz zeigen; Internet-Witze ersetzen ihn in 50 % der Fälle,
+    // sobald sie da sind (statt 1,5 % Chance im Gesamttopf und "Witz wird geladen…"-Wartezeit).
+    document.getElementById('jokeOfDay').textContent = pick(GUTE_WITZE);
+    (async function(){
+      const [w1, w2] = await Promise.all([holeJokeApiWitz(), holeOfficialJokeApiWitz()]);
+      const kandidaten=[w1, w2].filter(Boolean);
+      if(kandidaten.length && Math.random() < 0.5){
+        document.getElementById('jokeOfDay').textContent = pick(kandidaten);
+      }
+    })();
+
+    /* --- Zitat des Tages --- */
+    const FALLBACK_QUOTES=[
+      {text:"Der Weg ist das Ziel.", author:"Konfuzius (zugeschrieben)"},
+      {text:"Wissen ist Macht.", author:"Francis Bacon"},
+      {text:"In der Ruhe liegt die Kraft.", author:"Sprichwort"},
+      {text:"Der Anfang ist die Hälfte des Ganzen.", author:"Aristoteles"},
+      {text:"Man sieht nur mit dem Herzen gut.", author:"Antoine de Saint-Exupéry"},
+      {text:"Das Bessere ist der Feind des Guten.", author:"Voltaire"},
+      {text:"Probleme kann man niemals mit derselben Denkweise lösen, durch die sie entstanden sind.", author:"Albert Einstein (zugeschrieben)"},
+      {text:"Ich weiß, dass ich nichts weiß.", author:"Sokrates (zugeschrieben)"},
+      {text:"Was mich nicht umbringt, macht mich stärker.", author:"Friedrich Nietzsche"},
+      {text:"Wer sein Ziel kennt, findet den Weg.", author:"Laozi (zugeschrieben)"},
+      {text:"Es ist nicht der stärkste, der überlebt, sondern der anpassungsfähigste.", author:"nach Charles Darwin"},
+      {text:"Alles fließt, nichts bleibt.", author:"Heraklit"},
+      {text:"Die einzige Möglichkeit, großartige Arbeit zu leisten, ist zu lieben, was man tut.", author:"Steve Jobs"},
+      {text:"Wenn du denkst, du kannst es, oder du denkst, du kannst es nicht - du hast recht.", author:"Henry Ford"},
+      {text:"Erfolg ist die Summe kleiner Anstrengungen, die täglich wiederholt werden.", author:"Robert Collier"},
+      {text:"Es ist nicht wichtig, wie oft du hinfällst, sondern wie oft du wieder aufstehst.", author:"Vince Lombardi"},
+      {text:"Qualität ist kein Zufall, sie ist immer das Ergebnis intelligenter Anstrengung.", author:"John Ruskin"},
+      {text:"Erfolg entsteht, wenn Vorbereitung auf Gelegenheit trifft.", author:"nach Zig Ziglar"},
+      {text:"Der Wille zu gewinnen ist wichtig, aber der Wille, sich vorzubereiten, ist entscheidend.", author:"nach Bobby Knight"},
+      {text:"Schmerz ist vorübergehend, Aufgeben dauert für immer.", author:"Sprichwort im Ausdauersport"},
+      {text:"Man verliert nie, man lernt entweder oder man gewinnt.", author:"Nelson Mandela (zugeschrieben)"},
+      {text:"Ich bin nicht dick, ich bin einfach leicht überentwickelt.", author:"Volksmund"},
+      {text:"Arbeit ist die beste Art, Zeit totzuschlagen, die man sonst mit Nichtstun verbracht hätte.", author:"Oscar Wilde (zugeschrieben)"},
+      {text:"Ich habe nichts gegen harte Arbeit, ich kann stundenlang danebensitzen.", author:"Volksmund"},
+      {text:"Der frühe Vogel kann mich mal, ich schlaf aus.", author:"Volksmund"},
+      {text:"Erfahrung ist der Name, den jeder seinen Fehlern gibt.", author:"Oscar Wilde"}
+    ];
+
+    const FALLBACK_MOVIE_QUOTES=[
+      {text:"Wer um Regen bittet, muss auch den Matsch verkraften.", author:"Robert McCall, The Equalizer"},
+      {text:"Ich habe keine Freunde, ich habe Familie.", author:"Dominic Toretto, Fast & Furious"},
+      {text:"Mögen die Chancen immer zu deinen Gunsten stehen.", author:"Die Tribute von Panem"},
+      {text:"Ich bin der Gefahr nicht aus dem Weg gegangen, ich habe sie gesucht.", author:"Iron Man"},
+      {text:"Hoffnung ist eine gute Sache, vielleicht das Beste von allem.", author:"Andy Dufresne, Die Verurteilten"},
+      {text:"Es ist nicht wichtig, wie hart man zuschlagen kann, sondern wie viele Schläge man einstecken kann.", author:"Rocky Balboa"},
+      {text:"Schwierige Zeiten formen starke Menschen.", author:"nach Miyagi-Prinzip, Karate Kid"},
+      {text:"Ein Mann sieht das, was er sehen will.", author:"Der Pate II"},
+      {text:"Ich komme wieder.", author:"Der Terminator"},
+      {text:"Hasta la vista, Baby.", author:"Terminator 2 – Tag der Abrechnung"},
+      {text:"Möge die Macht mit dir sein.", author:"Star Wars"},
+      {text:"Nein, ich bin dein Vater.", author:"Star Wars: Das Imperium schlägt zurück"},
+      {text:"Das Leben findet einen Weg.", author:"Ian Malcolm, Jurassic Park"},
+      {text:"Ich bin Groot.", author:"Guardians of the Galaxy"},
+      {text:"Mit großer Macht kommt große Verantwortung.", author:"Spider-Man"},
+      {text:"Yippie-ya-yeah, Schweinebacke!", author:"John McClane, Stirb langsam"},
+      {text:"Ich sehe tote Menschen.", author:"The Sixth Sense"},
+      {text:"Wir brauchen ein größeres Boot.", author:"Der weiße Hai"},
+      {text:"Bond. James Bond.", author:"James-Bond-Reihe"},
+      {text:"Ich habe ein ganz besonderes Set an Fähigkeiten.", author:"Taken"},
+      {text:"Warum so ernst?", author:"Joker, The Dark Knight"},
+      {text:"Houston, wir haben ein Problem.", author:"Apollo 13"},
+      {text:"Ich liebe den Geruch von Napalm am Morgen.", author:"Apocalypse Now"},
+      {text:"Wohin wir gehen, brauchen wir keine Straßen.", author:"Zurück in die Zukunft"},
+      {text:"Das Leben ist wie eine Schachtel Pralinen, man weiß nie, was man kriegt.", author:"Forrest Gump"},
+      {text:"Ich schau dir in die Augen, Kleines.", author:"Casablanca"},
+      {text:"Redest du mit mir?", author:"Travis Bickle, Taxi Driver"},
+      {text:"Nutzt den Tag, Jungs. Carpe diem.", author:"Der Club der toten Dichter"},
+      {text:"Ich bin der König der Welt!", author:"Titanic"},
+      {text:"Ehrlich gesagt, meine Liebe, das ist mir völlig egal.", author:"Vom Winde verweht"},
+      {text:"Elementar, mein lieber Watson.", author:"Sherlock Holmes"},
+      {text:"Ein Ring, sie zu knechten, sie alle zu finden.", author:"Der Herr der Ringe"},
+      {text:"Man kommt nicht zu spät, ebenso wenig zu früh. Man kommt genau dann, wenn man es beabsichtigt.", author:"Gandalf, Der Herr der Ringe"},
+      {text:"Immer.", author:"Severus Snape, Harry Potter"},
+      {text:"Ich werde haben, was sie hat.", author:"Harry und Sally"},
+      {text:"Ich bin nicht dick, ich bin flauschig.", author:"Ich – Einfach unverbesserlich"},
+      {text:"Das ist nicht mein Tempo, Baby.", author:"Austin Powers"},
+      {text:"Ich bin der Dude.", author:"The Big Lebowski"},
+      {text:"Das eskalierte schnell.", author:"Anchorman"},
+      {text:"Chantal, heul leise!", author:"Fack ju Göhte"},
+      {text:"Bis zur Unendlichkeit und noch viel weiter!", author:"Toy Story"},
+      {text:"Hakuna Matata!", author:"Der König der Löwen"},
+      {text:"Ohana bedeutet Familie. Niemand wird zurückgelassen.", author:"Lilo & Stitch"},
+      {text:"Manche Menschen sind es wert, dass man für sie schmilzt.", author:"Frozen"},
+      {text:"Nur weiterschwimmen.", author:"Findet Nemo"},
+      {text:"Ich hab' da ein ganz mieses Gefühl.", author:"Star Wars-Reihe"},
+      {text:"Mein Name ist Winston Wolfe. Ich löse Probleme.", author:"Pulp Fiction"},
+      {text:"Sie können die Wahrheit doch gar nicht vertragen!", author:"Eine Frage der Ehre"},
+      {text:"Entscheidungen machen uns zu denen, die wir sind.", author:"Peter Parker, Spider-Man 3"},
+      {text:"Ich sage immer die Wahrheit. Sogar wenn ich lüge.", author:"Scarface"},
+      {text:"Dein Wahnsinn passt zu meinem Wahnsinn.", author:"Deadpool"},
+      {text:"Versprechen sind wie Pastetenkrusten, gemacht, um gebrochen zu werden.", author:"Sherlock Holmes: Spiel im Schatten"},
+      {text:"Ich habe eine Wassermelone getragen.", author:"Dirty Dancing"},
+      {text:"Ich kann dir nur die Tür zeigen. Hindurchgehen musst du alleine.", author:"Morpheus, Matrix"},
+      {text:"Alles was einen Anfang hat, hat auch ein Ende.", author:"Matrix Revolutions"},
+      {text:"Avengers, vereinigt euch!", author:"The Avengers"},
+      {text:"Manche Menschen wollen einfach die Welt brennen sehen.", author:"Alfred, The Dark Knight"},
+      {text:"Seid ihr nicht unterhalten?", author:"Maximus, Gladiator"},
+      {text:"Warum ist der Rum immer weg?", author:"Jack Sparrow, Fluch der Karibik"}
+    ];
+
+    function zeigeZitat(q){ document.getElementById('quoteGeneral').textContent=`${q.text} — ${q.author}`; }
+
+    // GEÄNDERT [8]: sofort ein Fallback-Zitat zeigen, Live-Zitat ersetzt es im Hintergrund
+    async function ladeLiveZitat(){
+      const el=document.getElementById('quoteGeneral');
+      try{
+        const res=await fetch('https://dummyjson.com/quotes/random', {cache:"no-store"});
+        if(!res.ok) throw new Error('Netzwerkfehler');
+        const data=await res.json();
+        if(!data.quote) throw new Error('Ungültige Antwort');
+        el.textContent=`${await uebersetzeInsDeutsche(data.quote)} — ${data.author}`;
+      }catch(e1){
+        try{
+          const res2=await fetch('https://zenquotes.io/api/quotes/random', {cache:"no-store"});
+          if(!res2.ok) throw new Error('Netzwerkfehler2');
+          const data2=await res2.json();
+          const item=Array.isArray(data2)?data2[0]:data2;
+          if(!item || !item.q) throw new Error('Ungültige Antwort2');
+          el.textContent=`${await uebersetzeInsDeutsche(item.q)} — ${item.a}`;
+        }catch(e2){ /* Fallback bleibt stehen */ }
+      }
+    }
+    if(Math.random() < 0.5){
+      zeigeZitat(pick(FALLBACK_QUOTES));
+      ladeLiveZitat();
+    }else{
+      zeigeZitat(pick(FALLBACK_MOVIE_QUOTES));
+    }
+
+    /* --- Fußball-Topspiele --- */
+    const LIEBLINGSVEREINE=[
+      "Galatasaray","Besiktas","Fenerbahce","Trabzonspor",
+      "Borussia Dortmund","Bayern Munich","VfB Stuttgart",
+      "Real Madrid","Barcelona",
+      "Juventus","Inter Milan","Napoli",
+      "Manchester City","Liverpool","Arsenal",
+      "Paris SG"
+    ];
+    const WETTBEWERB_IDS=["4339","4331","4335","4332","4328","4334","4480","4481","5071","4569","4512"];
+    const SPORTSDB_BASE="https://www.thesportsdb.com/api/v1/json/123";
+    const TEAMID_CACHE_KEY="galvanikFussballTeamIds";
+    const FIXTURES_CACHE_KEY="galvanikFussballSpiele_v14";
+    const FIXTURES_TTL_MS=1000*60*15; // GEÄNDERT [9]: 5 -> 15 Minuten
+
+    // NEU [6]: alte Cache-Versionen einmalig aufräumen
+    try{
+      Object.keys(localStorage)
+        .filter(k => k.startsWith("galvanikFussballSpiele_") && k !== FIXTURES_CACHE_KEY)
+        .forEach(k => localStorage.removeItem(k));
+    }catch(e){}
+
+    const FESTE_TEAM_IDS={ "Paris SG": "133714", "Barcelona": "133739" };
+
+    function ladeTeamIdCache(){ try{return JSON.parse(localStorage.getItem(TEAMID_CACHE_KEY))||{};}catch(e){return {};} }
+    function speichereTeamIdCache(c){ try{localStorage.setItem(TEAMID_CACHE_KEY, JSON.stringify(c));}catch(e){} }
+    function warteMs(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+    async function inStapelnAusfuehren(elemente, stapelGroesse, asyncFn){
+      const ergebnisse=[];
+      for(let i=0; i<elemente.length; i+=stapelGroesse){
+        const stapel=elemente.slice(i, i+stapelGroesse);
+        ergebnisse.push(...await Promise.all(stapel.map(asyncFn)));
+        if(i+stapelGroesse < elemente.length) await warteMs(120);
+      }
+      return ergebnisse;
+    }
+
+    function istLieblingsverein(ev){
+      const heim=(ev.strHomeTeam||"").toLowerCase(), gast=(ev.strAwayTeam||"").toLowerCase();
+      return LIEBLINGSVEREINE.some(v=>{ const vn=v.toLowerCase(); return heim.includes(vn) || gast.includes(vn); });
+    }
+
+    async function holeTeamId(name, cache){
+      if(FESTE_TEAM_IDS[name]) return FESTE_TEAM_IDS[name];
+      if(cache[name]) return cache[name];
+      try{
+        const res=await fetch(`${SPORTSDB_BASE}/searchteams.php?t=${encodeURIComponent(name)}`, {cache:"no-store"});
+        const data=await res.json();
+        if(data && data.teams && data.teams.length){
+          const passend = data.teams.find(t =>
+            (t.strSport||"").toLowerCase()==="soccer" &&
+            !/women|damen|frauen|youth|jugend|reserve|\bII\b|esports|futsal/i.test(t.strTeam||"")
+          ) || data.teams[0];
+          cache[name]=passend.idTeam;
+          return cache[name];
+        }
+      }catch(e){}
+      return null;
+    }
+    async function holeNaechsteSpieleFuerTeam(teamId){
+      try{
+        const res=await fetch(`${SPORTSDB_BASE}/eventsnext.php?id=${teamId}`, {cache:"no-store"});
+        if(!res.ok) return {ok:false, events:[]};
+        const data=await res.json();
+        return {ok:true, events:(data && data.events) ? data.events : []};
+      }catch(e){ return {ok:false, events:[]}; }
+    }
+    async function holeLetzteSpieleFuerTeam(teamId){
+      try{
+        const res=await fetch(`${SPORTSDB_BASE}/eventslast.php?id=${teamId}`, {cache:"no-store"});
+        if(!res.ok) return {ok:false, events:[]};
+        const data=await res.json();
+        return {ok:true, events:(data && data.results) ? data.results : []};
+      }catch(e){ return {ok:false, events:[]}; }
+    }
+    async function holeNaechsteSpieleFuerWettbewerb(ligaId){
+      try{
+        const res=await fetch(`${SPORTSDB_BASE}/eventsnextleague.php?id=${ligaId}`, {cache:"no-store"});
+        if(!res.ok) return {ok:false, events:[]};
+        const data=await res.json();
+        return {ok:true, events:(data && data.events) ? data.events.filter(istLieblingsverein) : []};
+      }catch(e){ return {ok:false, events:[]}; }
+    }
+
+    const ERGEBNIS_SICHTBAR_STUNDEN=12;
+    const BUNDESLIGA_VEREINE=["Dortmund","Bayern","Stuttgart"];
+
+    function berlinUhrzeit(date){ return date.toLocaleTimeString('de-DE', {timeZone:'Europe/Berlin', hour:'2-digit', minute:'2-digit'}); }
+    function berlinDatum(date){ return date.toLocaleDateString('de-DE', {timeZone:'Europe/Berlin', day:'2-digit', month:'2-digit'}); }
+
+    function verarbeiteEvent(ev){
+      const heimTor=ev.intHomeScore, gastTor=ev.intAwayScore;
+      const hatErgebnis = heimTor!==null && heimTor!==undefined && gastTor!==null && gastTor!==undefined;
+      const rohZeit=(ev.strTime||"").slice(0,5);
+      const kickoff=new Date(ev.dateEvent+'T'+(rohZeit||'00:00')+':00Z');
+      const stundenSeitAnstoss=(Date.now()-kickoff.getTime())/3600000;
+      const rohStatus=ev.strStatus||"";
+      let status="geplant";
+      if(hatErgebnis){
+        const beendetLtStatus=/finished|ft|match finished/i.test(rohStatus);
+        status = (beendetLtStatus || stundenSeitAnstoss>2.5) ? "beendet" : "live";
+      }
+      return { heim: ev.strHomeTeam, auswaerts: ev.strAwayTeam, datum: berlinDatum(kickoff), zeit: berlinUhrzeit(kickoff),
+               wettbewerb: ev.strLeague, heimTor, gastTor, status, kickoff, stundenSeitAnstoss, rohStatus };
+    }
+
+    async function holeOpenLigaDbSpiele(){
+      try{
+        const res=await fetch('https://api.openligadb.de/getmatchdata/bl1', {cache:"no-store"});
+        if(!res.ok) return {ok:false, spiele:[]};
+        const data=await res.json();
+        if(!Array.isArray(data)) return {ok:false, spiele:[]};
+        const passend=data.filter(m=>{
+          const heim=(m.team1 && m.team1.teamName)||"", gast=(m.team2 && m.team2.teamName)||"";
+          return BUNDESLIGA_VEREINE.some(v=> heim.includes(v) || gast.includes(v));
+        });
+        const spiele=passend.map(m=>{
+          const kickoff=new Date(m.matchDateTime);
+          const stundenSeitAnstoss=(Date.now()-kickoff.getTime())/3600000;
+          let heimTor=null, gastTor=null;
+          if(m.matchResults && m.matchResults.length){
+            const endergebnis=m.matchResults.find(r=>r.resultTypeID===2) || m.matchResults[m.matchResults.length-1];
+            heimTor=endergebnis.pointsTeam1; gastTor=endergebnis.pointsTeam2;
+          }
+          let status="geplant";
+          if(m.matchIsFinished){ status="beendet"; }
+          else if(stundenSeitAnstoss>0 && stundenSeitAnstoss<=2.5 && heimTor!==null){ status="live"; }
+          return { heim: m.team1 ? m.team1.teamName : "?", auswaerts: m.team2 ? m.team2.teamName : "?",
+                   datum: berlinDatum(kickoff), zeit: berlinUhrzeit(kickoff), wettbewerb: "Bundesliga",
+                   heimTor, gastTor, status, kickoff, stundenSeitAnstoss, rohStatus:"" };
+        });
+        return {ok:true, spiele};
+      }catch(e){ return {ok:false, spiele:[]}; }
+    }
+
+    const FOOTBALL_DATA_PROXY = "https://bold-moon-1924.kizilkaya-aziz.workers.dev";
+    const FOOTBALL_DATA_WETTBEWERBE = [
+      {code:"PL", name:"Premier League", teams:["Manchester City","Liverpool","Arsenal"]},
+      {code:"PD", name:"La Liga", teams:["Real Madrid","Barcelona","Barça"]},
+      {code:"SA", name:"Serie A", teams:["Juventus","Inter","Napoli"]},
+      {code:"FL1", name:"Ligue 1", teams:["Paris"]},
+      {code:"CL", name:"Champions League", teams:["Galatasaray","Besiktas","Fenerbahce","Trabzonspor","Dortmund","Bayern","Stuttgart","Real Madrid","Barcelona","Juventus","Inter","Napoli","Manchester City","Liverpool","Arsenal","Paris"]}
+    ];
+
+    async function holeFootballDataProxySpiele(){
+      let alle=[], mindestensEinErfolg=false;
+      for(const wb of FOOTBALL_DATA_WETTBEWERBE){
+        try{
+          const res=await fetch(`${FOOTBALL_DATA_PROXY}/?comp=${wb.code}`, {cache:"no-store"});
+          if(!res.ok) continue;
+          const data=await res.json();
+          if(!data || !Array.isArray(data.matches)) continue;
+          mindestensEinErfolg=true;
+          const passend=data.matches.filter(m=>{
+            const heim=(m.homeTeam && m.homeTeam.name)||"", gast=(m.awayTeam && m.awayTeam.name)||"";
+            return wb.teams.some(v=> heim.includes(v) || gast.includes(v));
+          });
+          alle.push(...passend.map(m=>{
+            const kickoff=new Date(m.utcDate);
+            const stundenSeitAnstoss=(Date.now()-kickoff.getTime())/3600000;
+            const heimTor = m.score && m.score.fullTime ? m.score.fullTime.home : null;
+            const gastTor = m.score && m.score.fullTime ? m.score.fullTime.away : null;
+            let status="geplant";
+            if(m.status==="FINISHED"){ status="beendet"; }
+            else if(m.status==="IN_PLAY" || m.status==="PAUSED" || m.status==="LIVE"){ status="live"; }
+            return { heim: m.homeTeam ? m.homeTeam.name : "?", auswaerts: m.awayTeam ? m.awayTeam.name : "?",
+                     datum: berlinDatum(kickoff), zeit: berlinUhrzeit(kickoff), wettbewerb: wb.name,
+                     heimTor, gastTor, status, kickoff, stundenSeitAnstoss, rohStatus:"" };
+          }));
+        }catch(e){}
+        await warteMs(80);
+      }
+      return {ok:mindestensEinErfolg, spiele:alle};
+    }
+
+    async function ladeFussballTopspiele(versuch){
+      versuch = versuch || 1;
+      if(versuch===1){
+        try{
+          const cached=JSON.parse(localStorage.getItem(FIXTURES_CACHE_KEY));
+          if(cached && (Date.now()-cached.zeitstempel < FIXTURES_TTL_MS)){ zeigeFussballErgebnis(cached.daten, true); return; }
+        }catch(e){}
+      }
+
+      const teamIdCache=ladeTeamIdCache();
+      let alleSpiele=[], erfolgreicheAbfragen=0, gesamtAbfragen=0;
+
+      async function holeSpieleFuerEinenVerein(teamName){
+        const id=await holeTeamId(teamName, teamIdCache);
+        if(!id) return {events:[], abfragen:0, erfolge:0};
+        const [nachfolgende, letzte]=await Promise.all([holeNaechsteSpieleFuerTeam(id), holeLetzteSpieleFuerTeam(id)]);
+        return { abfragen:2, erfolge:(nachfolgende.ok?1:0)+(letzte.ok?1:0),
+                 events:[...nachfolgende.events.slice(0,3).map(verarbeiteEvent), ...letzte.events.slice(0,3).map(verarbeiteEvent)] };
+      }
+      const teamErgebnisse=await inStapelnAusfuehren(LIEBLINGSVEREINE, 4, holeSpieleFuerEinenVerein);
+      teamErgebnisse.forEach(r=>{ gesamtAbfragen+=r.abfragen; erfolgreicheAbfragen+=r.erfolge; alleSpiele.push(...r.events); });
+
+      const ligaErgebnisse=await inStapelnAusfuehren(WETTBEWERB_IDS, 4, holeNaechsteSpieleFuerWettbewerb);
+      ligaErgebnisse.forEach(ergebnis=>{ gesamtAbfragen++; if(ergebnis.ok) erfolgreicheAbfragen++; alleSpiele.push(...ergebnis.events.map(verarbeiteEvent)); });
+
+      const erfolgsquote = gesamtAbfragen>0 ? erfolgreicheAbfragen/gesamtAbfragen : 0;
+      if(erfolgsquote < 0.2){
+        if(versuch < 2){ await warteMs(2000); return ladeFussballTopspiele(versuch+1); }
+        const [proxyErgebnis, openligaErgebnis] = await Promise.all([holeFootballDataProxySpiele(), holeOpenLigaDbSpiele()]);
+        let fallbackSpiele=[...proxyErgebnis.spiele, ...openligaErgebnis.spiele];
+        if(fallbackSpiele.length>0){
+          fallbackSpiele=fallbackSpiele.filter(s => s.status==="geplant" ? s.stundenSeitAnstoss <= ERGEBNIS_SICHTBAR_STUNDEN : s.stundenSeitAnstoss <= ERGEBNIS_SICHTBAR_STUNDEN);
+          fallbackSpiele.sort((a,b)=> a.kickoff - b.kickoff);
+          zeigeFussballErgebnis(fallbackSpiele, false, true);
+          return;
+        }
+        zeigeFussballFehler();
+        return;
+      }
+
+      alleSpiele=alleSpiele.filter(s => !(s.status==="geplant" && s.stundenSeitAnstoss > ERGEBNIS_SICHTBAR_STUNDEN));
+      alleSpiele=alleSpiele.filter(s => s.status==="geplant" || s.stundenSeitAnstoss <= ERGEBNIS_SICHTBAR_STUNDEN);
+
+      const rang={geplant:0, live:1, beendet:2};
+      const karte=new Map();
+      for(const s of alleSpiele){
+        const key=s.heim+'|'+s.auswaerts+'|'+s.datum;
+        const bestehend=karte.get(key);
+        if(!bestehend || rang[s.status] > rang[bestehend.status]) karte.set(key, s);
+      }
+      const eindeutig=[...karte.values()];
+      eindeutig.sort((a,b)=> a.kickoff - b.kickoff);
+
+      speichereTeamIdCache(teamIdCache);
+      try{ localStorage.setItem(FIXTURES_CACHE_KEY, JSON.stringify({zeitstempel:Date.now(), daten:eindeutig})); }catch(e){}
+      zeigeFussballErgebnis(eindeutig, false);
+    }
+
+    function formatiereSpielminute(rohStatus){
+      const s=(rohStatus||"").trim();
+      if(/^\d+['’]?\+?\d*$/.test(s)) return s.replace(/['’]/,'')+"'";
+      if(/^\d+$/.test(s)) return s+"'";
+      if(/ht|halbzeit|half.?time/i.test(s)) return "HZ";
+      if(/^1^h$/i.test(s)) return "1. HZ";
+      if(/^2^h$/i.test(s)) return "2. HZ";
+      return s || "LIVE";
+    }
+
+    function zeigeFussballErgebnis(spiele, ausCache, istFallback){
+      const box=document.getElementById('footballBox');
+      // GEÄNDERT [9]: Hinweistext passt jetzt zu den tatsächlichen Rückfallquellen
+      const fallbackHinweis = istFallback
+        ? '<div style="color:#a15c00;font-size:12px;margin-bottom:6px;">⚠️ Hauptquelle nicht erreichbar – Anzeige über Rückfallquellen (evtl. unvollständig).</div>'
+        : '';
+      if(!spiele || spiele.length===0){
+        box.innerHTML=fallbackHinweis+'Aktuell spielt keiner der europäischen Top-Mannschaften heute.';
+        return;
+      }
+      let html=fallbackHinweis;
+      spiele.forEach(s=>{
+        // Cache-Daten haben kickoff als String -> für Anzeige nicht nötig, aber sauber prüfen
+        let ergebnisTeil;
+        if(s.status==="live"){
+          ergebnisTeil=`<strong style="color:#e63946">🔴 ${s.heimTor}:${s.gastTor} (${formatiereSpielminute(s.rohStatus)})</strong>`;
+        }else if(s.status==="beendet"){
+          ergebnisTeil=`Endstand ${s.heimTor}:${s.gastTor}`;
+        }else if(s.stundenSeitAnstoss>0){
+          ergebnisTeil=`Angepfiffen ${s.datum}, ${s.zeit} Uhr – Ergebnis folgt`;
+        }else{
+          ergebnisTeil=`${s.datum}${s.zeit? ', '+s.zeit+' Uhr':''}`;
+        }
+        html+=`<div class="spiel">${escapeHtml(s.heim)} – ${escapeHtml(s.auswaerts)}<br><span class="datum">${ergebnisTeil}${s.wettbewerb? ' · '+escapeHtml(s.wettbewerb):''}</span></div>`;
+      });
+      box.innerHTML=html;
+    }
+
+    function zeigeFussballFehler(){
+      const box=document.getElementById('footballBox');
+      box.innerHTML='⚠️ Fußball-Daten aktuell nicht erreichbar (Quelle überlastet oder kein Internet). '
+        + '<a href="#" id="fussballRetryBtn" style="color:#0066cc;text-decoration:underline;">Erneut versuchen</a>';
+      const btn=document.getElementById('fussballRetryBtn');
+      if(btn){
+        btn.addEventListener('click', function(e){ e.preventDefault(); box.innerHTML='Spiele werden geladen…'; ladeFussballTopspiele(1); });
+      }
+    }
+
+    ladeFussballTopspiele();
+  </script>
+</section>
+
+<!-- ================================================================== -->
+<section id="tab-spule" class="tab-pane">
+<div class="container">
+    <div class="header">
+        <h2>Spulen-Bestandsrechner</h2>
+    </div>
+
+    <div class="switch-container">
+        <div class="switch-button active" id="btn-modus-durchmesser" onclick="wechsleSpuleModus('durchmesser')">📏 Nach Durchmesser</div>
+        <div class="switch-button" id="btn-modus-gewicht" onclick="wechsleSpuleModus('gewicht')">⚖️ Nach Gewicht</div>
+    </div>
+
+    <div id="modus-durchmesser">
+    <button type="button" onclick="zeigeSpuleHilfe()" style="width:calc(100% - 16px);display:block;margin:10px auto;background:#fff;border:2px solid var(--darkblue);color:var(--darkblue);padding:9px 14px;border-radius:8px;font-size:0.95rem;font-weight:bold;cursor:pointer;">❓ Wie funktioniert das?</button>
+    <div class="sub-auswahl-label">Spulengröße:</div>
+    <div class="switch-container sub">
+        <div class="switch-button sub" id="btn-98" onclick="setSpoolSize(98)">Spule 98 cm</div>
+        <div class="switch-button sub active" id="btn-76" onclick="setSpoolSize(76)">Spule 76 cm</div>
+    </div>
+
+    <div class="section" style="padding-top: 5px; padding-bottom: 5px;">
+        <div class="section-title" style="margin-bottom: 0;">
+            Kern-Durchmesser: <strong>35 cm</strong>. Max. Durchmesser: <span id="maxDDisplay">76 cm</span>.
+        </div>
+    </div>
+
+    <div class="section bg-blue">
+        <div class="section-title">1. Referenz (Kalibrierung)</div>
+
+        <!-- GEÄNDERT [10]: eindeutige Beschriftung, passend zur Rechnung (Dmax − 2·Messwert) -->
+        <label>Abstand <strong>Spulenrand → Wicklung</strong> (leerer Bereich, cm) – bei <strong>REFERENZ</strong>-Spule:</label>
+        <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="refHalfD" placeholder="z.B. 3,5">
+
+        <label>Stückzahl bei diesem Referenz-Zustand:</label>
+        <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="refCount" placeholder="z.B. 200000">
+
+        <label><strong>Kontakte pro Meter (Dichte):</strong></label>
+        <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="cpm" placeholder="z.B. 200">
+
+        <div style="display:none;">
+        <label>Berechneter Referenz-Durchmesser (D_Ref):</label>
+        <span id="outputRefD" class="small-output">-</span>
+        <label>Kalibrierfaktor F (Fläche pro Meter):</label>
+        <span id="outputFactorF" class="small-output">-</span>
+        </div>
+    </div>
+
+    <div class="section bg-green">
+        <div class="section-title">2. Aktuelle Messung</div>
+
+        <label>Abstand <strong>Spulenrand → Wicklung</strong> (leerer Bereich, cm) – <strong>AKTUELL</strong>:</label>
+        <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="currHalfD" placeholder="z.B. 7,0">
+
+        <label>Berechneter aktueller Durchmesser (D_Aktuell):</label>
+        <span id="outputCurrD" class="small-output">-</span>
+    </div>
+
+    <div id="errorBox" class="error-msg"></div>
+
+    <button onclick="calculate(false)">BESTAND BERECHNEN</button>
+
+    <div id="resultBox" class="result-area bg-result">
+        <div class="result-group">
+            <div class="result-label">Aktueller Bestand ca.:</div>
+            <div id="resultValue" class="result-number">0</div>
+            <div class="result-label">Stück</div>
+        </div>
+    </div>
+    </div>
+
+    <div id="modus-gewicht" style="display:none;">
+        <div class="section bg-blue">
+            <div class="section-title">1. Referenz (volle Spule)</div>
+            <label>Gewicht der vollen Spule (kg) - laut Lieferschein/Wiegung:</label>
+            <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="gewVoll" placeholder="z.B. 18,5">
+            <label>Stückzahl bei diesem Gewicht (laut Lieferschein):</label>
+            <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="gewVollStueck" placeholder="z.B. 200000">
+        </div>
+
+        <div class="section bg-green">
+            <div class="section-title">2. Aktuelle Messung</div>
+            <label>Gewicht der aktuellen (teilweise befüllten) Spule (kg):</label>
+            <input type="text" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" id="gewAktuell" placeholder="z.B. 9,8">
+        </div>
+
+        <div id="errorBoxGewicht" class="error-msg"></div>
+
+        <button onclick="calculateWeight(false)">BESTAND BERECHNEN</button>
+
+        <div id="resultBoxGewicht" class="result-area bg-result">
+            <div class="result-group">
+                <div class="result-label">Aktueller Bestand ca.:</div>
+                <div id="resultValueGewicht" class="result-number">0</div>
+                <div class="result-label">Stück</div>
+            </div>
+            <div class="result-label" style="margin-top:8px; opacity:0.85;">
+                Gewicht pro Stück: <span id="resultGewichtProStueck">-</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="spuleHilfeOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; overflow-y:auto; padding:12px; box-sizing:border-box;">
+  <div style="max-width:480px; margin:0 auto; background:#fff; border-radius:12px; overflow:hidden;">
+    <div style="background:var(--darkblue); color:#fff; padding:14px; display:flex; justify-content:space-between; align-items:center;">
+      <strong style="font-size:1.05rem;">Spulen-Bestandsrechner – Kurz erklärt</strong>
+      <button type="button" onclick="versteckeSpuleHilfe()" style="width:auto;background:none;border:none;color:#fff;font-size:1.4rem;line-height:1;cursor:pointer;padding:0 4px;">✕</button>
+    </div>
+    <div style="padding:14px;">
+
+      <div style="background:#fff3e8;border:1px solid #f2c58a;border-radius:8px;padding:12px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="background:var(--orange);color:#fff;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0;">1</span>
+          <strong>Spulengröße auswählen</strong>
+        </div>
+        <div style="font-size:0.92rem;color:#333;">Hier wählst du die passende Spule aus. Möglich sind <strong>98 cm</strong> oder <strong>76 cm</strong> (maximaler Außendurchmesser).</div>
+        <div style="margin-top:6px;background:#fff;border:1px solid #ddd;border-radius:6px;padding:6px 10px;display:inline-block;font-size:0.9rem;"><strong>Beispiel:</strong> 98 cm</div>
+      </div>
+
+      <div style="background:#eef6ff;border:1px solid #b8d8f5;border-radius:8px;padding:12px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="background:#0066cc;color:#fff;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0;">2</span>
+          <strong>Referenzmaß – volle Spule</strong>
+        </div>
+        <!-- GEÄNDERT [10]: Text passt jetzt zur Grafik und zur Rechnung -->
+        <div style="font-size:0.92rem;color:#333;">Vom <strong>Spulenrand</strong> (Außenkante des Flansches) nach innen bis zur <strong>Oberfläche der Wicklung</strong> messen – also nur den <strong>leeren</strong> Bereich, nicht bis zum Kern.</div>
+        <div style="margin-top:8px;text-align:center;">
+          <svg viewBox="0 0 200 140" style="width:100%;max-width:220px;">
+            <ellipse cx="100" cy="65" rx="60" ry="55" fill="#888"/>
+            <ellipse cx="100" cy="65" rx="60" ry="55" fill="none" stroke="#555" stroke-width="1"/>
+            <g stroke="#666" stroke-width="1">
+              <line x1="45" y1="20" x2="45" y2="110"/><line x1="55" y1="14" x2="55" y2="116"/>
+              <line x1="65" y1="11" x2="65" y2="119"/><line x1="75" y1="10" x2="75" y2="120"/>
+              <line x1="85" y1="10" x2="85" y2="120"/><line x1="95" y1="10" x2="95" y2="120"/>
+              <line x1="105" y1="10" x2="105" y2="120"/><line x1="115" y1="10" x2="115" y2="120"/>
+              <line x1="125" y1="10" x2="125" y2="120"/><line x1="135" y1="11" x2="135" y2="119"/>
+              <line x1="145" y1="14" x2="145" y2="116"/><line x1="155" y1="20" x2="155" y2="110"/>
+            </g>
+            <ellipse cx="100" cy="65" rx="27.6" ry="25.3" fill="#ccc" stroke="#555" stroke-width="1"/>
+            <line x1="100" y1="10" x2="100" y2="39.7" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+            <line x1="100" y1="10" x2="100" y2="15.5" stroke="#cc0000" stroke-width="2.5" marker-end="url(#arrow2)"/>
+            <defs><marker id="arrow2" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#cc0000"/></marker></defs>
+            <text x="100" y="135" text-anchor="middle" font-size="9" fill="#555">Seitenansicht der Spule</text>
+          </svg>
+          <div style="font-size:0.78rem;color:#cc0000;font-weight:bold;">Messmaß: nur der kleine rote Abschnitt (3,5 cm)</div>
+          <div style="font-size:0.7rem;color:#888;">Graue gestrichelte Linie = voller möglicher Weg bis zum Kern (hier max. 20,5 cm)</div>
+        </div>
+        <div style="margin-top:6px;background:#fff;border:1px solid #ddd;border-radius:6px;padding:6px 10px;display:inline-block;font-size:0.9rem;"><strong>Beispiel:</strong> 3,5 cm</div>
+      </div>
+
+      <div style="background:#eafaf0;border:1px solid #a9e0c0;border-radius:8px;padding:12px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="background:#1a9850;color:#fff;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0;">3</span>
+          <strong>Menge der vollen Spule</strong>
+        </div>
+        <div style="font-size:0.92rem;color:#333;">Hier gibst du ein, wie viele Kontakte eine volle Spule enthält (z. B. 200.000 oder 150.000).</div>
+        <div style="margin-top:6px;background:#fff;border:1px solid #ddd;border-radius:6px;padding:6px 10px;display:inline-block;font-size:0.9rem;"><strong>Beispiel:</strong> 200.000</div>
+      </div>
+
+      <div style="background:#f3ecfa;border:1px solid #d3b8f0;border-radius:8px;padding:12px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="background:#8e44ad;color:#fff;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0;">4</span>
+          <strong>Kontakte pro Meter</strong>
+        </div>
+        <div style="font-size:0.92rem;color:#333;">Hier gibst du ein, wie viele Kontakte pro 1 Meter laut Arbeitskarte vorhanden sind.</div>
+        <div style="margin-top:6px;background:#fff;border:1px solid #ddd;border-radius:6px;padding:6px 10px;display:inline-block;font-size:0.9rem;"><strong>Beispiel:</strong> 200</div>
+      </div>
+
+      <div style="background:#fdecec;border:1px solid #f5b3b3;border-radius:8px;padding:12px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="background:#cc0000;color:#fff;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0;">5</span>
+          <strong>Aktuelle Spule messen</strong>
+        </div>
+        <div style="font-size:0.92rem;color:#333;">Wieder vom <strong>Spulenrand</strong> nach innen bis zur <strong>Oberfläche der Wicklung</strong> messen. Je größer dieses Maß, desto weniger Material ist noch auf der Spule.</div>
+        <div style="margin-top:8px;text-align:center;">
+          <svg viewBox="0 0 200 140" style="width:100%;max-width:220px;">
+            <ellipse cx="100" cy="65" rx="60" ry="55" fill="#888"/>
+            <ellipse cx="100" cy="65" rx="60" ry="55" fill="none" stroke="#555" stroke-width="1"/>
+            <g stroke="#666" stroke-width="1">
+              <line x1="45" y1="20" x2="45" y2="110"/><line x1="55" y1="14" x2="55" y2="116"/>
+              <line x1="65" y1="11" x2="65" y2="119"/><line x1="75" y1="10" x2="75" y2="120"/>
+              <line x1="85" y1="10" x2="85" y2="120"/><line x1="95" y1="10" x2="95" y2="120"/>
+              <line x1="105" y1="10" x2="105" y2="120"/><line x1="115" y1="10" x2="115" y2="120"/>
+              <line x1="125" y1="10" x2="125" y2="120"/><line x1="135" y1="11" x2="135" y2="119"/>
+              <line x1="145" y1="14" x2="145" y2="116"/><line x1="155" y1="20" x2="155" y2="110"/>
+            </g>
+            <ellipse cx="100" cy="65" rx="27.6" ry="25.3" fill="#ccc" stroke="#555" stroke-width="1"/>
+            <line x1="100" y1="10" x2="100" y2="39.7" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+            <line x1="100" y1="10" x2="100" y2="21" stroke="#cc0000" stroke-width="2.5" marker-end="url(#arrow5)"/>
+            <defs><marker id="arrow5" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#cc0000"/></marker></defs>
+            <text x="100" y="135" text-anchor="middle" font-size="9" fill="#555">Seitenansicht der Spule</text>
+          </svg>
+          <div style="font-size:0.78rem;color:#cc0000;font-weight:bold;">Messmaß: nur der kleine rote Abschnitt (7,0 cm)</div>
+          <div style="font-size:0.7rem;color:#888;">Graue gestrichelte Linie = voller möglicher Weg bis zum Kern (hier max. 20,5 cm)</div>
+        </div>
+        <div style="margin-top:6px;background:#fff;border:1px solid #ddd;border-radius:6px;padding:6px 10px;display:inline-block;font-size:0.9rem;"><strong>Beispiel:</strong> 7,0 cm</div>
+      </div>
+
+      <div style="background:var(--darkblue);color:#fff;border-radius:8px;padding:12px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:1.2rem;">🧮</span><strong>Ergebnis</strong>
+        </div>
+        <div style="font-size:0.92rem;">Der Bestand wird automatisch beim Eingeben berechnet – der Button <strong>„BESTAND BERECHNEN"</strong> zeigt zusätzlich Hinweise, falls ein Wert fehlt oder unplausibel ist.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script>
-const $=id=>document.getElementById(id);
-function openSettings(){ $('ip').value=localStorage.gbIp||''; $('name').value=localStorage.gbName||'Trio 4K'; $('version').value=localStorage.gbVersion||'OpenATV / Enigma2'; $('modal').classList.add('show') }
-function closeSettings(){ $('modal').classList.remove('show') }
-function saveSettings(){localStorage.gbIp=$('ip').value;localStorage.gbName=$('name').value;localStorage.gbVersion=$('version').value; update();closeSettings();toast('Verbindung gespeichert')}
-function update(){ $('receiverIp').textContent='IP: '+(localStorage.gbIp||'nicht konfiguriert');$('receiverName').textContent=localStorage.gbName||'Trio 4K';$('receiverVersion').textContent=localStorage.gbVersion||'OpenATV / Enigma2'}
-function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>$('toast').classList.remove('show'),2200)}
-function selectPath(p){toast('Ordner ausgewählt: '+p)}
-update();
+    const D_INNER = 35.0;
+    const PI = Math.PI;
+    let currentDMax = 76.0;
+    const D_MAX_76 = 76.0;
+
+    function setSpoolSize(newMaxD) {
+        currentDMax = newMaxD;
+        document.getElementById('maxDDisplay').innerText = newMaxD + ' cm';
+        document.getElementById('btn-98').classList.remove('active');
+        document.getElementById('btn-76').classList.remove('active');
+        document.getElementById('btn-' + newMaxD).classList.add('active');
+        document.getElementById('outputRefD').innerText = '-';
+        document.getElementById('outputCurrD').innerText = '-';
+        document.getElementById('outputFactorF').innerText = '-';
+        document.getElementById('errorBox').style.display = 'none';
+        document.getElementById('resultBox').style.display = 'none';
+        speichereDurchmesserKalibrierung();
+        calculate(true); // NEU: nach Größenwechsel still neu rechnen
+    }
+
+    // NEU [10]: Kalibrierwerte der Durchmesser-Methode merken (wie bei der Gewichts-Methode)
+    const DURCHMESSER_KALIBRIERUNG_KEY = "galvanikSpuleDurchmesserKalibrierung";
+    const durchmesserKalibrierFelder = ["refHalfD", "refCount", "cpm"];
+
+    function ladeDurchmesserKalibrierung() {
+        try {
+            const g = JSON.parse(localStorage.getItem(DURCHMESSER_KALIBRIERUNG_KEY));
+            if (g) {
+                durchmesserKalibrierFelder.forEach(id => { if (g[id] !== undefined && g[id] !== "") document.getElementById(id).value = g[id]; });
+                if (g.dmax === 98 || g.dmax === 76) { currentDMax = g.dmax; }
+            }
+        } catch (e) {}
+    }
+    function speichereDurchmesserKalibrierung() {
+        try {
+            const werte = { dmax: currentDMax };
+            durchmesserKalibrierFelder.forEach(id => { werte[id] = document.getElementById(id).value; });
+            localStorage.setItem(DURCHMESSER_KALIBRIERUNG_KEY, JSON.stringify(werte));
+        } catch (e) {}
+    }
+
+    /**
+     * Hauptberechnung. stumm=true: bei unvollständiger Eingabe keine Fehlermeldung anzeigen
+     * (wird beim Tippen benutzt), stumm=false: Fehlermeldung anzeigen (Button).
+     */
+    function calculate(stumm) {
+        const elResultBox = document.getElementById('resultBox');
+        const elResultVal = document.getElementById('resultValue');
+        const elOutputRefD = document.getElementById('outputRefD');
+        const elOutputCurrD = document.getElementById('outputCurrD');
+        const elOutputFactorF = document.getElementById('outputFactorF');
+        const elError = document.getElementById('errorBox');
+
+        const d_ref_half_measured = parseDeNumber(document.getElementById('refHalfD').value);
+        const count_ref = parseDeNumber(document.getElementById('refCount').value);
+        const cpm = parseDeNumber(document.getElementById('cpm').value);
+        const d_curr_half_measured = parseDeNumber(document.getElementById('currHalfD').value);
+
+        elOutputRefD.innerText = '-';
+        elOutputCurrD.innerText = '-';
+        elOutputFactorF.innerText = '-';
+        elError.style.display = 'none';
+        elResultBox.style.display = 'none';
+
+        if (isNaN(d_ref_half_measured) || isNaN(count_ref) || isNaN(d_curr_half_measured) || isNaN(cpm) || cpm <= 0) {
+            if (!stumm) showError("Bitte füllen Sie alle vier Felder mit gültigen Zahlen aus (Kontakte/m muss > 0 sein).");
+            return;
+        }
+
+        const d_ref_calculated = currentDMax - (d_ref_half_measured * 2);
+        const d_current_calculated = currentDMax - (d_curr_half_measured * 2);
+
+        if (d_ref_calculated <= D_INNER || d_current_calculated <= D_INNER) {
+            showError("Eine Messung ist zu groß. Der berechnete Durchmesser liegt unter dem Kern (" + D_INNER + " cm).");
+            return;
+        }
+        if (d_ref_calculated > currentDMax || d_current_calculated > currentDMax) {
+            showError("Eine Messung ist zu klein. Der berechnete Durchmesser ist größer als D_Max (" + currentDMax + " cm).");
+            return;
+        }
+
+        const L_ref_m = count_ref / cpm;
+        const area_ref_cm2 = PI * (Math.pow(d_ref_calculated / 2, 2) - Math.pow(D_INNER / 2, 2));
+        const factor_F = area_ref_cm2 / L_ref_m;
+        const area_curr_cm2 = PI * (Math.pow(d_current_calculated / 2, 2) - Math.pow(D_INNER / 2, 2));
+        const L_curr_m = area_curr_cm2 / factor_F;
+        const resultCount = Math.floor(L_curr_m * cpm);
+
+        elOutputRefD.innerText = d_ref_calculated.toFixed(1) + ' cm';
+        elOutputCurrD.innerText = d_current_calculated.toFixed(1) + ' cm';
+        elOutputFactorF.innerText = factor_F.toFixed(4) + ' cm²/m';
+        elResultVal.innerText = resultCount.toLocaleString('de-DE');
+        elResultBox.style.display = 'block';
+        speichereDurchmesserKalibrierung();
+    }
+
+    function showError(msg, targetId) {
+        const elError = document.getElementById(targetId || 'errorBox');
+        elError.innerText = msg;
+        elError.style.display = 'block';
+    }
+
+    function zeigeSpuleHilfe() { document.getElementById('spuleHilfeOverlay').style.display = 'block'; }
+    function versteckeSpuleHilfe() { document.getElementById('spuleHilfeOverlay').style.display = 'none'; }
+
+    function wechsleSpuleModus(modus) {
+        document.getElementById('btn-modus-durchmesser').classList.toggle('active', modus === 'durchmesser');
+        document.getElementById('btn-modus-gewicht').classList.toggle('active', modus === 'gewicht');
+        document.getElementById('modus-durchmesser').style.display = modus === 'durchmesser' ? 'block' : 'none';
+        document.getElementById('modus-gewicht').style.display = modus === 'gewicht' ? 'block' : 'none';
+    }
+
+    const GEWICHT_KALIBRIERUNG_KEY = "galvanikSpuleGewichtKalibrierung";
+    const gewichtKalibrierFelder = ["gewVoll", "gewVollStueck"];
+
+    function ladeGewichtKalibrierung() {
+        try {
+            const g = JSON.parse(localStorage.getItem(GEWICHT_KALIBRIERUNG_KEY));
+            if (g) gewichtKalibrierFelder.forEach(id => { if (g[id] !== undefined && g[id] !== "") document.getElementById(id).value = g[id]; });
+        } catch (e) {}
+    }
+    function speichereGewichtKalibrierung() {
+        try {
+            const werte = {};
+            gewichtKalibrierFelder.forEach(id => { werte[id] = document.getElementById(id).value; });
+            localStorage.setItem(GEWICHT_KALIBRIERUNG_KEY, JSON.stringify(werte));
+        } catch (e) {}
+    }
+
+    function calculateWeight(stumm) {
+        const vollGewicht = parseDeNumber(document.getElementById('gewVoll').value);
+        const vollStueck = parseDeNumber(document.getElementById('gewVollStueck').value);
+        const aktGewicht = parseDeNumber(document.getElementById('gewAktuell').value);
+
+        const elResultBoxGewicht = document.getElementById('resultBoxGewicht');
+        const elResultValGewicht = document.getElementById('resultValueGewicht');
+        const elResultGewichtProStueck = document.getElementById('resultGewichtProStueck');
+
+        document.getElementById('errorBoxGewicht').style.display = 'none';
+        elResultBoxGewicht.style.display = 'none';
+        elResultGewichtProStueck.innerText = '-';
+
+        if (isNaN(vollGewicht) || isNaN(vollStueck) || isNaN(aktGewicht) || vollGewicht <= 0 || vollStueck <= 0 || aktGewicht < 0) {
+            if (!stumm) showError('Bitte alle drei Felder mit gültigen Zahlen ausfüllen (Gewicht und Stückzahl müssen größer als 0 sein).', 'errorBoxGewicht');
+            return;
+        }
+
+        const gewichtProStueckKg = vollGewicht / vollStueck;
+        const resultCount = Math.floor(aktGewicht / vollGewicht * vollStueck);
+        const hinweis = aktGewicht > vollGewicht ? ' ⚠️ über Vollgewicht - Werte prüfen' : '';
+
+        elResultGewichtProStueck.innerText = (gewichtProStueckKg * 1000).toFixed(4) + ' g/Stück';
+        elResultValGewicht.innerText = resultCount.toLocaleString('de-DE') + hinweis;
+        elResultBoxGewicht.style.display = 'block';
+        speichereGewichtKalibrierung();
+    }
+
+    // GEÄNDERT [10]: beide Modi rechnen automatisch beim Tippen (still), Button zeigt Fehler
+    document.querySelectorAll("#modus-durchmesser input").forEach(i => i.addEventListener("input", () => calculate(true)));
+    document.querySelectorAll("#modus-gewicht input").forEach(i => i.addEventListener("input", () => calculateWeight(true)));
+
+    window.addEventListener('load', function() {
+        ladeDurchmesserKalibrierung();
+        setSpoolSize(currentDMax || D_MAX_76);
+        ladeGewichtKalibrierung();
+    });
 </script>
-</body></html>
+</section>
+
+<!-- ================================================================== -->
+<section id="tab-code" class="tab-pane">
+  <div class="container">
+    <h2>🔳 QR-Code / Strichcode Generator</h2>
+
+    <div class="switch-container">
+      <div class="switch-button active" id="btn-code-qr" onclick="wechsleCodeTyp('qr')">QR-Code</div>
+      <div class="switch-button" id="btn-code-barcode" onclick="wechsleCodeTyp('barcode')">Strichcode</div>
+      <div class="switch-button" id="btn-code-lesen" onclick="wechsleCodeTyp('lesen')">🔍 QR lesen</div>
+    </div>
+
+    <div class="code-panel active" id="panel-qr">
+      <label for="qrBenutzer">Benutzername</label>
+      <input type="text" id="qrBenutzer" placeholder="z.B. TE123456" autocomplete="off">
+
+      <label for="qrPasswort">Passwort</label>
+      <div class="passwort-zeile">
+        <!-- GEÄNDERT [11]: startet verdeckt -->
+        <input type="password" id="qrPasswort" placeholder="Passwort" autocomplete="off">
+        <button type="button" class="augen-btn" id="qrPasswortToggle" onclick="wechslePasswortSichtbarkeit()" title="Passwort ein-/ausblenden">
+          <svg id="qrAugeIcon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+
+      <button onclick="erzeugeLoginQrCode()">QR-Code erzeugen</button>
+
+      <div class="code-ausgabe" id="qrAusgabe"></div>
+      <button id="qrTeilenBtn" class="teilen-btn" style="display:none;" onclick="teileQrCode()">📤 QR-Code teilen / speichern</button>
+
+      <div class="hinweis">
+        ℹ️ Der QR-Code enthält: Benutzername, dann <strong>Tab</strong>, dann Passwort, dann <strong>Enter</strong>.
+        Wird er mit einem Strichcode-Scanner gescannt, der als Tastatur arbeitet, tippt er Benutzername ein,
+        springt automatisch ins nächste Feld und meldet sich nach dem Passwort selbst an.
+        Alles läuft nur auf diesem Gerät – nichts wird ins Internet gesendet.
+      </div>
+    </div>
+
+    <div class="code-panel" id="panel-barcode">
+      <label for="barcodeText">Text / Nummer</label>
+      <input type="text" id="barcodeText" placeholder="z.B. 123456789" autocomplete="off">
+      <button onclick="erzeugeBarcode()">Strichcode erzeugen</button>
+      <div class="hinweis">ℹ️ Erzeugt einen 1D-Strichcode (CODE128) aus dem eingegebenen Text bzw. der Nummer.</div>
+      <div class="code-ausgabe" id="barcodeAusgabe"><svg id="barcodeSvg"></svg></div>
+      <button id="barcodeTeilenBtn" class="teilen-btn" style="display:none;" onclick="teileBarcode()">📤 Strichcode teilen / speichern</button>
+    </div>
+
+    <div class="code-panel" id="panel-lesen">
+      <div class="hinweis">
+        ℹ️ Liest QR-Codes live über die Kamera. WLAN-QR-Codes werden automatisch erkannt und
+        Netzwerkname/Passwort übersichtlich angezeigt. Alles läuft nur auf diesem Gerät.
+      </div>
+      <button type="button" id="qrKameraBtn" onclick="starteQrKamera()">📷 Kamera starten</button>
+      <button type="button" id="qrKameraStopBtn" onclick="stoppeQrKamera()" style="display:none;background:#ffdd00;color:#d0021b;margin-top:8px;font-weight:bold;-webkit-text-stroke:0.6px #000000;text-shadow:0 0 1px #000;">Kamera stoppen</button>
+      <video id="qrVideo" playsinline style="display:none;width:100%;border-radius:10px;margin-top:12px;"></video>
+      <div id="qrScanStatus" style="display:none;text-align:center;font-weight:bold;color:#0066cc;margin-top:8px;">🔍 Suche nach QR-Code…</div>
+      <div id="qrLesenErgebnis" class="code-ausgabe" style="display:block;min-height:auto;"></div>
+    </div>
+  </div>
+
+  <script>
+    function wechsleCodeTyp(typ){
+      document.getElementById('btn-code-qr').classList.toggle('active', typ==='qr');
+      document.getElementById('btn-code-barcode').classList.toggle('active', typ==='barcode');
+      document.getElementById('btn-code-lesen').classList.toggle('active', typ==='lesen');
+      document.getElementById('panel-qr').classList.toggle('active', typ==='qr');
+      document.getElementById('panel-barcode').classList.toggle('active', typ==='barcode');
+      document.getElementById('panel-lesen').classList.toggle('active', typ==='lesen');
+      if(typ!=='lesen') stoppeQrKamera();
+    }
+
+    const AUGE_OFFEN_SVG = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    const AUGE_DURCHGESTRICHEN_SVG = '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-3.22 4.61M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+
+    function wechslePasswortSichtbarkeit(){
+      const feld = document.getElementById('qrPasswort');
+      const icon = document.getElementById('qrAugeIcon');
+      if(feld.type === 'password'){ feld.type = 'text'; icon.innerHTML = AUGE_DURCHGESTRICHEN_SVG; }
+      else{ feld.type = 'password'; icon.innerHTML = AUGE_OFFEN_SVG; }
+    }
+
+    function dataUrlZuBlobSynchron(dataUrl){
+      const teile = dataUrl.split(',');
+      const mimeMatch = teile[0].match(/:(.*?);/);
+      const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+      const binaer = atob(teile[1]);
+      const bytes = new Uint8Array(binaer.length);
+      for(let i=0; i<binaer.length; i++){ bytes[i] = binaer.charCodeAt(i); }
+      return new Blob([bytes], {type: mime});
+    }
+
+    async function teileOderSpeichereBild(dataUrl, dateiname){
+      try{
+        const blob = dataUrlZuBlobSynchron(dataUrl);
+        const datei = new File([blob], dateiname, {type: blob.type});
+        if(navigator.canShare && navigator.canShare({files:[datei]})){
+          await navigator.share({files:[datei], title: dateiname});
+          return;
+        }
+      }catch(e){}
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = dateiname;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function erzeugeLoginQrCode(){
+      const benutzer = document.getElementById('qrBenutzer').value;
+      const passwort = document.getElementById('qrPasswort').value;
+      const ausgabe = document.getElementById('qrAusgabe');
+      const teilenBtn = document.getElementById('qrTeilenBtn');
+      teilenBtn.style.display = 'none';
+
+      if(!benutzer || !passwort){
+        ausgabe.innerHTML = '<div style="color:red;font-size:13px;">Bitte Benutzername und Passwort eingeben.</div>';
+        return;
+      }
+      if(typeof QRCode === 'undefined'){
+        ausgabe.innerHTML = '<div style="color:red;font-size:13px;">QR-Bibliothek nicht geladen – bitte prüfen, ob der QRCode.js-Block eingefügt ist.</div>';
+        return;
+      }
+
+      const inhalt = benutzer + '\t' + passwort + '\n';
+      ausgabe.innerHTML = '';
+      new QRCode(ausgabe, { text: inhalt, width: 260, height: 260, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+      wartAufFertigenQrCode(ausgabe, teilenBtn);
+    }
+
+    function wartAufFertigenQrCode(ausgabe, teilenBtn, versuch){
+      versuch = versuch || 0;
+      const canvas = ausgabe.querySelector('canvas');
+      const img = ausgabe.querySelector('img');
+      const canvasFertig = canvas && canvas.width > 0 && (function(){
+        try{
+          const daten = canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
+          for(let i=3; i<daten.length; i+=4){ if(daten[i] !== 0) return true; }
+          return false;
+        }catch(e){ return true; }
+      })();
+      const imgFertig = img && img.src && img.complete;
+      if(canvasFertig || imgFertig || versuch > 40){ teilenBtn.style.display = 'block'; return; }
+      setTimeout(()=> wartAufFertigenQrCode(ausgabe, teilenBtn, versuch+1), 50);
+    }
+
+    function teileQrCode(){
+      const ausgabe = document.getElementById('qrAusgabe');
+      const canvas = ausgabe.querySelector('canvas');
+      let quellCanvas;
+      if(canvas){ quellCanvas = canvas; }
+      else{
+        const img = ausgabe.querySelector('img');
+        if(!img) return;
+        quellCanvas = document.createElement('canvas');
+        quellCanvas.width = img.naturalWidth || 260;
+        quellCanvas.height = img.naturalHeight || 260;
+        quellCanvas.getContext('2d').drawImage(img, 0, 0);
+      }
+      const rand = 24;
+      const ausgabeCanvas = document.createElement('canvas');
+      ausgabeCanvas.width = quellCanvas.width + rand*2;
+      ausgabeCanvas.height = quellCanvas.height + rand*2;
+      const ctx = ausgabeCanvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, ausgabeCanvas.width, ausgabeCanvas.height);
+      ctx.drawImage(quellCanvas, rand, rand);
+      teileOderSpeichereBild(ausgabeCanvas.toDataURL('image/png'), 'qrcode.png');
+    }
+
+    function erzeugeBarcode(){
+      const text = document.getElementById('barcodeText').value;
+      const svg = document.getElementById('barcodeSvg');
+      const teilenBtn = document.getElementById('barcodeTeilenBtn');
+      teilenBtn.style.display = 'none';
+
+      if(!text){
+        document.getElementById('barcodeAusgabe').innerHTML = '<div style="color:red;font-size:13px;">Bitte Text oder Nummer eingeben.</div><svg id="barcodeSvg"></svg>';
+        return;
+      }
+      if(typeof JsBarcode === 'undefined'){
+        document.getElementById('barcodeAusgabe').innerHTML = '<div style="color:red;font-size:13px;">Barcode-Bibliothek nicht geladen – bitte prüfen, ob der JsBarcode-Block eingefügt ist.</div><svg id="barcodeSvg"></svg>';
+        return;
+      }
+      try{
+        JsBarcode(svg, text, { format: "CODE128", lineColor: "#000", width: 2, height: 80, displayValue: true, fontSize: 14 });
+        teilenBtn.style.display = 'block';
+      }catch(e){
+        document.getElementById('barcodeAusgabe').innerHTML = '<div style="color:red;font-size:13px;">Ungültige Eingabe für Strichcode.</div><svg id="barcodeSvg"></svg>';
+      }
+    }
+
+    function teileBarcode(){
+      const svg = document.getElementById('barcodeSvg');
+      const breite = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width ? svg.viewBox.baseVal.width : (svg.width.baseVal.value || 300);
+      const hoehe = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.height ? svg.viewBox.baseVal.height : (svg.height.baseVal.value || 120);
+      const svgText = new XMLSerializer().serializeToString(svg);
+      const url = URL.createObjectURL(new Blob([svgText], {type:'image/svg+xml;charset=utf-8'}));
+      const bild = new Image();
+      bild.onload = function(){
+        const canvas = document.createElement('canvas');
+        canvas.width = breite + 20; canvas.height = hoehe + 20;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(bild, 10, 10);
+        URL.revokeObjectURL(url);
+        teileOderSpeichereBild(canvas.toDataURL('image/png'), 'barcode.png');
+      };
+      bild.src = url;
+    }
+
+    /* --- QR-Code lesen --- */
+
+    // GEÄNDERT [3]: ohne Regex-Lookbehind (Safari < 16.4 warf sonst SyntaxError beim Laden)
+    function parseWlanCode(text){
+      const treffer = /^WIFI:(.*);;?\s*$/i.exec((text||'').trim());
+      if(!treffer) return null;
+      const PLATZHALTER = '\u0000';
+      const felder = {};
+      treffer[1].replace(/\\;/g, PLATZHALTER).split(';').forEach(teil=>{
+        teil = teil.split(PLATZHALTER).join('\\;');
+        const idx = teil.indexOf(':');
+        if(idx > -1){
+          felder[teil.slice(0, idx)] = teil.slice(idx+1).replace(/\\(.)/g, '$1');
+        }
+      });
+      if(!felder.S) return null;
+      return felder;
+    }
+
+    // GEÄNDERT [4]: alles escaped, kein Inline-onclick mit Nutzerdaten mehr
+    function zeigeQrLeseErgebnis(text, fehler){
+      const box = document.getElementById('qrLesenErgebnis');
+      if(fehler){
+        box.innerHTML = `<div style="color:red;font-size:13px;">${escapeHtml(fehler)}</div>`;
+        box.scrollIntoView({behavior:'smooth', block:'nearest'});
+        return;
+      }
+      const wlan = parseWlanCode(text);
+      box.dataset.rohtext = text;
+      box.dataset.passwort = wlan ? (wlan.P || '') : '';
+
+      let inhaltHtml;
+      if(wlan){
+        inhaltHtml = `
+          <div style="color:#1a7d1a;font-weight:bold;font-size:15px;margin-bottom:6px;">✅ WLAN-Code erkannt!</div>
+          <div style="background:#f5f5f5;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:14px;">
+            <div><strong>📶 Netzwerk:</strong> ${escapeHtml(wlan.S)}</div>
+            <div style="margin-top:4px;"><strong>🔑 Passwort:</strong> ${wlan.P ? escapeHtml(wlan.P) : '(kein Passwort)'}</div>
+            <div style="margin-top:4px;"><strong>Verschlüsselung:</strong> ${escapeHtml(wlan.T || 'unbekannt')}</div>
+          </div>
+          <button type="button" onclick="kopiereQrErgebnis('passwort')" style="margin-top:10px;">📋 Passwort kopieren</button>`;
+      }else{
+        inhaltHtml = `
+          <div style="color:#1a7d1a;font-weight:bold;font-size:15px;margin-bottom:6px;">✅ QR-Code erkannt!</div>
+          <label style="margin-top:0;">Inhalt:</label>
+          <div style="background:#f5f5f5;border:1px solid #ddd;border-radius:8px;padding:10px;font-family:monospace;font-size:14px;white-space:pre-wrap;word-break:break-all;margin-top:5px;">${escapeHtml(text)}</div>
+          <button type="button" onclick="kopiereQrErgebnis('rohtext')" style="margin-top:10px;">📋 Text kopieren</button>`;
+      }
+      box.innerHTML = `<div style="width:100%;text-align:left;">${inhaltHtml}</div>`;
+      box.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+
+    function kopiereQrErgebnis(was){
+      const box = document.getElementById('qrLesenErgebnis');
+      const text = was === 'passwort' ? (box.dataset.passwort || '') : (box.dataset.rohtext || '');
+      if(navigator.clipboard && text){ navigator.clipboard.writeText(text).catch(()=>{}); }
+    }
+
+    let qrKameraStream = null;
+    let qrKameraLaeuft = false;
+
+    async function starteQrKamera(){
+      const video = document.getElementById('qrVideo');
+      const startBtn = document.getElementById('qrKameraBtn');
+      const stopBtn = document.getElementById('qrKameraStopBtn');
+
+      if(location.protocol !== 'https:' && location.hostname !== 'localhost'){
+        zeigeQrLeseErgebnis(null, 'Kamera braucht eine sichere Verbindung (https). Diese Seite läuft aktuell über ' + location.protocol + ' – bitte über https:// aufrufen.');
+        return;
+      }
+      if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+        zeigeQrLeseErgebnis(null, 'Dieser Browser/diese Ansicht unterstützt keinen Kamera-Zugriff. Bitte die Seite direkt in Safari/Chrome öffnen.');
+        return;
+      }
+      if(typeof jsQR === 'undefined'){
+        zeigeQrLeseErgebnis(null, 'Die Lese-Funktion ist gerade nicht verfügbar (Bibliothek konnte nicht geladen werden). Bitte Seite neu laden und erneut versuchen.');
+        return;
+      }
+
+      try{
+        qrKameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+      }catch(e){
+        zeigeQrLeseErgebnis(null, formatiereKameraFehler(e));
+        return;
+      }
+
+      video.srcObject = qrKameraStream;
+      video.style.display = 'block';
+      video.play();
+      startBtn.style.display = 'none';
+      stopBtn.style.display = 'block';
+      document.getElementById('qrScanStatus').style.display = 'block';
+      document.getElementById('qrLesenErgebnis').innerHTML = '';
+      qrKameraLaeuft = true;
+
+      const scrolleZurKamera = ()=>{ video.scrollIntoView({behavior:'smooth', block:'center'}); };
+      video.addEventListener('loadedmetadata', scrolleZurKamera, {once:true});
+      setTimeout(scrolleZurKamera, 700);
+      requestAnimationFrame(qrKameraScanSchleife);
+    }
+
+    function qrKameraScanSchleife(){
+      if(!qrKameraLaeuft) return;
+      const video = document.getElementById('qrVideo');
+      if(video.readyState === video.HAVE_ENOUGH_DATA){
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const bilddaten = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const ergebnis = jsQR(bilddaten.data, bilddaten.width, bilddaten.height);
+        if(ergebnis && ergebnis.data){ stoppeQrKamera(); zeigeQrLeseErgebnis(ergebnis.data, null); return; }
+      }
+      requestAnimationFrame(qrKameraScanSchleife);
+    }
+
+    function formatiereKameraFehler(e){
+      if(e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError'){
+        return 'Kamera-Zugriff wurde blockiert. Bitte in den iPhone-Einstellungen unter Safari (bzw. dem verwendeten Browser) → Kamera auf "Erlauben" stellen, dann die Seite neu laden.';
+      }else if(e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError'){
+        return 'Es wurde keine Kamera gefunden.';
+      }else if(e.name === 'NotReadableError' || e.name === 'TrackStartError'){
+        return 'Die Kamera wird gerade von einer anderen App benutzt.';
+      }else if(e.name === 'SecurityError'){
+        return 'Kamera-Zugriff aus Sicherheitsgründen blockiert. Bitte die Seite direkt in Safari/Chrome öffnen.';
+      }
+      return 'Kein Kamera-Zugriff möglich (' + (e.name || e.message || 'unbekannter Fehler') + ').';
+    }
+
+    function stoppeQrKamera(){
+      qrKameraLaeuft = false;
+      if(qrKameraStream){ qrKameraStream.getTracks().forEach(track => track.stop()); qrKameraStream = null; }
+      document.getElementById('qrVideo').style.display = 'none';
+      document.getElementById('qrScanStatus').style.display = 'none';
+      document.getElementById('qrKameraBtn').style.display = 'block';
+      document.getElementById('qrKameraStopBtn').style.display = 'none';
+    }
+  </script>
+</section>
+
+<!-- ================================================================== -->
+<section id="tab-mde" class="tab-pane">
+  <div class="container" style="padding:0; overflow:hidden; height:80vh; max-height:800px;">
+    <iframe src="https://postmen1971.github.io/BandG/MDE_SAP_Anleitung.html" title="MDE-Gerät Anleitung" style="width:100%; height:100%; border:none; display:block;"></iframe>
+  </div>
+</section>
+
+<section id="tab-gehalt" class="tab-pane">
+  <div class="container">
+    <h2>Gehalt / Lohnabrechnung</h2>
+    <div style="background:#fff3e8;border:1px solid #f2c58a;border-radius:8px;padding:14px;font-size:0.95rem;line-height:1.5;color:#333;">
+      <p style="margin-top:0;"><strong>Hinweis:</strong> Der folgende Button leitet dich lediglich zur offiziellen Login-Seite unseres Lohnabrechnungs-Dienstleisters <strong>ADP</strong> weiter.</p>
+      <p>Diese App (RechnerGAL) läuft komplett getrennt davon – es werden <strong>keine Zugangsdaten, Passwörter oder Gehaltsdaten</strong> über diese Seite oder ihren Server übertragen oder gespeichert. Der Klick öffnet einfach direkt die ADP-Webseite in deinem Browser, genau wie ein Lesezeichen.</p>
+      <p style="margin-bottom:0;">Login und Verschlüsselung laufen danach ausschließlich über die Server von ADP, nicht über RechnerGAL.</p>
+    </div>
+    <a href="https://online.emea.adp.com/signin/v1?APPID=ADPworld&amp;productId=d3012000-a7b7-6167-e053-f282530b58ef&amp;returnURL=https://adpworld.adp.com/&amp;callingAppId=ADPworld&amp;TARGET=-SM-https://adpworld.adp.com/"
+       style="display:block;text-align:center;text-decoration:none;background:var(--darkblue);color:#fff;font-weight:bold;padding:12px;border-radius:8px;margin-top:14px;">
+      Weiter zum ADP-Login →
+    </a>
+    <a href="#" onclick="event.preventDefault();activate('zeit');" style="display:block;text-align:center;margin-top:14px;color:#666;font-size:0.85rem;">← Zurück zu den Rechnern</a>
+  </div>
+</section>
+
+<script>
+  const TABS = {
+    strom: {btn:"tabBtnStrom", pane:"tab-strom"},
+    zeit:  {btn:"tabBtnZeit",  pane:"tab-zeit"},
+    spule: {btn:"tabBtnSpule", pane:"tab-spule"},
+    code:  {btn:"tabBtnCode",  pane:"tab-code"},
+    mde:   {btn:"tabBtnMde",   pane:"tab-mde"}
+  };
+
+  function activate(t){
+    // NEU [5]: laufende Kamera beim Tab-Wechsel stoppen
+    if(typeof stoppeQrKamera === 'function') stoppeQrKamera();
+    document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".tabbtn").forEach(b => b.classList.remove("active"));
+    const ziel = TABS[t] || TABS.code;
+    document.getElementById(ziel.btn).classList.add("active");
+    document.getElementById(ziel.pane).classList.add("active");
+  }
+  Object.keys(TABS).forEach(t => document.getElementById(TABS[t].btn).addEventListener("click", () => activate(t)));
+
+  // GEÄNDERT [13]: versteckter Zugang zur Gehalt-Seite über den gemeinsamen Helfer
+  fuenffachTipp(document.getElementById("zeitResult"), function(){
+    document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".tabbtn").forEach(b => b.classList.remove("active"));
+    document.getElementById("tab-gehalt").classList.add("active");
+  });
+
+  // Verstecktes Popup: Long-Press (600 ms) auf den Header
+  (function(){
+    const header = document.querySelector(".app-header");
+    const overlay = document.getElementById("spetePopupOverlay");
+    let pressTimer = null;
+    function starteTimer(e){ if (e) e.preventDefault(); pressTimer = setTimeout(function(){ overlay.style.display = "flex"; }, 600); }
+    function stoppeTimer(){ clearTimeout(pressTimer); }
+    header.addEventListener("touchstart", starteTimer, {passive:false});
+    header.addEventListener("touchend", stoppeTimer);
+    header.addEventListener("touchmove", stoppeTimer);
+    header.addEventListener("touchcancel", stoppeTimer);
+    header.addEventListener("mousedown", starteTimer);
+    header.addEventListener("mouseup", stoppeTimer);
+    header.addEventListener("mouseleave", stoppeTimer);
+    header.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+    overlay.addEventListener("click", function(e){ if (e.target === overlay) overlay.style.display = "none"; });
+  })();
+</script>
+</body>
+</html>
