@@ -1,7 +1,7 @@
 {
-  "schema_version": "13.0",
-  "generated_at": "2026-09-22T10:10:18.087719+00:00",
-  "generated_at_display": "22.09.2026 10:10 UTC",
+  "schema_version": "11.0",
+  "generated_at": "2026-09-22T10:04:16.148508+00:00",
+  "generated_at_display": "22.09.2026 10:04 UTC",
   "sources_checked": {
     "google_news_rss": true,
     "press_eye_news": true,
@@ -13,7 +13,7 @@
     {
       "id": "59b4f629639d9ac05c80",
       "title": "Study of Subretinally Injected AAVB-081 in Patients With Usher Syndrome Type IB (USH1B) Retinitis Pigmentosa",
-      "title_de": "Studie zu subretinal injiziertem AAVB-081 in bei Patienten mit Usher-Syndrom Typ 1B (USH1B) Retinitis pigmentosa",
+      "title_de": "Study of Subretinally Injected AAVB-081 in Patients With Usher Syndrome Type IB (USH1B) Retinitis Pigmentosa",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist PHASE1, PHASE2.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Usher-Syndrom Typ 1B / MYO7A. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet PHASE1, PHASE2. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -33,7 +33,7 @@
     {
       "id": "c201a3f5edf0027bfe6f",
       "title": "Weight Reduction Heterogenicity and Mediators of GLP-1RAs and Dual Agonists for Individuals With Obesity: A Meta-Analysis.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Weight Reduction Heterogenicity and Mediators of GLP-1RAs and Dual Agonists for Individuals With Obesity: A Meta-Analysis.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -53,7 +53,7 @@
     {
       "id": "bf5bb2db309fb985dd57",
       "title": "Separate and Combined Extrapancreatic Effects of the Incretin Hormones",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Separate and Combined Extrapancreatic Effects of the Incretin Hormones",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -73,7 +73,7 @@
     {
       "id": "27fb31f4e7c48b097a16",
       "title": "Detection and Excretion Profile of Retatrutide in Human Plasma and Urine by LC-HRMS: Implications for Antidoping Analysis.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Detection and Excretion Profile of Retatrutide in Human Plasma and Urine by LC-HRMS: Implications for Antidoping Analysis.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -93,7 +93,7 @@
     {
       "id": "624a1215ef23925b53b7",
       "title": "Consensus-based clinical and research recommendations for use of glucagon-like peptide-1 receptor agonists in the context of eating disorders: a modified Delphi study.",
-      "title_de": "Consensus-based clinical and research recommendations for use of glucagon-like peptide-1 receptor agonists in the context of eating disorders: a modified Delphi Studie.",
+      "title_de": "Consensus-based clinical and research recommendations for use of glucagon-like peptide-1 receptor agonists in the context of eating disorders: a modified Delphi study.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -113,7 +113,7 @@
     {
       "id": "4af4bcdbf37cc8d71dcb",
       "title": "The Effect of Combination of Mosapride and DPP-4 Inhibitor on Plasma Concentration of Incretin Hormones",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "The Effect of Combination of Mosapride and DPP-4 Inhibitor on Plasma Concentration of Incretin Hormones",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist PHASE4.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet PHASE4. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -133,7 +133,7 @@
     {
       "id": "95ab46b6057fc47bca98",
       "title": "Splanchnic Blood Redistribution After Incretin Hormone Infusion and Obesity Surgery",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Splanchnic Blood Redistribution After Incretin Hormone Infusion and Obesity Surgery",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist PHASE1.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet PHASE1. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -153,7 +153,7 @@
     {
       "id": "e6162c1f84a4d068f8db",
       "title": "Treatment of Type 2 Diabetes Mellitus by Duodenal Exclusion Associated With Omentectomy: Clinical and Hormonal Study",
-      "title_de": "Treatment of Type 2 Diabetes Mellitus by Duodenal Exclusion Associated With Omentectomy: Clinical and Hormonal Studie",
+      "title_de": "Treatment of Type 2 Diabetes Mellitus by Duodenal Exclusion Associated With Omentectomy: Clinical and Hormonal Study",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist PHASE1, PHASE2.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet PHASE1, PHASE2. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -173,7 +173,7 @@
     {
       "id": "24d6523496c9a9f2a889",
       "title": "The Effect of Dietary Fiber-enriched Cereals on Glycemic Control and Secretion of Gut Hormones",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "The Effect of Dietary Fiber-enriched Cereals on Glycemic Control and Secretion of Gut Hormones",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -193,7 +193,7 @@
     {
       "id": "686d766aee90ba5c2990",
       "title": "The Insulin Response to the Gut Hormone GIP After Near-normalisation of Plasma Glucose in Patients With Type 2 Diabetes",
-      "title_de": "The Insulin Response to the Gut Hormone GIP After Near-normalisation of Plasma Glucose in bei Patienten mit Type 2 Diabetes",
+      "title_de": "The Insulin Response to the Gut Hormone GIP After Near-normalisation of Plasma Glucose in Patients With Type 2 Diabetes",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -213,7 +213,7 @@
     {
       "id": "3ae998b55c728fa335dd",
       "title": "A Study to Evaluate the Effects of Enicepatide in Participants With Obesity or Overweight, With or Without Type 2 Diabetes",
-      "title_de": "A Studie to Evaluate the Effects of Enicepatide in Participants With Obesity or Overweight, With or Without Type 2 Diabetes",
+      "title_de": "A Study to Evaluate the Effects of Enicepatide in Participants With Obesity or Overweight, With or Without Type 2 Diabetes",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist PHASE3.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet PHASE3. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -233,7 +233,7 @@
     {
       "id": "bba25541ea3f80d8add2",
       "title": "The Effect of Andrographis Paniculata to GLP-1, Fasting Insulin, Insulin 2-h Post OGTT, and HOMA-IR",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "The Effect of Andrographis Paniculata to GLP-1, Fasting Insulin, Insulin 2-h Post OGTT, and HOMA-IR",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -253,7 +253,7 @@
     {
       "id": "f0142c4c55002cca9f68",
       "title": "Search for Biological Markers of Orosensory Perception of Fatty Acids in Healthy Subjects and Possible Modifications in Patients With Type 2 Diabetes and in Obese Non-diabetic Patients.",
-      "title_de": "Search for Biological Markers of Orosensory Perception of Fatty Acids in Healthy Subjects and Possible Modifications in bei Patienten mit Type 2 Diabetes and in Obese Non-diabetic Patients.",
+      "title_de": "Search for Biological Markers of Orosensory Perception of Fatty Acids in Healthy Subjects and Possible Modifications in Patients With Type 2 Diabetes and in Obese Non-diabetic Patients.",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -273,7 +273,7 @@
     {
       "id": "ed672afecb4c3a4a2cab",
       "title": "Characterization of the Incretinpathy in Type 2 Diabetes Initiated After Sixty Years Old",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Characterization of the Incretinpathy in Type 2 Diabetes Initiated After Sixty Years Old",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist COMPLETED.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet COMPLETED. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -293,7 +293,7 @@
     {
       "id": "12bfdf25fd24e92dd639",
       "title": "Clinical, Morphometric and Biochemical Effects on Adiposopathy Associated With the Use of GLP-1RA in CKD",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Clinical, Morphometric and Biochemical Effects on Adiposopathy Associated With the Use of GLP-1RA in CKD",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist RECRUITING.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet RECRUITING. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -313,7 +313,7 @@
     {
       "id": "e86c9cddc60da35b08e1",
       "title": "How lipid ingestion is sensed: the mechanisms underlying intestinal hormone secretion.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "How lipid ingestion is sensed: the mechanisms underlying intestinal hormone secretion.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -333,7 +333,7 @@
     {
       "id": "2d1c89e0f805d0362702",
       "title": "Whey Protein Effect on Glycaemic and Appetite Responses in T2D",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Whey Protein Effect on Glycaemic and Appetite Responses in T2D",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -353,7 +353,7 @@
     {
       "id": "c23ef532bb1bf3455b77",
       "title": "Oral small-molecule GLP-1 receptor agonist for type 2 diabetes and obesity.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Oral small-molecule GLP-1 receptor agonist for type 2 diabetes and obesity.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -373,7 +373,7 @@
     {
       "id": "b8f2c659a83cb55a84d7",
       "title": "Associations Between Antidiabetic Pharmacotherapy and Hearing Thresholds in Adult Hearing-Impaired Patients With Type 2 Diabetes.",
-      "title_de": "Associations Between Antidiabetic Pharmacotherapy and Hearing Thresholds in Adult Hearing-Impaired bei Patienten mit Type 2 Diabetes.",
+      "title_de": "Associations Between Antidiabetic Pharmacotherapy and Hearing Thresholds in Adult Hearing-Impaired Patients With Type 2 Diabetes.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -393,7 +393,7 @@
     {
       "id": "f9d9fd518dc3191af763",
       "title": "Effects of Gut Peptides on Bone Remodeling. KS-4-Diabetes-19",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Effects of Gut Peptides on Bone Remodeling. KS-4-Diabetes-19",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -413,7 +413,7 @@
     {
       "id": "0aca903a9c07fea7d31f",
       "title": "The Effect of HMG-CoA Reductase Inhibition on Postprandial GLP-1 Secretion",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "The Effect of HMG-CoA Reductase Inhibition on Postprandial GLP-1 Secretion",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -433,7 +433,7 @@
     {
       "id": "0f0ebbcfe183db3dbbb0",
       "title": "Metabolic Effects of Melatonin Treatment",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Metabolic Effects of Melatonin Treatment",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist PHASE1.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet PHASE1. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -453,7 +453,7 @@
     {
       "id": "124af0d45dba3e826b7e",
       "title": "The Effect of Acipimox on GLP (Glucagon-like Peptide)-1 Secretion",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "The Effect of Acipimox on GLP (Glucagon-like Peptide)-1 Secretion",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -473,7 +473,7 @@
     {
       "id": "576dcea7ab31d9ee86e2",
       "title": "Glycated hemoglobin and retinal microvascular changes in type 2 diabetic retinopathy patients treated with metformin and/or insulin: A retrospective study .",
-      "title_de": "Glycated hemoglobin and retinal microvascular changes in type 2 diabetic retinopathy patients treated with metformin and/or insulin: A retrospective Studie .",
+      "title_de": "Glycated hemoglobin and retinal microvascular changes in type 2 diabetic retinopathy patients treated with metformin and/or insulin: A retrospective study .",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -493,7 +493,7 @@
     {
       "id": "efa4a3d36514d333544c",
       "title": "Applicability of Non-Invasive Eligibility Criteria for MASH Pharmacotherapy: A Multicentre Cohort Study.",
-      "title_de": "Applicability of Non-Invasive Eligibility Criteria for MASH Pharmacotherapy: A Multicentre Cohort Studie.",
+      "title_de": "Applicability of Non-Invasive Eligibility Criteria for MASH Pharmacotherapy: A Multicentre Cohort Study.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -513,7 +513,7 @@
     {
       "id": "9c136e664a2e1e6d6b3b",
       "title": "Effect of Bariatric Surgery on Improvement of Retinal Microvasculature in Patients With Obesity: A Systematic Review and Meta-Analysis.",
-      "title_de": "Effect of Bariatric Surgery on Improvement of Retinal Microvasculature in bei Patienten mit Obesity: A Systematic Review and Meta-Analysis.",
+      "title_de": "Effect of Bariatric Surgery on Improvement of Retinal Microvasculature in Patients With Obesity: A Systematic Review and Meta-Analysis.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -533,7 +533,7 @@
     {
       "id": "bcac6c93424097a750fb",
       "title": "Efficacy of Educational Nutrition and Exercise on the Regulation of Appetite Through Exosomes in Type 2 Diabetics",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Efficacy of Educational Nutrition and Exercise on the Regulation of Appetite Through Exosomes in Type 2 Diabetics",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -553,7 +553,7 @@
     {
       "id": "280cdddae1bd7f678ef2",
       "title": "Evaluate Effects of Sprinkled Format REDUCOSE in a Carbohydrate-rich, Mixed Meal on Post-prandial Glycemia",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Evaluate Effects of Sprinkled Format REDUCOSE in a Carbohydrate-rich, Mixed Meal on Post-prandial Glycemia",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -573,7 +573,7 @@
     {
       "id": "3eabf291dcaf7ed16cc3",
       "title": "A Multiple-ascending-dose Study to Evaluate the Efficacy, Safety, and Pharmacokinetics (PK) of MEDI0382 in Overweight and Obese Participants With Type 2 Diabetes Mellitus",
-      "title_de": "A Multiple-ascending-dose Studie to Evaluate the Efficacy, Safety, and Pharmacokinetics (PK) of MEDI0382 in Overweight and Obese Participants With Type 2 Diabetes Mellitus",
+      "title_de": "A Multiple-ascending-dose Study to Evaluate the Efficacy, Safety, and Pharmacokinetics (PK) of MEDI0382 in Overweight and Obese Participants With Type 2 Diabetes Mellitus",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist PHASE1, PHASE2.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet PHASE1, PHASE2. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -593,7 +593,7 @@
     {
       "id": "190e73d8e084196f112f",
       "title": "Gypenosides Damulin A and Damulin B Inhibit Hepatocellular Carcinoma by Regulating Cholesterol Synthesis.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Gypenosides Damulin A and Damulin B Inhibit Hepatocellular Carcinoma by Regulating Cholesterol Synthesis.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -613,7 +613,7 @@
     {
       "id": "34e2e852a9d68d0e48c6",
       "title": "Rethinking Empowerment in Healthcare: A Dynamic Continuum.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Rethinking Empowerment in Healthcare: A Dynamic Continuum.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -633,7 +633,7 @@
     {
       "id": "1f09e7b0243df2dc378d",
       "title": "Metformin Attenuates Behavioral Deficits and Oxidative Stress in a Preclinical Model of Autism.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Metformin Attenuates Behavioral Deficits and Oxidative Stress in a Preclinical Model of Autism.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -653,7 +653,7 @@
     {
       "id": "0bd384443879e1c7a02a",
       "title": "Prognostic Value of Liver Stiffness in Advanced Chronic Liver Disease After Hepatitis C Virus Eradication.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Prognostic Value of Liver Stiffness in Advanced Chronic Liver Disease After Hepatitis C Virus Eradication.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -673,7 +673,7 @@
     {
       "id": "b89082448d416288b8f6",
       "title": "ALPS-HCC Score: A Dynamic Liver Stiffness Measurement-Based Machine Learning Model to Predict Risk of Hepatocellular Carcinoma.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "ALPS-HCC Score: A Dynamic Liver Stiffness Measurement-Based Machine Learning Model to Predict Risk of Hepatocellular Carcinoma.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -693,7 +693,7 @@
     {
       "id": "a19c57abdd344ca30b84",
       "title": "IMPROVE 2025: The 3rd International Meeting on Pathway-Related Obesity: Vision & Evidence.",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "IMPROVE 2025: The 3rd International Meeting on Pathway-Related Obesity: Vision & Evidence.",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -713,7 +713,7 @@
     {
       "id": "b884b30091d7e9c8853e",
       "title": "Precision Nutrition to Improve Cardiometabolic Health With Dietary (Poly)Phenols",
-      "title_de": "Neue Forschung zu Typ-2-Diabetes",
+      "title_de": "Precision Nutrition to Improve Cardiometabolic Health With Dietary (Poly)Phenols",
       "summary_de": "Es handelt sich um eine bei ClinicalTrials.gov registrierte klinische Studie. Der aktuelle Status ist NA.",
       "detailed_summary_de": "Die Studie untersucht einen medizinischen Therapieansatz im Themenbereich Typ-2-Diabetes. Die Studie ist bei ClinicalTrials.gov registriert. Der angegebene Entwicklungsstand lautet NA. Aus den vorliegenden Registerdaten lässt sich ohne weitere Angaben keine Aussage über bereits erzielte Wirksamkeit ableiten.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
@@ -730,13 +730,5 @@
       "study_phase": "NA",
       "priority": 0
     }
-  ],
-  "full_refresh": true,
-  "translation_check": {
-    "checked": 36,
-    "repaired": 0,
-    "language": "de",
-    "source_content_refetched": true,
-    "gemini_batches": 9
-  }
+  ]
 }
