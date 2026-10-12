@@ -1,7 +1,7 @@
 {
   "schema_version": "13.0",
-  "generated_at": "2026-10-11T11:33:44.861739+00:00",
-  "generated_at_display": "11.10.2026 11:33 UTC",
+  "generated_at": "2026-10-12T13:22:01.731061+00:00",
+  "generated_at_display": "12.10.2026 13:22 UTC",
   "sources_checked": {
     "google_news_rss": true,
     "press_eye_news": true,
@@ -591,17 +591,17 @@
       "priority": 60
     },
     {
-      "id": "f8eb8e0ecf9ebc51f02d",
-      "title": "Prediction of metabolic dysfunction-associated steatotic liver disease among patients with type 2 diabetes mellitus using liver fat indices in a resource-limited clinical setting",
-      "title_de": "Prediction of metabolic dysfunction-associated steatotic liver disease among bei Patienten mit type 2 diabetes mellitus using liver fat indices in a resource-limited clinical setting",
+      "id": "f2020edcee0fcf47ef5c",
+      "title": "Transcutaneous Skin Perforation by a Protruding Xiphoid Process in a Bedbound Patient With Post-Traumatic Cervical Myelopathy: A Case Report and Review of the Literature",
+      "title_de": "Transcutaneous Skin Perforation by a Protruding Xiphoid Process in a Bedbound Patienten mit Post-Traumatic Cervical Myelopathy: A Case Report and Review of the Literature",
       "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
       "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Typ-2-Diabetes. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
       "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/PMC13649460/",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/PPR1338625/",
       "source": "PubMed / Europe PMC",
       "country": "",
-      "published": "2026-10-10",
-      "published_display": "10.10.2026",
+      "published": "2026-10-11",
+      "published_display": "11.10.2026",
       "topic": "diabetes",
       "category": "forschung",
       "press": false,
