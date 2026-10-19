@@ -1,7 +1,7 @@
 {
   "schema_version": "13.0",
-  "generated_at": "2026-10-18T09:48:27.259340+00:00",
-  "generated_at_display": "18.10.2026 09:48 UTC",
+  "generated_at": "2026-10-19T10:59:41.909600+00:00",
+  "generated_at_display": "19.10.2026 10:59 UTC",
   "sources_checked": {
     "google_news_rss": true,
     "press_eye_news": true,
@@ -748,7 +748,7 @@
       "evidence": "frueh",
       "evidence_key": "frueh",
       "study_phase": "Nicht angegeben",
-      "priority": 0
+      "priority": 245
     },
     {
       "id": "7a352522ab57c6d309d6",
