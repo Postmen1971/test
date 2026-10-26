@@ -1,7 +1,7 @@
 {
   "schema_version": "13.0",
-  "generated_at": "2026-10-25T10:00:11.598366+00:00",
-  "generated_at_display": "25.10.2026 10:00 UTC",
+  "generated_at": "2026-10-26T11:20:02.037138+00:00",
+  "generated_at_display": "26.10.2026 11:20 UTC",
   "sources_checked": {
     "google_news_rss": true,
     "press_eye_news": true,
@@ -251,6 +251,26 @@
       "priority": 160
     },
     {
+      "id": "f91b6cd1753f3bdd3d10",
+      "title": "Single-cell transcriptomic profiling reveals cellular heterogeneity and organ-specific signatures in the vestibular system.",
+      "title_de": "Neue Forschung zu Usher-Syndrom Typ 1B / MYO7A",
+      "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
+      "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Usher-Syndrom Typ 1B / MYO7A. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
+      "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42925510/",
+      "source": "PubMed / Europe PMC",
+      "country": "",
+      "published": "2026-10-24",
+      "published_display": "24.10.2026",
+      "topic": "usher",
+      "category": "forschung",
+      "press": false,
+      "evidence": "frueh",
+      "evidence_key": "frueh",
+      "study_phase": "Nicht angegeben",
+      "priority": 155
+    },
+    {
       "id": "b9b5457f3651497b5578",
       "title": "EASL-EASD-EASO Guidance for the Use of Resmetirom and Semaglutide as MASH-Targeted Therapy.",
       "title_de": "Neue Forschung zu Typ-2-Diabetes",
@@ -429,26 +449,6 @@
       "evidence_key": "frueh",
       "study_phase": "Nicht angegeben",
       "priority": 120
-    },
-    {
-      "id": "bffaac773484e5b1d663",
-      "title": "Advances and prospects of 3D air-liquid interface cultured middle ear epithelial cells and inner ear organoids in otologic diseases.",
-      "title_de": "Neue Forschung zu Usher-Syndrom Typ 1B / MYO7A",
-      "summary_de": "Die Quelle beschreibt eine wissenschaftliche Information aus dem Forschungsbereich. Die wesentlichen Angaben werden auf Grundlage des verfügbaren Originalinhalts zusammengefasst.",
-      "detailed_summary_de": "Die Meldung betrifft den Forschungsbereich Usher-Syndrom Typ 1B / MYO7A. Die Zusammenfassung basiert auf dem verfügbaren Inhalt der Quelle PubMed / Europe PMC. Nicht im verfügbaren Inhalt enthaltene Ergebnisse werden nicht ergänzt.",
-      "why_relevant": "Die Meldung ist für den entsprechenden Forschungsbereich relevant.",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/42781149/",
-      "source": "PubMed / Europe PMC",
-      "country": "",
-      "published": "2026-09-09",
-      "published_display": "09.09.2026",
-      "topic": "usher",
-      "category": "forschung",
-      "press": false,
-      "evidence": "frueh",
-      "evidence_key": "frueh",
-      "study_phase": "Nicht angegeben",
-      "priority": 90
     },
     {
       "id": "59e917a2a082c4de7e6d",
